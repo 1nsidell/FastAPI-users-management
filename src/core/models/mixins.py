@@ -7,7 +7,7 @@ from src.core.models.utils.to_utc_converter import to_utc_converter
 
 class IntIdPkMixin:
 
-    id: Mapped[int] = mapped_column(primary_key=True, index=True, sort_order=-100)
+    id: Mapped[int] = mapped_column(primary_key=True, sort_order=-100)
 
 
 class CreatedTimestampMixin:
