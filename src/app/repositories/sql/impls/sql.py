@@ -4,14 +4,14 @@ that must be defined for the application to work
 """
 
 import logging
-from abc import abstractmethod
-from typing import Any, Protocol, Self
+from typing import Any, Self
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.app.repositories import SQLRepositoryProtocol
+from src.app.repositories import handle_repository_exceptions
 from src.app.exceptions import UserNotFoundException
-from src.app.repositories.exceptions_handler import handle_repository_exceptions
 from src.app.schemas.users import SInfoUser
 from src.core.schemas import SAddInfoUser
 from src.app.models import InfoUser, Role
@@ -20,71 +20,7 @@ from src.app.models import InfoUser, Role
 log = logging.getLogger("repositories")
 
 
-class RepositoryProtocol(Protocol):
-
-    @abstractmethod
-    async def get_user(
-        self: Self,
-        session: AsyncSession,
-        user_id: int,
-    ) -> SInfoUser:
-        """Get information about the user.
-
-        Args:
-            session (AsyncSession): transaction session.
-            user_id (int): argument to search for user data
-
-        Returns:
-            SUser: user model.
-        """
-        ...
-
-    @abstractmethod
-    async def add_user(
-        self: Self,
-        session: AsyncSession,
-        **data: SAddInfoUser,
-    ) -> None:
-        """Add a new user.
-
-        Args:
-            session (AsyncSession): transaction session.
-            **data (SAddInfoUser): data to be added.
-        """
-        ...
-
-    @abstractmethod
-    async def update_user(
-        self: Self,
-        session: AsyncSession,
-        user_id: int,
-        **data: Any,
-    ) -> None:
-        """Update user information by user ID.
-
-        Args:
-            session (AsyncSession): transaction session.
-            user_id (int): user id.
-            **data (Any): Data set to be updated.
-        """
-        ...
-
-    @abstractmethod
-    async def delete_user(
-        self: Self,
-        session: AsyncSession,
-        user_id: int,
-    ) -> None:
-        """Deleting a user account by ID.
-
-        Args:
-            session (AsyncSession): transaction session.
-            user_id (int): user id.
-        """
-        ...
-
-
-class RepositoryImpl(RepositoryProtocol):
+class SQLRepositoryImpl(SQLRepositoryProtocol):
     USER_INFO_MODEL = InfoUser
     ROLE_MODEL = Role
 
