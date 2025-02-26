@@ -17,8 +17,8 @@ class RunConfig(BaseModel):
 class ApiPrefix(BaseModel):
     healthcheck: str = "/healthcheck"
     prefix: str = "/api/user-management"
-    internal: str = "/internals"
     v1_prefix: str = "/v1"
+    user: str = "/user"
 
 
 class DatabaseConfig(BaseModel):
