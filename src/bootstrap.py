@@ -3,6 +3,7 @@ from fastapi import FastAPI
 
 from src.core.loggers import setup_logging
 from src.middlewares import apply_middlewares
+from src.routers import apply_routes
 
 
 @asynccontextmanager
@@ -22,4 +23,4 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         openapi_url="/docs.json",
     )
-    return apply_middlewares(app)
+    return apply_routes(apply_middlewares(app))
