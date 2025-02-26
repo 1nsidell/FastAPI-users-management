@@ -5,16 +5,15 @@ from typing import List
 from src.core.models.base import Base
 from src.core.models.mixins import (
     CreatedTimestampMixin,
-    IntIdPkMixin,
     UpdatedTimestampMixin,
 )
 
 
-class InfoUser(Base, IntIdPkMixin, CreatedTimestampMixin, UpdatedTimestampMixin):
+class InfoUser(Base, CreatedTimestampMixin, UpdatedTimestampMixin):
 
-    user_id: Mapped[int] = mapped_column(unique=True, nullable=False, index=True)
+    user_id: Mapped[int] = mapped_column(primary_key=True)
     role_id: Mapped[int] = mapped_column(
-        ForeignKey("roles.id", ondelete="SET NULL"),
+        ForeignKey("roles.role_id", ondelete="SET NULL"),
         nullable=True,
         default=1,
     )
@@ -26,8 +25,9 @@ class InfoUser(Base, IntIdPkMixin, CreatedTimestampMixin, UpdatedTimestampMixin)
     role: Mapped["Role"] = relationship(back_populates="users")
 
 
-class Role(Base, IntIdPkMixin):
+class Role(Base):
 
+    role_id: Mapped[int] = mapped_column(primary_key=True)
     role: Mapped[str] = mapped_column(unique=True, nullable=False)
 
     users: Mapped[List["InfoUser"]] = relationship(
