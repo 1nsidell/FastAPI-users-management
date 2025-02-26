@@ -1,16 +1,16 @@
 """init
 
 Revision ID: 38d83670f4ba
-Revises: 
+Revises:
 Create Date: 2025-02-26 19:40:46.963942
 
 """
 
 from typing import Sequence, Union
 
-from alembic import op
 import sqlalchemy as sa
 
+from alembic import op
 
 revision: str = "38d83670f4ba"
 down_revision: Union[str, None] = None
@@ -45,7 +45,10 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("user_id", name=op.f("pk_info_users")),
     )
     op.create_index(
-        op.f("ix_info_users_nickname"), "info_users", ["nickname"], unique=False
+        op.f("ix_info_users_nickname"),
+        "info_users",
+        ["nickname"],
+        unique=False,
     )
 
 
