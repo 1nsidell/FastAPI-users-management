@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Callable
+from typing import Callable, Optional
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,

@@ -12,7 +12,6 @@ class UserInfo:
             settings.api.user,
             self.create_user,
             methods=["DELETE"],
-            response_model=SSuccessfulRequest,
             status_code=204,
         )
 
@@ -21,10 +20,9 @@ class UserInfo:
         api_access: APIAccessProvider,
         user_id: int,
         api_key: str = Header(..., alias="X-API-Key"),
-    ) -> SSuccessfulRequest:
+    ) -> None:
         await api_access.check_api_key(api_key)
         await UsersUseCase.delete_user(user_id)
-        return SSuccessfulRequest()
 
 
 user_info = UserInfo()

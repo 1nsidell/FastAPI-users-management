@@ -1,10 +1,11 @@
 from typing import Any, Self
 
-from src.app.schemas.users import SInfoUser
-from src.core.schemas import SAddInfoUser
-from src.app.services import UsersServiceProtocol
+from src.app.exceptions import UserNotFoundException
 from src.app.repositories import SQLRepositoryProtocol
+from src.app.schemas.users import SInfoUser
+from src.app.services import UsersServiceProtocol
 from src.core.db import RepositoryUOW
+from src.core.schemas import SAddInfoUser
 
 
 class UsersServiceImpl(UsersServiceProtocol):
@@ -23,22 +24,24 @@ class UsersServiceImpl(UsersServiceProtocol):
     ) -> SInfoUser:
         async with self.db_uow as uow:
             user = await self.sql_repository.get_user(uow, user_id)
+        if not user:
+            raise UserNotFoundException()
         return user
 
     async def create_user(
         self: Self,
-        **data: SAddInfoUser,
+        data: SAddInfoUser,
     ) -> None:
         async with self.db_uow as uow:
-            await self.sql_repository.add_user(uow, **data)
+            await self.sql_repository.add_user(uow, data)
 
     async def update_user(
         self: Self,
         user_id: int,
-        **data: Any,
+        data: Any,
     ) -> None:
         async with self.db_uow as uow:
-            await self.sql_repository.update_user(uow, user_id, **data)
+            await self.sql_repository.update_user(uow, user_id, data)
 
     async def delete_user(
         self: Self,

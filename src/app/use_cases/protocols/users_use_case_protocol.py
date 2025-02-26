@@ -1,8 +1,8 @@
-from typing import Protocol, Self, Any
 from abc import abstractmethod
+from typing import Any, Protocol, Self
 
-from src.app.services import UsersServiceProtocol
 from src.app.schemas.users import SInfoUser
+from src.app.services import UsersServiceProtocol
 from src.core.schemas import SAddInfoUser
 
 
@@ -28,7 +28,7 @@ class UsersUseCaseProtocol(Protocol):
     @abstractmethod
     async def create_user(
         self: Self,
-        **data: SAddInfoUser,
+        data: SAddInfoUser,
     ) -> None:
         """Add a new user.
 
@@ -41,7 +41,7 @@ class UsersUseCaseProtocol(Protocol):
     async def update_user(
         self: Self,
         user_id: int,
-        **data: Any,
+        data: Any,
     ) -> None:
         """Update user information by user ID.
 

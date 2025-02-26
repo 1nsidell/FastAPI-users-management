@@ -1,12 +1,12 @@
 import logging
 from functools import wraps
 
+from redis.exceptions import RedisError
 from sqlalchemy.exc import SQLAlchemyError
-from aioredis.exceptions import RedisError
 
 from src.app.exceptions import (
-    RepositoryException,
     RedisDBException,
+    RepositoryException,
     UserNotFoundException,
 )
 
@@ -18,8 +18,6 @@ def handle_repository_exceptions(func):
     async def wrapper(*args, **kwargs):
         try:
             return await func(*args, **kwargs)
-        except UserNotFoundException as e:
-            raise UserNotFoundException(e)
         except (TypeError, ValueError) as e:
             log.warning("Error when working with database: %s.", e)
             raise RepositoryException(e)

@@ -1,5 +1,5 @@
 """
-A protocol describing the methods and attributes of a repository, 
+A protocol describing the methods and attributes of a repository,
 that must be defined for the application to work
 """
 
@@ -35,13 +35,13 @@ class SQLRepositoryProtocol(Protocol):
     async def add_user(
         self: Self,
         session: AsyncSession,
-        **data: SAddInfoUser,
+        data: SAddInfoUser,
     ) -> None:
         """Add a new user.
 
         Args:
             session (AsyncSession): transaction session.
-            **data (SAddInfoUser): data to be added.
+            data (SAddInfoUser): data to be added.
         """
         ...
 
@@ -50,14 +50,14 @@ class SQLRepositoryProtocol(Protocol):
         self: Self,
         session: AsyncSession,
         user_id: int,
-        **data: Any,
+        data: Any,
     ) -> None:
         """Update user information by user ID.
 
         Args:
             session (AsyncSession): transaction session.
             user_id (int): user id.
-            **data (Any): Data set to be updated.
+            data (Any): Data set to be updated.
         """
         ...
 

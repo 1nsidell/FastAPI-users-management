@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Header
 
 from src.app.depends import APIAccessProvider, UsersUseCase
-from src.core.schemas import SSuccessfulRequest, SAddInfoUser
+from src.core.schemas import SAddInfoUser, SSuccessfulRequest
 from src.settings import settings
 
 
@@ -13,7 +13,7 @@ class UserInfo:
             self.create_user,
             methods=["POST"],
             response_model=SSuccessfulRequest,
-            status_code=200,
+            status_code=201,
         )
 
     async def create_user(

@@ -1,6 +1,7 @@
+from typing import List
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from typing import List
 
 from src.core.models.base import Base
 from src.core.models.mixins import (

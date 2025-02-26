@@ -1,12 +1,15 @@
 import os
 from pathlib import Path
 from typing import Dict
+
 from pydantic import BaseModel
 from sqlalchemy import URL
 
 
 # ----------------------------- BaseProjectConfig -----------------------------
-ROOT_DIR_SRC: Path = Path(__file__).parent
+class Paths:
+    ROOT_DIR_SRC: Path = Path(__file__).parent
+    PATH_TO_BASE_FOLDER = Path(__file__).parent.parent
 
 
 class RunConfig(BaseModel):
@@ -62,11 +65,15 @@ class RedisConfig(BaseModel):
 
     @property
     def token_url(self) -> str:
-        return f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.TOKEN_DB}"
+        return (
+            f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.TOKEN_DB}"
+        )
 
     @property
     def cache_url(self) -> str:
-        return f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.CACHE_DB}"
+        return (
+            f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.CACHE_DB}"
+        )
 
 
 class Settings:
@@ -75,6 +82,7 @@ class Settings:
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig = DatabaseConfig()
     kv_repository: RedisConfig = RedisConfig()
+    paths: Paths = Paths()
 
 
 def get_settings() -> Settings:

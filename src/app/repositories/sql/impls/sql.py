@@ -1,5 +1,5 @@
 """
-A protocol describing the methods and attributes of a repository, 
+A protocol describing the methods and attributes of a repository,
 that must be defined for the application to work
 """
 
@@ -9,13 +9,13 @@ from typing import Any, Self
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from src.app.models import InfoUser, Role
 from src.app.repositories import SQLRepositoryProtocol
-from src.app.repositories import handle_repository_exceptions
-from src.app.exceptions import UserNotFoundException
+from src.app.repositories.exceptions_handler import (
+    handle_repository_exceptions,
+)
 from src.app.schemas.users import SInfoUser
 from src.core.schemas import SAddInfoUser
-from src.app.models import InfoUser, Role
-
 
 log = logging.getLogger("repositories")
 
@@ -43,14 +43,14 @@ class SQLRepositoryImpl(SQLRepositoryProtocol):
             .where(self.USER_INFO_MODEL.user_id == user_id)
             .join(
                 self.ROLE_MODEL,
-                self.ROLE_MODEL.id == self.USER_INFO_MODEL.role_id,
+                self.ROLE_MODEL.role_id == self.USER_INFO_MODEL.role_id,
             )
         )
         result = await session.execute(stmt)
         user = result.mappings().one_or_none()
         if not user:
             log.info("User not found with ID: %s.", user_id)
-            raise UserNotFoundException()
+            return None
         log.info("User information found with ID: %s.", user_id)
         return SInfoUser.model_validate(user, from_attributes=True)
 
@@ -74,7 +74,7 @@ class SQLRepositoryImpl(SQLRepositoryProtocol):
         self: Self,
         session: AsyncSession,
         user_id: int,
-        **data: Any,
+        data: Any,
     ) -> None:
         log.info("User data update: %s.", user_id)
         stmt = (

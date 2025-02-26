@@ -6,8 +6,8 @@ from abc import abstractmethod
 from typing import Any, Protocol, Self
 
 from src.app.repositories import SQLRepositoryProtocol
-from src.core.db import RepositoryUOW
 from src.app.schemas.users import SInfoUser
+from src.core.db import RepositoryUOW
 from src.core.schemas import SAddInfoUser
 
 
@@ -34,12 +34,12 @@ class UsersServiceProtocol(Protocol):
     @abstractmethod
     async def create_user(
         self: Self,
-        **data: SAddInfoUser,
+        data: SAddInfoUser,
     ) -> None:
         """Add a new user.
 
         Args:
-            **data (SAddInfoUser): data to be user create.
+            data (SAddInfoUser): data to be user create.
         """
         ...
 
@@ -47,13 +47,13 @@ class UsersServiceProtocol(Protocol):
     async def update_user(
         self: Self,
         user_id: int,
-        **data: Any,
+        data: Any,
     ) -> None:
         """Update user information by user ID.
 
         Args:
             user_id (int): user id.
-            **data (Any): Data set to be updated.
+            data (Any): Data set to be updated.
         """
         ...
 

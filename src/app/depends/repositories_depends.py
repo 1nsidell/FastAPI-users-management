@@ -1,4 +1,4 @@
-from src.app.repositories import SQLRepositoryProtocol, SQLRepositoryImpl
+from src.app.repositories import SQLRepositoryImpl, SQLRepositoryProtocol
 
 
 def get_sql_repository() -> SQLRepositoryProtocol:
