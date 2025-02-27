@@ -12,7 +12,7 @@ from src.settings import settings
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Предварительная инициализация приложения.
+    Pre-initialization of the application.
     """
     # startup
     setup_logging(settings)

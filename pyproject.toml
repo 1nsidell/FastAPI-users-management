@@ -10,6 +10,7 @@ dependencies = [
     "black>=25.1.0",
     "fastapi>=0.115.8",
     "isort>=6.0.0",
+    "pytest>=8.3.4",
     "redis>=5.2.1",
     "setuptools>=75.8.1",
     "uvicorn>=0.34.0",

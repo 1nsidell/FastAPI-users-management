@@ -1,36 +1,31 @@
 """Custom domain exceptions."""
 
 
-class BaseCustomException(Exception):
+class BaseCustomDomainException(Exception):
     """Base class for all custom exceptions."""
 
-    error_type: str = "APPLICATION_ERROR"
-    status_code: int = 500
-
-    def __init__(self, message: str = None):
-        self.message = message or self.__doc__
-        super().__init__(self.message)
+    error_type: str
+    status_code: int
+    message: str
 
 
-class SecurityException(BaseCustomException):
+class CustomSecurityException(BaseCustomDomainException):
     """Base class for all API security related exceptions."""
 
-    error_type: str = "SECURITY_ERROR"
-    status_code: int = None
-
-    def __init__(self, message: str = None):
-        self.message = message or self.__doc__
-        super().__init__(self.message)
+    error_type: str
+    status_code: int
+    message: str
 
 
-class CustomUserException(BaseCustomException):
+class CustomUserException(BaseCustomDomainException):
     """Base class for all user-related errors."""
 
-    error_type = "USER_ERROR"
-    status_code = None
+    error_type: str
+    status_code: int
+    message: str
 
 
-class CustomAccessDeniedException(SecurityException):
+class CustomAccessDeniedException(CustomSecurityException):
     """API key rejected."""
 
     error_type: str = "API_KEY_ERROR"
