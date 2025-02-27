@@ -1,4 +1,4 @@
-from typing import Any, Self
+from typing import Any, Self, Dict
 
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol
@@ -30,7 +30,7 @@ class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
     async def update_user(
         self: Self,
         user_id: int,
-        data: Any,
+        data: Dict[str, Any],
     ) -> None:
         await self.users_service.update_user(user_id, data)
 

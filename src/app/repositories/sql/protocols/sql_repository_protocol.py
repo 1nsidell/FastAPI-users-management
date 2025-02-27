@@ -4,7 +4,7 @@ that must be defined for the application to work
 """
 
 from abc import abstractmethod
-from typing import Any, Protocol, Self
+from typing import Any, Protocol, Self, Dict
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -50,14 +50,14 @@ class SQLRepositoryProtocol(Protocol):
         self: Self,
         session: AsyncSession,
         user_id: int,
-        data: Any,
+        data: Dict[str, Any],
     ) -> None:
         """Update user information by user ID.
 
         Args:
             session (AsyncSession): transaction session.
             user_id (int): user id.
-            data (Any): Data set to be updated.
+            data (Dict[str, Any]): Data set to be updated.
         """
         ...
 

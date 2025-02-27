@@ -4,7 +4,7 @@ that must be defined for the application to work
 """
 
 import logging
-from typing import Any, Self
+from typing import Any, Self, Dict
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -74,7 +74,7 @@ class SQLRepositoryImpl(SQLRepositoryProtocol):
         self: Self,
         session: AsyncSession,
         user_id: int,
-        data: Any,
+        data: Dict[str, Any],
     ) -> None:
         log.info("User data update: %s.", user_id)
         stmt = (

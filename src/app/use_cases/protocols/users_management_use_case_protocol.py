@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Protocol, Self
+from typing import Any, Protocol, Self, Dict
 
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol
@@ -41,13 +41,13 @@ class UsersManagementUseCaseProtocol(Protocol):
     async def update_user(
         self: Self,
         user_id: int,
-        data: Any,
+        data: Dict[str, Any],
     ) -> None:
         """Update user information by user ID.
 
         Args:
             user_id (int): user id.
-            **data (Any): Data set to be updated.
+            **data (Dict[str, Any]): Data set to be updated.
         """
         ...
 
