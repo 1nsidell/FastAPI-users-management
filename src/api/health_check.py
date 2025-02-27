@@ -1,5 +1,6 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Header
 
+from src.app.depends import APIAccessProvider
 from src.core.schemas import SSuccessfulRequest
 from src.settings import settings
 
@@ -16,7 +17,12 @@ class Healthcheck:
             status_code=200,
         )
 
-    async def get_healthcheck(self) -> SSuccessfulRequest:
+    async def get_healthcheck(
+        self,
+        api_access: APIAccessProvider,
+        api_key: str = Header(..., alias="X-API-Key"),
+    ) -> SSuccessfulRequest:
+        await api_access.check_api_key(api_key)
         return SSuccessfulRequest()
 
 

@@ -7,14 +7,14 @@ from typing import Any, Protocol, Self, Dict
 
 from src.app.repositories import SQLRepositoryProtocol
 from src.app.schemas.users import SInfoUser
-from src.core.db import RepositoryUOW
 from src.core.schemas import SAddInfoUser
+from src.core.db import UOWFactory
 
 
 class UsersManagementServiceProtocol(Protocol):
 
     sql_repository: SQLRepositoryProtocol
-    db_uow: RepositoryUOW
+    uow_factory: UOWFactory
 
     @abstractmethod
     async def get_user(

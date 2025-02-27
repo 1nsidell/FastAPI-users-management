@@ -37,3 +37,14 @@ class RedisDBException(CustomDBException):
     def __init__(self, message: str):
         super().__init__(message)
         self.message = message
+
+
+class TransactionException(CustomDBException):
+    """Transaction error."""
+
+    error_type = "TRANSACTION_ERROR"
+    status_code = 500
+
+    def __init__(self, message: str):
+        super().__init__(message)
+        self.message = message
