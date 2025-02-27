@@ -1,6 +1,6 @@
 from typing import Any, Self
 
-from src.app.exceptions import UserNotFoundException
+from src.core.exceptions import UserNotFoundException
 from src.app.repositories import SQLRepositoryProtocol
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersServiceProtocol

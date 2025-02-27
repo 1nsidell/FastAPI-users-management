@@ -4,11 +4,7 @@ from functools import wraps
 from redis.exceptions import RedisError
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.app.exceptions import (
-    RedisDBException,
-    RepositoryException,
-    UserNotFoundException,
-)
+from src.app.exceptions import RedisDBException, RepositoryException
 
 log = logging.getLogger("repositories")
 
