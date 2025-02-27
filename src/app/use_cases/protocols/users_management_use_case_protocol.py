@@ -2,13 +2,13 @@ from abc import abstractmethod
 from typing import Any, Protocol, Self
 
 from src.app.schemas.users import SInfoUser
-from src.app.services import UsersServiceProtocol
+from src.app.services import UsersManagementServiceProtocol
 from src.core.schemas import SAddInfoUser
 
 
-class UsersUseCaseProtocol(Protocol):
+class UsersManagementUseCaseProtocol(Protocol):
 
-    UsersService: UsersServiceProtocol
+    UsersService: UsersManagementServiceProtocol
 
     @abstractmethod
     async def get_user(

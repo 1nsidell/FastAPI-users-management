@@ -1,14 +1,14 @@
-from typing import Any, Self
+from typing import Any, Dict, Self
 
-from src.core.exceptions import UserNotFoundException
 from src.app.repositories import SQLRepositoryProtocol
 from src.app.schemas.users import SInfoUser
-from src.app.services import UsersServiceProtocol
+from src.app.services import UsersManagementServiceProtocol
 from src.core.db import RepositoryUOW
+from src.core.exceptions import UserNotFoundException
 from src.core.schemas import SAddInfoUser
 
 
-class UsersServiceImpl(UsersServiceProtocol):
+class UsersManagementServiceImpl(UsersManagementServiceProtocol):
 
     def __init__(
         self,
@@ -38,7 +38,7 @@ class UsersServiceImpl(UsersServiceProtocol):
     async def update_user(
         self: Self,
         user_id: int,
-        data: Any,
+        data: Dict[str, Any],
     ) -> None:
         async with self.db_uow as uow:
             await self.sql_repository.update_user(uow, user_id, data)

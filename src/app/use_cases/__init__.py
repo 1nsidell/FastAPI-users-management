@@ -1,2 +1,3 @@
-from .impls.users_management_use_case import UsersUseCaseImpl
-from .protocols.users_management_use_case_protocol import UsersUseCaseProtocol
+from .protocols.users_management_use_case_protocol import (
+    UsersManagementUseCaseProtocol,
+)

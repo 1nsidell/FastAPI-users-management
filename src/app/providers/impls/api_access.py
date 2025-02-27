@@ -1,7 +1,7 @@
 from typing import Self
 
-from src.core.exceptions import CustomAccessDeniedException
 from src.app.providers import APIAccessProviderProtocol
+from src.core.exceptions import CustomAccessDeniedException
 
 
 class APIAccessProviderImpl(APIAccessProviderProtocol):

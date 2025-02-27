@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Header
 
 from src.app.depends import APIAccessProvider, UsersUseCase
-from src.core.schemas import SSuccessfulRequest
 from src.settings import settings
 
 

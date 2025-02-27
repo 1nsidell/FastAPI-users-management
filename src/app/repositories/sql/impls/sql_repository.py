@@ -10,8 +10,8 @@ from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.models import InfoUser, Role
-from src.app.repositories import SQLRepositoryProtocol
-from src.app.repositories.exceptions_handler import (
+from src.app.repositories import (
+    SQLRepositoryProtocol,
     handle_repository_exceptions,
 )
 from src.app.schemas.users import SInfoUser

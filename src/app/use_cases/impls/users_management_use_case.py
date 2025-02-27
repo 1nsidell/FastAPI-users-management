@@ -1,16 +1,16 @@
 from typing import Any, Self
 
 from src.app.schemas.users import SInfoUser
-from src.app.services import UsersServiceProtocol
-from src.app.use_cases import UsersUseCaseProtocol
+from src.app.services import UsersManagementServiceProtocol
+from src.app.use_cases import UsersManagementUseCaseProtocol
 from src.core.schemas import SAddInfoUser
 
 
-class UsersUseCaseImpl(UsersUseCaseProtocol):
+class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
 
     def __init__(
         self,
-        UsersService: UsersServiceProtocol,
+        UsersService: UsersManagementServiceProtocol,
     ):
         self.users_service = UsersService
 

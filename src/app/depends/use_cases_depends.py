@@ -1,12 +1,16 @@
 from src.app.depends import UsersService
-from src.app.services import UsersServiceProtocol
-from src.app.use_cases import UsersUseCaseImpl, UsersUseCaseProtocol
+from src.app.services import UsersManagementServiceProtocol
+from src.app.use_cases import UsersManagementUseCaseProtocol
+
+from ..use_cases.impls.users_management_use_case import (
+    UsersManagementUseCaseImpl,
+)
 
 
 def get_users_use_case(
-    users_service: UsersServiceProtocol,
-) -> UsersUseCaseProtocol:
-    return UsersUseCaseImpl(users_service)
+    users_service: UsersManagementServiceProtocol,
+) -> UsersManagementUseCaseProtocol:
+    return UsersManagementUseCaseImpl(users_service)
 
 
-UsersUseCase: UsersUseCaseProtocol = get_users_use_case(UsersService)
+UsersUseCase: UsersManagementUseCaseProtocol = get_users_use_case(UsersService)

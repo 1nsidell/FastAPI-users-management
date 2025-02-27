@@ -11,7 +11,7 @@ from src.core.db import RepositoryUOW
 from src.core.schemas import SAddInfoUser
 
 
-class UsersServiceProtocol(Protocol):
+class UsersManagementServiceProtocol(Protocol):
 
     sql_repository: SQLRepositoryProtocol
     db_uow: RepositoryUOW

@@ -13,6 +13,7 @@ class Healthcheck:
             methods=["GET"],
             tags=["HEALTCHECK"],
             response_model=SSuccessfulRequest,
+            status_code=200,
         )
 
     async def get_healthcheck(self) -> SSuccessfulRequest:
