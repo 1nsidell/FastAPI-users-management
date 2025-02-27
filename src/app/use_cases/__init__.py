@@ -1,2 +1,2 @@
-from ..use_cases.impls.users_use_case import UsersUseCaseImpl
-from ..use_cases.protocols.users_use_case_protocol import UsersUseCaseProtocol
+from .impls.users_management_use_case import UsersUseCaseImpl
+from .protocols.users_management_use_case_protocol import UsersUseCaseProtocol

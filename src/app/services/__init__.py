@@ -1,2 +1,2 @@
-from ..services.impls.users_service import UsersServiceImpl
-from ..services.protocols.users_service_protocol import UsersServiceProtocol
+from .impls.users_management_service import UsersServiceImpl
+from .protocols.users_management_service_protocol import UsersServiceProtocol
