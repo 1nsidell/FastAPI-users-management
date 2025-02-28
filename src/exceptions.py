@@ -5,8 +5,8 @@ import logging
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 
-from src.core.exceptions import BaseCustomDomainException
 from src.app.exceptions import BaseCustomInfrastructureException
+from src.core.exceptions import BaseCustomDomainException
 
 log = logging.getLogger("exception_handler")
 

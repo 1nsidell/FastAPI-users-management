@@ -4,7 +4,7 @@ that must be defined for the application to work
 """
 
 from abc import abstractmethod
-from typing import Any, Optional, Protocol, Self, Dict
+from typing import Any, Dict, Optional, Protocol, Self
 
 from sqlalchemy import RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession

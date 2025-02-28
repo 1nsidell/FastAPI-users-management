@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Callable, Protocol, Self
+from typing import Callable, Optional, Protocol, Self
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -79,29 +79,31 @@ class RepositoryUOWImpl(RepositoryUOWProtocol):
     async def __aenter__(self) -> AsyncSession:
         self.session = self.__session_factory()
         self.transaction = await self.session.begin()
-        log.info(f"Session [{id(self.session)}] started")
+        log.info(f"Session [{id(self.session)}] started.")
         return self.session
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         try:
             if self.session is None:
-                raise TransactionException("Session not initialized")
+                raise TransactionException("Session not initialized.")
             if exc_type is not None:
                 log.warning(
-                    f"Rolling back transaction for session [{id(self.session)}]"
+                    f"Rolling back transaction for session [{id(self.session)}]."
                 )
                 await self.transaction.rollback()
-                log.debug(f"Rollback complete for session [{id(self.session)}]")
+                log.debug(
+                    f"Rollback complete for session [{id(self.session)}]."
+                )
             else:
                 try:
                     await self.transaction.commit()
                     log.info(
-                        f"Commit successful for session [{id(self.session)}]"
+                        f"Commit successful for session [{id(self.session)}]."
                     )
                 except Exception as commit_error:
-                    log.error(f"Commit failed: {commit_error}")
+                    log.exception(f"Commit failed.")
                     await self.session.rollback()
-                    raise TransactionException(commit_error)
+                    raise TransactionException()
         finally:
             log.info(f"Session [{id(self.session)}] is closed.")
             await self.session.close()

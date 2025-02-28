@@ -1,5 +1,5 @@
 from abc import abstractmethod
-from typing import Any, Protocol, Self, Dict
+from typing import Any, Dict, Protocol, Self
 
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol

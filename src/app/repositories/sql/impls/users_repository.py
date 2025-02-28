@@ -4,7 +4,7 @@ that must be defined for the application to work
 """
 
 import logging
-from typing import Any, Optional, Self, Dict
+from typing import Any, Dict, Optional, Self
 
 from sqlalchemy import RowMapping, delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession

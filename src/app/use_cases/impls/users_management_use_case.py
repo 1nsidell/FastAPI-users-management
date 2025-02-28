@@ -1,4 +1,4 @@
-from typing import Any, Self, Dict
+from typing import Any, Dict, Self
 
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol

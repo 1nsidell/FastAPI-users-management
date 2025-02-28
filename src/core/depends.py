@@ -6,7 +6,6 @@ from src.core import DatabaseHelperProtocol, RepositoryUOWProtocol
 from src.core.db import DatabaseHelperImpl, RepositoryUOWImpl
 from src.settings import Settings, get_settings
 
-
 SettingsService = Annotated[Settings, Depends(get_settings)]
 
 

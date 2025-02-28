@@ -4,7 +4,7 @@ from core.db import RepositoryUOWProtocol
 from src.app.repositories import UsersSQLRepositoryProtocol
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol
-from src.core.exceptions import UserNotFoundException, UserAlreadyExistException
+from src.core.exceptions import UserAlreadyExistException, UserNotFoundException
 from src.core.schemas import SAddInfoUser
 
 

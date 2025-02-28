@@ -3,12 +3,12 @@ Service protocol responsible for user management.
 """
 
 from abc import abstractmethod
-from typing import Any, Protocol, Self, Dict
+from typing import Any, Dict, Protocol, Self
 
 from src.app.repositories import UsersSQLRepositoryProtocol
 from src.app.schemas.users import SInfoUser
-from src.core.schemas import SAddInfoUser
 from src.core.db import RepositoryUOWProtocol
+from src.core.schemas import SAddInfoUser
 
 
 class UsersManagementServiceProtocol(Protocol):

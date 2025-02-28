@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict, Annotated
+from typing import Annotated, Dict
 
 from fastapi import Depends
 from pydantic import BaseModel

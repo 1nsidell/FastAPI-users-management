@@ -1,4 +1,5 @@
 from typing import Any, Dict
+
 from fastapi import APIRouter, Header
 
 from src.app.depends import APIAccessProvider, UsersUseCase
