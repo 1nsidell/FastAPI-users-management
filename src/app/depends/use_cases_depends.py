@@ -1,5 +1,8 @@
+from typing import Annotated
+
+from fastapi import Depends
+
 from src.app.depends import UsersService
-from src.app.services import UsersManagementServiceProtocol
 from src.app.use_cases import UsersManagementUseCaseProtocol
 
 from ..use_cases.impls.users_management_use_case import (
@@ -8,9 +11,11 @@ from ..use_cases.impls.users_management_use_case import (
 
 
 def get_users_use_case(
-    users_service: UsersManagementServiceProtocol,
+    users_service: UsersService,
 ) -> UsersManagementUseCaseProtocol:
     return UsersManagementUseCaseImpl(users_service)
 
 
-UsersUseCase: UsersManagementUseCaseProtocol = get_users_use_case(UsersService)
+UsersUseCase = Annotated[
+    UsersManagementUseCaseProtocol, Depends(get_users_use_case)
+]

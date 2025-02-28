@@ -16,13 +16,13 @@ def handle_repository_exceptions(func):
             return await func(*args, **kwargs)
         except (TypeError, ValueError) as e:
             log.warning("Error when working with database: %s.", e)
-            raise RepositoryException(e)
+            raise RepositoryException()
         except SQLAlchemyError as e:
             log.exception("Error when working with database: %s.", e)
-            raise RepositoryException(e)
+            raise RepositoryException()
         except Exception as e:
             log.exception("!Critical error when working with database: %s.", e)
-            raise RepositoryException(e)
+            raise RepositoryException()
 
     return wrapper
 
@@ -34,9 +34,9 @@ def handle_redis_exceptions(func):
             return await func(*args, **kwargs)
         except RedisError as e:
             log.exception("Error when working with Redis: %s.", e)
-            raise RedisDBException(e)
+            raise RedisDBException()
         except Exception as e:
             log.exception("!Critical error when working with Redis: %s.", e)
-            raise RedisDBException(e)
+            raise RedisDBException()
 
     return wrapper

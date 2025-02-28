@@ -4,14 +4,14 @@ that must be defined for the application to work
 """
 
 import logging
-from typing import Any, Self, Dict
+from typing import Any, Optional, Self, Dict
 
-from sqlalchemy import delete, insert, select, update
+from sqlalchemy import RowMapping, delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.models import InfoUser, Role
 from src.app.repositories import (
-    SQLRepositoryProtocol,
+    UsersSQLRepositoryProtocol,
     handle_repository_exceptions,
 )
 from src.app.schemas.users import SInfoUser
@@ -20,12 +20,12 @@ from src.core.schemas import SAddInfoUser
 log = logging.getLogger("repositories")
 
 
-class SQLRepositoryImpl(SQLRepositoryProtocol):
+class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     USER_INFO_MODEL = InfoUser
     ROLE_MODEL = Role
 
     @handle_repository_exceptions
-    async def get_user(
+    async def get_user_by_id(
         self: Self,
         session: AsyncSession,
         user_id: int,
@@ -92,7 +92,7 @@ class SQLRepositoryImpl(SQLRepositoryProtocol):
         session: AsyncSession,
         user_id: int,
     ) -> None:
-        log.info("user deletion with ID: %s.", user_id)
+        log.info("User deletion with ID: %s.", user_id)
         stmt = (
             delete(self.USER_INFO_MODEL)
             .where(self.USER_INFO_MODEL.user_id == user_id)
@@ -100,3 +100,17 @@ class SQLRepositoryImpl(SQLRepositoryProtocol):
         )
         await session.execute(stmt)
         log.info("Successful deletion user with ID: %s.", user_id)
+
+    @handle_repository_exceptions
+    async def user_exists(
+        self,
+        session: AsyncSession,
+        nickname: str,
+    ) -> Optional[RowMapping]:
+        log.info("Check if there is a user with a nickname: %s.")
+        stmt = select(self.USER_INFO_MODEL).where(
+            self.USER_INFO_MODEL.nickname == nickname
+        )
+        result = await session.execute(stmt)
+        user = result.mappings().one_or_none()
+        return user

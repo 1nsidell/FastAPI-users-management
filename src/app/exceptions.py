@@ -1,5 +1,7 @@
 """Custom infrastructure exceptions."""
 
+from typing import Optional
+
 
 class BaseCustomInfrastructureException(Exception):
     """Base class for all custom exceptions."""
@@ -23,8 +25,9 @@ class RepositoryException(CustomDBException):
     error_type = "SQL_REPOSITORY_ERROR"
     status_code = 500
 
-    def __init__(self, message: str):
+    def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
+        super().__init__(self.message)
 
 
 class RedisDBException(CustomDBException):
@@ -33,8 +36,9 @@ class RedisDBException(CustomDBException):
     error_type = "REDIS_ERROR"
     status_code = 500
 
-    def __init__(self, message: str):
+    def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
+        super().__init__(self.message)
 
 
 class TransactionException(CustomDBException):
@@ -43,5 +47,6 @@ class TransactionException(CustomDBException):
     error_type = "TRANSACTION_ERROR"
     status_code = 500
 
-    def __init__(self, message: str):
+    def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
+        super().__init__(self.message)

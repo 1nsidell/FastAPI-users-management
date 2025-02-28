@@ -5,21 +5,21 @@ Service protocol responsible for user management.
 from abc import abstractmethod
 from typing import Any, Protocol, Self, Dict
 
-from src.app.repositories import SQLRepositoryProtocol
+from src.app.repositories import UsersSQLRepositoryProtocol
 from src.app.schemas.users import SInfoUser
 from src.core.schemas import SAddInfoUser
-from src.core.db import UOWFactory
+from src.core.db import RepositoryUOWProtocol
 
 
 class UsersManagementServiceProtocol(Protocol):
 
-    sql_repository: SQLRepositoryProtocol
-    uow_factory: UOWFactory
+    users_sql_repository: UsersSQLRepositoryProtocol
+    uow: RepositoryUOWProtocol
 
     @abstractmethod
-    async def get_user(
+    async def get_user_by_id(
         self: Self,
-        user_id: int,
+        data: Any,
     ) -> SInfoUser:
         """Get information about the user.
 

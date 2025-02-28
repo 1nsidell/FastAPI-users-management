@@ -15,10 +15,12 @@ class InfoUser(Base, CreatedTimestampMixin, UpdatedTimestampMixin):
     user_id: Mapped[int] = mapped_column(primary_key=True)
     role_id: Mapped[int] = mapped_column(
         ForeignKey("roles.role_id", ondelete="SET NULL"),
-        nullable=True,
+        nullable=False,
         default=1,
     )
-    nickname: Mapped[str] = mapped_column(nullable=False, index=True)
+    nickname: Mapped[str] = mapped_column(
+        nullable=False, index=True, unique=True
+    )
     is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
     is_verified: Mapped[bool] = mapped_column(default=False, nullable=False)
     avatar: Mapped[bool] = mapped_column(default=False, nullable=False)

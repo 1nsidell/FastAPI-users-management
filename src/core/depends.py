@@ -1,16 +1,24 @@
-from src.core.db import DatabaseHelper, UOWFactory
-from src.settings import settings
+from typing import Annotated
+
+from fastapi import Depends
+
+from src.core import DatabaseHelperProtocol, RepositoryUOWProtocol
+from src.core.db import DatabaseHelperImpl, RepositoryUOWImpl
+from src.settings import Settings, get_settings
 
 
-def get_db_helper(url: str) -> DatabaseHelper:
-    return DatabaseHelper(url)
+SettingsService = Annotated[Settings, Depends(get_settings)]
 
 
-db_helper: DatabaseHelper = get_db_helper(settings.db.url)
+def get_db_helper(settings: SettingsService) -> DatabaseHelperProtocol:
+    return DatabaseHelperImpl(settings.db.url)
 
 
-def get_uow_factory(db_helper: DatabaseHelper) -> UOWFactory:
-    return UOWFactory(db_helper)
+DBHelper = Annotated[DatabaseHelperProtocol, Depends(get_db_helper)]
 
 
-uow_factory: UOWFactory = get_uow_factory(db_helper)
+def get_uow(db_helper: DBHelper) -> RepositoryUOWProtocol:
+    return RepositoryUOWImpl(db_helper)
+
+
+UoW = Annotated[RepositoryUOWProtocol, Depends(get_uow)]

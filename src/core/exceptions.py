@@ -1,5 +1,7 @@
 """Custom domain exceptions."""
 
+from typing import Optional
+
 
 class BaseCustomDomainException(Exception):
     """Base class for all custom exceptions."""
@@ -31,8 +33,9 @@ class CustomAccessDeniedException(CustomSecurityException):
     error_type: str = "API_KEY_ERROR"
     status_code: int = 403
 
-    def __init__(self, message: str = None):
+    def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
+        super().__init__(self.message)
 
 
 class UserNotFoundException(CustomUserException):
@@ -41,5 +44,17 @@ class UserNotFoundException(CustomUserException):
     error_type: str = "USER_NOT_FOUND"
     status_code: int = 404
 
-    def __init__(self, message: str = None):
+    def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
+        super().__init__(self.message)
+
+
+class UserAlreadyExistException(CustomUserException):
+    """User already exist."""
+
+    error_type: str = "USER_EXIST"
+    status_code: int = 409
+
+    def __init__(self, message: Optional[str] = None):
+        self.message = message or self.__doc__
+        super().__init__(self.message)

@@ -4,18 +4,19 @@ that must be defined for the application to work
 """
 
 from abc import abstractmethod
-from typing import Any, Protocol, Self, Dict
+from typing import Any, Optional, Protocol, Self, Dict
 
+from sqlalchemy import RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.schemas.users import SInfoUser
 from src.core.schemas import SAddInfoUser
 
 
-class SQLRepositoryProtocol(Protocol):
+class UsersSQLRepositoryProtocol(Protocol):
 
     @abstractmethod
-    async def get_user(
+    async def get_user_by_id(
         self: Self,
         session: AsyncSession,
         user_id: int,
@@ -72,5 +73,22 @@ class SQLRepositoryProtocol(Protocol):
         Args:
             session (AsyncSession): transaction session.
             user_id (int): user id.
+        """
+        ...
+
+    @abstractmethod
+    async def user_exists(
+        self: Self,
+        session: AsyncSession,
+        nickname: str,
+    ) -> Optional[RowMapping]:
+        """Check if a user with the given nickname exists.
+
+        Args:
+            session (AsyncSession): transaction session.
+            nickname (str): nickname to check.
+
+        Returns:
+            Optional[RowMapping]: RowMapping if user exists, None otherwise.
         """
         ...

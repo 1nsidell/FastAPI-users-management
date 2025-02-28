@@ -17,10 +17,12 @@ class UserInfo:
 
     async def create_user(
         self,
+        APIAccessProvider: APIAccessProvider,
+        UsersUseCase: UsersUseCase,
         user_id: int,
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> None:
-        APIAccessProvider.valid_api_key(api_key)
+        APIAccessProvider.check_api_key(api_key)
         await UsersUseCase.delete_user(user_id)
 
 

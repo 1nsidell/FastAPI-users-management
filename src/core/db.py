@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Callable
+from typing import Optional, Callable, Protocol, Self
 
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -9,13 +9,26 @@ from sqlalchemy.ext.asyncio import (
     create_async_engine,
 )
 
-from app.exceptions import TransactionException
+from src.app.exceptions import TransactionException
 from src.settings import settings
 
 log = logging.getLogger("repositories")
 
 
-class DatabaseHelper:
+class DatabaseHelperProtocol(Protocol):
+    url: str
+    echo: bool
+    echo_pool: bool
+    pool_size: int
+    max_overflow: int
+
+    engine: AsyncEngine
+    async_session_factory: async_sessionmaker[AsyncSession]
+
+    async def dispose(self: Self) -> None: ...
+
+
+class DatabaseHelperImpl(DatabaseHelperProtocol):
     def __init__(
         self,
         url: str,
@@ -46,8 +59,17 @@ class DatabaseHelper:
         await self.engine.dispose()
 
 
-class RepositoryUOW:
-    def __init__(self, db_helper: DatabaseHelper):
+class RepositoryUOWProtocol(Protocol):
+    session: Optional[AsyncSession]
+    transaction: Optional[AsyncSessionTransaction]
+
+    async def __aenter__(self: Self) -> AsyncSession: ...
+
+    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None: ...
+
+
+class RepositoryUOWImpl(RepositoryUOWProtocol):
+    def __init__(self, db_helper: DatabaseHelperProtocol):
         self.__session_factory: Callable[[], AsyncSession] = (
             db_helper.async_session_factory
         )
@@ -83,11 +105,3 @@ class RepositoryUOW:
         finally:
             log.info(f"Session [{id(self.session)}] is closed.")
             await self.session.close()
-
-
-class UOWFactory:
-    def __init__(self, db_helper: DatabaseHelper):
-        self.db_helper = db_helper
-
-    def __call__(self) -> RepositoryUOW:
-        return RepositoryUOW(self.db_helper)

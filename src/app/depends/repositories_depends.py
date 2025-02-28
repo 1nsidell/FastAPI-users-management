@@ -1,9 +1,15 @@
-from src.app.repositories import SQLRepositoryProtocol
-from src.app.repositories.sql.impls.sql_repository import SQLRepositoryImpl
+from typing import Annotated
+
+from fastapi import Depends
+
+from src.app.repositories import UsersSQLRepositoryProtocol
+from app.repositories.sql.impls.users_repository import UsersSQLRepositoryImpl
 
 
-def get_sql_repository() -> SQLRepositoryProtocol:
-    return SQLRepositoryImpl()
+def get_users_sql_repository() -> UsersSQLRepositoryProtocol:
+    return UsersSQLRepositoryImpl()
 
 
-SQLRepository: SQLRepositoryProtocol = get_sql_repository()
+SQLRepository = Annotated[
+    UsersSQLRepositoryProtocol, Depends(get_users_sql_repository)
+]

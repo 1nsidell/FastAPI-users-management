@@ -11,7 +11,7 @@ class UsersManagementUseCaseProtocol(Protocol):
     UsersService: UsersManagementServiceProtocol
 
     @abstractmethod
-    async def get_user(
+    async def get_user_by_id(
         self: Self,
         user_id: int,
     ) -> SInfoUser:

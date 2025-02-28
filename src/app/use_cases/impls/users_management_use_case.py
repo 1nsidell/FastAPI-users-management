@@ -14,11 +14,11 @@ class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
     ):
         self.users_service = UsersService
 
-    async def get_user(
+    async def get_user_by_id(
         self: Self,
         user_id: int,
     ) -> SInfoUser:
-        user = await self.users_service.get_user(user_id)
+        user = await self.users_service.get_user_by_id(user_id)
         return user
 
     async def create_user(

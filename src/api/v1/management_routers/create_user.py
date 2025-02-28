@@ -18,6 +18,8 @@ class UserInfo:
 
     async def create_user(
         self,
+        APIAccessProvider: APIAccessProvider,
+        UsersUseCase: UsersUseCase,
         user_info: SAddInfoUser,
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> SSuccessfulRequest:

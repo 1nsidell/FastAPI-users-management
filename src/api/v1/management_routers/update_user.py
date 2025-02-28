@@ -19,6 +19,8 @@ class UserInfo:
 
     async def create_user(
         self,
+        APIAccessProvider: APIAccessProvider,
+        UsersUseCase: UsersUseCase,
         user_id: int,
         user_info: Dict[str, Any],
         api_key: str = Header(..., alias="X-API-Key"),
