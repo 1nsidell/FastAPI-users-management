@@ -33,7 +33,6 @@ class CustomAccessDeniedException(CustomSecurityException):
 
     def __init__(self, message: str = None):
         self.message = message or self.__doc__
-        super().__init__(self.message)
 
 
 class UserNotFoundException(CustomUserException):
@@ -44,4 +43,3 @@ class UserNotFoundException(CustomUserException):
 
     def __init__(self, message: str = None):
         self.message = message or self.__doc__
-        super().__init__(self.message)

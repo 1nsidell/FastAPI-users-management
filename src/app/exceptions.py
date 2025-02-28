@@ -24,8 +24,7 @@ class RepositoryException(CustomDBException):
     status_code = 500
 
     def __init__(self, message: str):
-        super().__init__(message)
-        self.message = message
+        self.message = message or self.__doc__
 
 
 class RedisDBException(CustomDBException):
@@ -35,8 +34,7 @@ class RedisDBException(CustomDBException):
     status_code = 500
 
     def __init__(self, message: str):
-        super().__init__(message)
-        self.message = message
+        self.message = message or self.__doc__
 
 
 class TransactionException(CustomDBException):
@@ -46,5 +44,4 @@ class TransactionException(CustomDBException):
     status_code = 500
 
     def __init__(self, message: str):
-        super().__init__(message)
-        self.message = message
+        self.message = message or self.__doc__
