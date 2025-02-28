@@ -19,12 +19,11 @@ class UserInfo:
 
     async def create_user(
         self,
-        api_access: APIAccessProvider,
         user_id: int,
         user_info: Dict[str, Any],
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> SSuccessfulRequest:
-        await api_access.check_api_key(api_key)
+        APIAccessProvider.check_api_key(api_key)
         await UsersUseCase.update_user(user_id, user_info)
         return SSuccessfulRequest()
 

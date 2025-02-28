@@ -11,16 +11,16 @@ class UserInfo:
             settings.api.user,
             self.create_user,
             methods=["DELETE"],
+            response_model=None,
             status_code=204,
         )
 
     async def create_user(
         self,
-        api_access: APIAccessProvider,
         user_id: int,
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> None:
-        await api_access.check_api_key(api_key)
+        APIAccessProvider.valid_api_key(api_key)
         await UsersUseCase.delete_user(user_id)
 
 

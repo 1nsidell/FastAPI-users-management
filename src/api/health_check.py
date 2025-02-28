@@ -19,10 +19,9 @@ class Healthcheck:
 
     async def get_healthcheck(
         self,
-        api_access: APIAccessProvider,
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> SSuccessfulRequest:
-        await api_access.check_api_key(api_key)
+        APIAccessProvider.check_api_key(api_key)
         return SSuccessfulRequest()
 
 

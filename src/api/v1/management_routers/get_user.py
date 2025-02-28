@@ -18,11 +18,10 @@ class UserInfo:
 
     async def get_user(
         self,
-        api_access: APIAccessProvider,
         user_id: int,
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> SInfoUser:
-        await api_access.check_api_key(api_key)
+        APIAccessProvider.check_api_key(api_key)
         return await UsersUseCase.get_user(user_id)
 
 
