@@ -9,7 +9,5 @@ class APIAccessProviderImpl(APIAccessProviderProtocol):
         self.valid_api_key = valid_api_key
 
     def check_api_key(self: Self, api_key: str) -> None:
-        if not api_key:
-            raise CustomAccessDeniedException()
         if api_key != self.valid_api_key:
             raise CustomAccessDeniedException()

@@ -4,7 +4,7 @@ from functools import wraps
 from redis.exceptions import RedisError
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.app.exceptions import RedisDBException, RepositoryException
+from src.app.exceptions import RedisCacheDBException, RepositoryException
 
 log = logging.getLogger("repositories")
 
@@ -34,9 +34,9 @@ def handle_redis_exceptions(func):
             return await func(*args, **kwargs)
         except RedisError as e:
             log.exception("Error when working with Redis: %s.", e)
-            raise RedisDBException()
+            raise RedisCacheDBException()
         except Exception as e:
             log.exception("!Critical error when working with Redis: %s.", e)
-            raise RedisDBException()
+            raise RedisCacheDBException()
 
     return wrapper

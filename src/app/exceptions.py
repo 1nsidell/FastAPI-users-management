@@ -33,8 +33,16 @@ class RepositoryException(CustomDBException):
 class RedisDBException(CustomDBException):
     """Redis working error."""
 
+    error_type: str
+    status_code: int
+    message: str
+
+
+class RedisCacheDBException(CustomDBException):
+    """Cache operation failed."""
+
     error_type = "REDIS_ERROR"
-    status_code = 500
+    status_code = 202
 
     def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
