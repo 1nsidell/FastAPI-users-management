@@ -9,7 +9,7 @@ app = create_app()
 if __name__ == "__main__":
     uvicorn.run(
         "main:app",
-        workers=5,
+        workers=1,
         host=settings.run.host,
         port=settings.run.port,
     )

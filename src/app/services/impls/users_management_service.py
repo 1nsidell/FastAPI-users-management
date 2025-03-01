@@ -47,6 +47,10 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
             if self.users_sql_repository.user_exists(session, data.nickname):
                 raise UserAlreadyExistException()
             await self.users_sql_repository.add_user(session, data)
+            user = await self.users_sql_repository.get_user_by_id(
+                session, data.user_id
+            )
+        await self.redis_users_cache.add(data.user_id, user.model_dump())
 
     async def update_user(
         self: Self,
@@ -55,6 +59,10 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
     ) -> None:
         async with self.uow as session:
             await self.users_sql_repository.update_user(session, user_id, data)
+            user = await self.users_sql_repository.get_user_by_id(
+                session, user_id
+            )
+        await self.redis_users_cache.add(user_id, user.model_dump())
 
     async def delete_user(
         self: Self,
