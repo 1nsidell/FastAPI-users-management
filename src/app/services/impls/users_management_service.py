@@ -1,7 +1,10 @@
 from typing import Any, Dict, Self
 
 from core.db import RepositoryUOWProtocol
-from src.app.repositories import UsersSQLRepositoryProtocol
+from src.app.repositories import (
+    UsersSQLRepositoryProtocol,
+    CacheRepositoryProtocol,
+)
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol
 from src.core.exceptions import UserAlreadyExistException, UserNotFoundException
@@ -13,21 +16,27 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
     def __init__(
         self,
         users_sql_repository: UsersSQLRepositoryProtocol,
+        redis_users_cache: CacheRepositoryProtocol,
         uow: RepositoryUOWProtocol,
     ):
         self.users_sql_repository = users_sql_repository
+        self.redis_users_cache = redis_users_cache
         self.uow = uow
 
     async def get_user_by_id(
         self: Self,
         user_id: int,
     ) -> SInfoUser:
+        user = await self.redis_users_cache.get(user_id)
+        if user:
+            return user
         async with self.uow as session:
             user = await self.users_sql_repository.get_user_by_id(
                 session, user_id
             )
         if not user:
             raise UserNotFoundException()
+        await self.redis_users_cache.add(user_id, user.model_dump())
         return user
 
     async def create_user(

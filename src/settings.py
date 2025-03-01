@@ -59,22 +59,16 @@ class DatabaseConfig(BaseModel):
 
 class RedisConfig(BaseModel):
     HOST: str = os.getenv("REDIS_HOST")
-    PORT: str = os.getenv("REDIS_PORT")
-    TOKEN_DB: str = os.getenv("REDIS_TOKEN_DB")
-    CACHE_DB: str = os.getenv("REDIS_CACHE_DB")
+    PORT: int = int(os.getenv("REDIS_PORT"))
+    CACHE_DB: int = int(os.getenv("REDIS_CACHE_DB"))
+    USERNAME: str = os.getenv("REDIS_USERNAME")
     PASSWORD: str = os.getenv("REDIS_PASSWORD")
 
-    @property
-    def token_url(self) -> str:
-        return (
-            f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.TOKEN_DB}"
-        )
+    USERS_CACHE_LIFETIME: int = int(os.getenv("REDIS_USERS_CACHE_LIFETIME"))
 
     @property
-    def cache_url(self) -> str:
-        return (
-            f"redis://:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.CACHE_DB}"
-        )
+    def users_cache_url(self) -> str:
+        return f"redis://{self.USERNAME}:{self.PASSWORD}@{self.HOST}:{self.PORT}/{self.CACHE_DB}"
 
 
 class Settings:
@@ -82,7 +76,7 @@ class Settings:
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig = DatabaseConfig()
-    kv_repository: RedisConfig = RedisConfig()
+    redis: RedisConfig = RedisConfig()
     paths: Paths = Paths()
 
 

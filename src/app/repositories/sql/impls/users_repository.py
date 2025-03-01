@@ -12,7 +12,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.app.models import InfoUser, Role
 from src.app.repositories import (
     UsersSQLRepositoryProtocol,
-    handle_repository_exceptions,
+    handle_sql_repository_exceptions,
 )
 from src.app.schemas.users import SInfoUser
 from src.core.schemas import SAddInfoUser
@@ -24,7 +24,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     USER_INFO_MODEL = InfoUser
     ROLE_MODEL = Role
 
-    @handle_repository_exceptions
+    @handle_sql_repository_exceptions
     async def get_user_by_id(
         self: Self,
         session: AsyncSession,
@@ -54,7 +54,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         log.info("User information found with ID: %s.", user_id)
         return SInfoUser.model_validate(user, from_attributes=True)
 
-    @handle_repository_exceptions
+    @handle_sql_repository_exceptions
     async def add_user(
         self: Self,
         session: AsyncSession,
@@ -69,7 +69,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         await session.execute(stmt)
         log.info("User successfully added with ID: %s.", data.user_id)
 
-    @handle_repository_exceptions
+    @handle_sql_repository_exceptions
     async def update_user(
         self: Self,
         session: AsyncSession,
@@ -86,7 +86,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         await session.execute(stmt)
         log.info("Successful update user with ID: %s.", user_id)
 
-    @handle_repository_exceptions
+    @handle_sql_repository_exceptions
     async def delete_user(
         self: Self,
         session: AsyncSession,
@@ -101,7 +101,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         await session.execute(stmt)
         log.info("Successful deletion user with ID: %s.", user_id)
 
-    @handle_repository_exceptions
+    @handle_sql_repository_exceptions
     async def user_exists(
         self,
         session: AsyncSession,

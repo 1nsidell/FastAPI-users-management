@@ -2,7 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from src.app.depends import UsersService
+from src.app.depends.services_depends import UsersService
 from src.app.use_cases import UsersManagementUseCaseProtocol
 
 from ..use_cases.impls.users_management_use_case import (

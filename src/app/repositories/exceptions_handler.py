@@ -9,7 +9,7 @@ from src.app.exceptions import RedisDBException, RepositoryException
 log = logging.getLogger("repositories")
 
 
-def handle_repository_exceptions(func):
+def handle_sql_repository_exceptions(func):
     @wraps(func)
     async def wrapper(*args, **kwargs):
         try:
