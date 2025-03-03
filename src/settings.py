@@ -14,7 +14,7 @@ class Paths:
 
 class RunConfig(BaseModel):
     host: str = "127.0.0.1"
-    port: int = 8000
+    port: int = 8002
 
 
 class ApiPrefix(BaseModel):

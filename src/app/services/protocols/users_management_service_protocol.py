@@ -6,7 +6,7 @@ from abc import abstractmethod
 from typing import Any, Dict, Protocol, Self
 
 from src.app.schemas.users import SInfoUser
-from src.core.db import RepositoryUOWProtocol
+from src.core.db import SQLRepositoryUOWProtocol
 from src.core.schemas import SAddInfoUser
 from src.app.repositories import (
     UsersSQLRepositoryProtocol,
@@ -18,7 +18,7 @@ class UsersManagementServiceProtocol(Protocol):
 
     users_sql_repository: UsersSQLRepositoryProtocol
     redis_users_cache: CacheRepositoryProtocol
-    uow: RepositoryUOWProtocol
+    uow: SQLRepositoryUOWProtocol
 
     @abstractmethod
     async def get_user_by_id(

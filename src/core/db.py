@@ -1,3 +1,5 @@
+"""Module somehow related to connection to repositories."""
+
 import logging
 from typing import Callable, Optional, Protocol, Self
 
@@ -8,9 +10,10 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
+import redis.asyncio as redis
 
 from src.app.exceptions import TransactionException
-from src.settings import settings
+from src.settings import settings, Settings
 
 log = logging.getLogger("repositories")
 
@@ -59,7 +62,7 @@ class DatabaseHelperImpl(DatabaseHelperProtocol):
         await self.engine.dispose()
 
 
-class RepositoryUOWProtocol(Protocol):
+class SQLRepositoryUOWProtocol(Protocol):
     session: Optional[AsyncSession]
     transaction: Optional[AsyncSessionTransaction]
 
@@ -68,11 +71,9 @@ class RepositoryUOWProtocol(Protocol):
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None: ...
 
 
-class RepositoryUOWImpl(RepositoryUOWProtocol):
-    def __init__(self, db_helper: DatabaseHelperProtocol):
-        self.__session_factory: Callable[[], AsyncSession] = (
-            db_helper.async_session_factory
-        )
+class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
+    def __init__(self, session_factory: AsyncSession):
+        self.__session_factory: Callable[[], AsyncSession] = session_factory
         self.session: Optional[AsyncSession] = None
         self.transaction: Optional[AsyncSessionTransaction] = None
 
@@ -107,3 +108,27 @@ class RepositoryUOWImpl(RepositoryUOWProtocol):
         finally:
             log.info(f"Session [{id(self.session)}] is closed.")
             await self.session.close()
+
+
+class RedisPoolManagerImpl:
+    def __init__(self: Self, settings: Settings):
+        self.settings: Settings = settings
+        self.pool: Optional[redis.ConnectionPool] = None
+        self.redis: Optional[redis.Redis] = None
+
+    async def startup(self: Self):
+        self.pool = redis.ConnectionPool.from_url(
+            self.settings.redis.users_cache_url,
+            decode_responses=True,
+        )
+        log.info(f"Redis conn pool [{id(self.pool)}] is created.")
+        self.redis = redis.Redis(connection_pool=self.pool)
+        log.info(f"Redis instance [{id(self.redis)}] is created.")
+
+    async def shutdown(self: Self):
+        if self.redis:
+            await self.redis.aclose()
+            log.info(f"Redis instance [{id(self.redis)}] is close.")
+        if self.pool:
+            await self.pool.disconnect()
+            log.info(f"Redis conn pool [{id(self.pool)}] is close.")

@@ -1,4 +1,7 @@
 from src.core.db import DatabaseHelperProtocol as DatabaseHelperProtocol
-from src.core.db import RepositoryUOWProtocol as RepositoryUOWProtocol
-from src.core.depends import SettingsService as SettingsService
-from src.core.depends import UoW as UoW
+from src.core.db import SQLRepositoryUOWProtocol as SQLRepositoryUOWProtocol
+from src.core.depends import (
+    SettingsService as SettingsService,
+    RedisPoolManager as RedisPoolManager,
+    UoW as UoW,
+)

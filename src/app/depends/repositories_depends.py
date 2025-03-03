@@ -14,6 +14,7 @@ from src.app.repositories import (
     CacheRepositoryProtocol,
 )
 from src.core import SettingsService
+from src.core import RedisPoolManager
 
 
 def get_users_sql_repository() -> UsersSQLRepositoryProtocol:
@@ -25,20 +26,18 @@ UsersSQLRepository = Annotated[
 ]
 
 
-def get_users_redis_pool(settings: SettingsService) -> redis.ConnectionPool:
-    return redis.ConnectionPool.from_url(
-        settings.redis.users_cache_url,
-        decode_responses=True,
-    )
+def get_users_redis_pool() -> redis.Redis:
+    return RedisPoolManager.redis
 
 
-UsersRedisPool = Annotated[redis.ConnectionPool, Depends(get_users_redis_pool)]
+UsersRedisPool = Annotated[redis.Redis, Depends(get_users_redis_pool)]
 
 
 def get_users_cache_repository(
     redis_pool: UsersRedisPool,
+    settings: SettingsService,
 ) -> CacheRepositoryProtocol:
-    return RedisUsersCacheImpl(redis_pool)
+    return RedisUsersCacheImpl(redis_pool, settings)
 
 
 RedisUsersCacheRepository = Annotated[

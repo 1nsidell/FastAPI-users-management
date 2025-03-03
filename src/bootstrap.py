@@ -6,6 +6,7 @@ from src.core.loggers import setup_logging
 from src.exceptions import apply_exceptions_handlers
 from src.middlewares import apply_middlewares
 from src.routers import apply_routes
+from src.core.depends import RedisPoolManager
 from src.settings import settings
 
 
@@ -16,8 +17,10 @@ async def lifespan(app: FastAPI):
     """
     # startup
     setup_logging(settings)
+    await RedisPoolManager.startup()
     yield
     # shutdown
+    await RedisPoolManager.shutdown()
 
 
 def create_app() -> FastAPI:

@@ -5,21 +5,19 @@ from datetime import timedelta
 import redis.asyncio as redis
 from src.app.repositories import CacheRepositoryProtocol
 from src.app.repositories import handle_redis_exceptions
-from src.settings import settings
+from src.settings import Settings
 
 
 class RedisUsersCacheImpl(CacheRepositoryProtocol):
-    def __init__(self: Self, redis_pool: redis.ConnectionPool) -> None:
-        self.redis = redis.Redis(
-            connection_pool=redis_pool,
-            decode_responses=True,
-        )
+    def __init__(self: Self, redis: redis.Redis, settings: Settings) -> None:
+        self.redis = redis
+        self.settings = settings
 
     @handle_redis_exceptions
     async def add(self: Self, key: Any, data: Dict[Any, Any]) -> None:
         expiration = int(
             timedelta(
-                minutes=settings.redis.USERS_CACHE_LIFETIME
+                minutes=self.settings.redis.USERS_CACHE_LIFETIME
             ).total_seconds()
         )
         json_data = json.dumps(data)
