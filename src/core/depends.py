@@ -3,6 +3,9 @@
 from typing import Annotated
 
 from fastapi import Depends
+import redis.asyncio as redis
+
+
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.core import DatabaseHelperProtocol, SQLRepositoryUOWProtocol
@@ -58,3 +61,11 @@ def get_redis_pool_manager(settings: Settings) -> RedisPoolManagerImpl:
 
 
 RedisPoolManager: RedisPoolManagerImpl = get_redis_pool_manager(settings)
+
+
+def get_users_redis_pool() -> redis.Redis:
+    """Create a Depends instance of Redis."""
+    return RedisPoolManager.redis
+
+
+UsersRedisPool = Annotated[redis.Redis, Depends(get_users_redis_pool)]

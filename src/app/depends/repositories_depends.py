@@ -1,7 +1,6 @@
 from typing import Annotated
 
 from fastapi import Depends
-import redis.asyncio as redis
 
 from src.app.repositories.sql.impls.users_repository import (
     UsersSQLRepositoryImpl,
@@ -13,8 +12,7 @@ from src.app.repositories import (
     UsersSQLRepositoryProtocol,
     CacheRepositoryProtocol,
 )
-from src.core import SettingsService
-from src.core import RedisPoolManager
+from src.core import SettingsService, UsersRedisPool
 
 
 def get_users_sql_repository() -> UsersSQLRepositoryProtocol:
@@ -24,13 +22,6 @@ def get_users_sql_repository() -> UsersSQLRepositoryProtocol:
 UsersSQLRepository = Annotated[
     UsersSQLRepositoryProtocol, Depends(get_users_sql_repository)
 ]
-
-
-def get_users_redis_pool() -> redis.Redis:
-    return RedisPoolManager.redis
-
-
-UsersRedisPool = Annotated[redis.Redis, Depends(get_users_redis_pool)]
 
 
 def get_users_cache_repository(

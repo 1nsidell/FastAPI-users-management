@@ -2,7 +2,9 @@
 
 import logging
 from typing import Callable, Optional, Protocol, Self
+from abc import abstractmethod
 
+import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
     AsyncSession,
@@ -10,44 +12,58 @@ from sqlalchemy.ext.asyncio import (
     async_sessionmaker,
     create_async_engine,
 )
-import redis.asyncio as redis
 
 from src.app.exceptions import TransactionException
-from src.settings import settings, Settings
+from src.settings import Settings
 
 log = logging.getLogger("repositories")
 
 
 class DatabaseHelperProtocol(Protocol):
+    """Class helping to async connect to SQL database."""
+
     url: str
     echo: bool
     echo_pool: bool
     pool_size: int
     max_overflow: int
 
-    engine: AsyncEngine
-    async_session_factory: async_sessionmaker[AsyncSession]
+    engine: Optional[AsyncEngine]
+    async_session_factory: Optional[async_sessionmaker[AsyncSession]]
 
-    async def dispose(self: Self) -> None: ...
+    @abstractmethod
+    async def startup(self: Self) -> None: ...
+
+    @abstractmethod
+    async def shutdown(self: Self) -> None: ...
 
 
 class DatabaseHelperImpl(DatabaseHelperProtocol):
     def __init__(
         self,
         url: str,
-        echo: bool = False,
-        echo_pool: bool = False,
-        pool_size: int = 5,
-        max_overflow: int = 10,
+        echo: bool,
+        echo_pool: bool,
+        pool_size: int,
+        max_overflow: int,
     ):
-        log.info("Creating DB engine: %s.", settings.db.NAME)
+        self.url = url
+        self.echo = echo
+        self.echo_pool = echo_pool
+        self.pool_size = pool_size
+        self.max_overflow = max_overflow
+
+        self.engine: Optional[AsyncEngine] = None
+
+    async def startup(self: Self):
         self.engine: AsyncEngine = create_async_engine(
-            url=url,
-            echo=echo,
-            echo_pool=echo_pool,
-            max_overflow=max_overflow,
-            pool_size=pool_size,
+            url=self.url,
+            echo=self.echo,
+            echo_pool=self.echo_pool,
+            max_overflow=self.max_overflow,
+            pool_size=self.pool_size,
         )
+        log.info(f"Created Postgres DB engine [{id(self.engine)}].")
         self.async_session_factory: async_sessionmaker[AsyncSession] = (
             async_sessionmaker(
                 bind=self.engine,
@@ -56,13 +72,19 @@ class DatabaseHelperImpl(DatabaseHelperProtocol):
                 expire_on_commit=False,
             )
         )
+        log.info(
+            f"Created Postgres DB async session factory [{id(self.async_session_factory)}]."
+        )
 
-    async def dispose(self):
-        log.info("Releasing database resources.")
-        await self.engine.dispose()
+    async def shutdown(self: Self) -> None:
+        if self.engine:
+            await self.engine.dispose()
+            log.info("Releasing database resources.")
 
 
 class SQLRepositoryUOWProtocol(Protocol):
+    """UOW for working with SQL database transactions."""
+
     session: Optional[AsyncSession]
     transaction: Optional[AsyncSessionTransaction]
 
@@ -72,42 +94,52 @@ class SQLRepositoryUOWProtocol(Protocol):
 
 
 class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
-    def __init__(self, session_factory: AsyncSession):
+    def __init__(self, session_factory: async_sessionmaker[AsyncSession]):
         self.__session_factory: Callable[[], AsyncSession] = session_factory
-        self.session: Optional[AsyncSession] = None
-        self.transaction: Optional[AsyncSessionTransaction] = None
+        self.__session: Optional[AsyncSession] = None
+        self.__transaction: Optional[AsyncSessionTransaction] = None
 
     async def __aenter__(self) -> AsyncSession:
-        self.session = self.__session_factory()
-        self.transaction = await self.session.begin()
-        log.info(f"Session [{id(self.session)}] started.")
-        return self.session
+        self.__session = self.__session_factory()
+        self.__transaction = await self.__session.begin()
+        log.info(f"Session [{id(self.__session)}] started.")
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         try:
-            if self.session is None:
-                raise TransactionException("Session not initialized.")
             if exc_type is not None:
+                log.error(
+                    f"Exception occurred in session [{id(self.__session)}]: {exc_type.__name__}: {exc_val}"
+                )
                 log.warning(
-                    f"Rolling back transaction for session [{id(self.session)}]."
+                    f"Rolling back transaction for session [{id(self.__session)}]."
                 )
-                await self.transaction.rollback()
-                log.debug(
-                    f"Rollback complete for session [{id(self.session)}]."
-                )
+                try:
+                    await self.__transaction.rollback()
+                except Exception:
+                    log.exception("Rollback failed.")
             else:
                 try:
-                    await self.transaction.commit()
+                    await self.__transaction.commit()
                     log.info(
-                        f"Commit successful for session [{id(self.session)}]."
+                        f"Commit successful for session [{id(self.__session)}]."
                     )
-                except Exception as commit_error:
-                    log.exception(f"Commit failed.")
-                    await self.session.rollback()
-                    raise TransactionException()
+                except Exception as e:
+                    log.exception("Commit failed.")
+                    try:
+                        await self.__transaction.rollback()
+                    except Exception:
+                        log.exception("Rollback after commit failure failed.")
+                    raise TransactionException("Commit failed") from e
         finally:
-            log.info(f"Session [{id(self.session)}] is closed.")
-            await self.session.close()
+            try:
+                await self.__session.close()
+                log.info(f"Session [{id(self.__session)}] closed.")
+            except Exception:
+                log.exception(
+                    f"Failed to close session [{id(self.__session)}]."
+                )
+            self.__session = None
+            self.__transaction = None
 
 
 class RedisPoolManagerImpl:
