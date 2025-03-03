@@ -1,8 +1,7 @@
 import os
 from pathlib import Path
-from typing import Annotated, Dict
+from typing import Dict
 
-from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy import URL
 

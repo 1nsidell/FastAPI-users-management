@@ -31,7 +31,10 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         self: Self,
         user_id: int,
     ) -> SInfoUser:
-        user = await self.redis_users_cache.get(user_id)
+        try:
+            user = await self.redis_users_cache.get(user_id)
+        except RedisCacheDBException:
+            log.warning("Cache operation failed.", exc_info=True)
         if user:
             return user
         async with self.uow as session:
