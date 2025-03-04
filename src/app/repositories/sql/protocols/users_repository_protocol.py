@@ -81,7 +81,7 @@ class UsersSQLRepositoryProtocol(Protocol):
         self: Self,
         session: AsyncSession,
         nickname: str,
-    ) -> Optional[RowMapping]:
+    ) -> bool:
         """Check if a user with the given nickname exists.
 
         Args:
@@ -89,6 +89,6 @@ class UsersSQLRepositoryProtocol(Protocol):
             nickname (str): nickname to check.
 
         Returns:
-            Optional[RowMapping]: RowMapping if user exists, None otherwise.
+            bool: True if user exists, False otherwise.
         """
         ...

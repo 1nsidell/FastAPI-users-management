@@ -4,7 +4,7 @@ from functools import wraps
 from redis.exceptions import RedisError
 from sqlalchemy.exc import SQLAlchemyError
 
-from src.app.exceptions import RedisCacheDBException, RepositoryException
+from src.app.exceptions import RedisCacheDBException, SQLRepositoryException
 
 
 log = logging.getLogger("repositories")
@@ -37,7 +37,7 @@ def handle_repository_exceptions(
 
 
 handle_sql_exceptions = handle_repository_exceptions(
-    SQLAlchemyError, RepositoryException, "SQL Database error"
+    SQLAlchemyError, SQLRepositoryException, "SQL Database error"
 )
 handle_redis_exceptions = handle_repository_exceptions(
     RedisError, RedisCacheDBException, "Redis error"

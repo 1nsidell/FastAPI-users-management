@@ -1,6 +1,6 @@
 from fastapi import APIRouter
 
-from src.api.health_check import router as healthcheck_router
+from api.health_check.healthcheck import healthcheck_router
 from src.api.v1.router import v1_router
 from src.settings import settings
 

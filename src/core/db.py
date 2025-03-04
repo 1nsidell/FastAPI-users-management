@@ -29,7 +29,7 @@ class DatabaseHelperProtocol(Protocol):
     max_overflow: int
 
     engine: Optional[AsyncEngine]
-    async_session_factory: Optional[async_sessionmaker[AsyncSession]]
+    async_session_factory: async_sessionmaker[AsyncSession]
 
     @abstractmethod
     async def startup(self: Self) -> None: ...
@@ -55,7 +55,7 @@ class DatabaseHelperImpl(DatabaseHelperProtocol):
 
         self.engine: Optional[AsyncEngine] = None
 
-    async def startup(self: Self):
+    async def startup(self: Self) -> None:
         self.engine: AsyncEngine = create_async_engine(
             url=self.url,
             echo=self.echo,
@@ -149,7 +149,7 @@ class RedisPoolManagerImpl:
         self.pool: Optional[redis.ConnectionPool] = None
         self.redis: Optional[redis.Redis] = None
 
-    async def startup(self: Self):
+    async def startup(self: Self) -> None:
         self.pool = redis.ConnectionPool.from_url(
             self.settings.redis.users_cache_url,
             decode_responses=True,
@@ -158,7 +158,7 @@ class RedisPoolManagerImpl:
         self.redis = redis.Redis(connection_pool=self.pool)
         log.info(f"Redis instance [{id(self.redis)}] is created.")
 
-    async def shutdown(self: Self):
+    async def shutdown(self: Self) -> None:
         if self.redis:
             await self.redis.aclose()
             log.info(f"Redis instance [{id(self.redis)}] is close.")

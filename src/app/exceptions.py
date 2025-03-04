@@ -19,7 +19,15 @@ class CustomDBException(BaseCustomInfrastructureException):
     message: str
 
 
-class RepositoryException(CustomDBException):
+class RedisDBException(CustomDBException):
+    """Redis working error."""
+
+    error_type: str
+    status_code: int
+    message: str
+
+
+class SQLRepositoryException(CustomDBException):
     """SQL repository working error."""
 
     error_type = "SQL_REPOSITORY_ERROR"
@@ -30,12 +38,15 @@ class RepositoryException(CustomDBException):
         super().__init__(self.message)
 
 
-class RedisDBException(CustomDBException):
-    """Redis working error."""
+class SQLRepositoryHealthException(CustomDBException):
+    """SQL repository connection error."""
 
-    error_type: str
-    status_code: int
-    message: str
+    error_type = "SQL_REPOSITORY_ERROR"
+    status_code = 500
+
+    def __init__(self, message: Optional[str] = None):
+        self.message = message or self.__doc__
+        super().__init__(self.message)
 
 
 class RedisCacheDBException(CustomDBException):
@@ -43,6 +54,17 @@ class RedisCacheDBException(CustomDBException):
 
     error_type = "REDIS_ERROR"
     status_code = 202
+
+    def __init__(self, message: Optional[str] = None):
+        self.message = message or self.__doc__
+        super().__init__(self.message)
+
+
+class RedisHealthException(CustomDBException):
+    """Redis connection error."""
+
+    error_type = "REDIS_ERROR"
+    status_code = 500
 
     def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__

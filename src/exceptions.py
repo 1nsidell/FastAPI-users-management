@@ -17,7 +17,7 @@ def custom_infrastructure_exception_handler(
 ) -> Response:
     """Creating a custom error handler"""
     error_data = {"error_type": exc.error_type, "message": exc.message}
-    log.exception(
+    log.error(
         "[CustomInfrastructureException] %s | Path: %s", error_data, request.url
     )
     return JSONResponse(content=error_data, status_code=exc.status_code)

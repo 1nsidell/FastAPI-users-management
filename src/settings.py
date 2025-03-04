@@ -19,6 +19,8 @@ class RunConfig(BaseModel):
 
 class ApiPrefix(BaseModel):
     healthcheck: str = "/healthcheck"
+    liveness: str = "/liveness"
+    readiness: str = "/readiness"
     prefix: str = "/api/users-management"
     v1_prefix: str = "/v1"
     users: str = "/users"
