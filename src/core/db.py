@@ -109,7 +109,7 @@ class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
         try:
             if exc_type is not None:
                 log.error(
-                    f"Exception occurred in session [{id(self.__session)}]: {exc_type.__name__}: {exc_val}"
+                    f"Exception occurred in session [{id(self.__session)}]: {exc_type.__name__}: {exc_val}."
                 )
                 log.warning(
                     f"Rolling back transaction for session [{id(self.__session)}]."

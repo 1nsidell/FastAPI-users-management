@@ -21,7 +21,22 @@ class UsersManagementUseCaseProtocol(Protocol):
             user_id (int): argument to search for user data
 
         Returns:
-            SUser: user model.
+            SInfoUser: user model.
+        """
+        ...
+
+    @abstractmethod
+    async def get_list_users_by_id(
+        self: Self,
+        users_id: list[int],
+    ) -> list[SInfoUser]:
+        """Get information about the users.
+
+        Args:
+            user_id (list[int]): arguments to search for users data
+
+        Returns:
+            SInfoUser: list of users model.
         """
         ...
 

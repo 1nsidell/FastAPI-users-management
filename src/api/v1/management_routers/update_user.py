@@ -11,14 +11,14 @@ class UserInfo:
     def __init__(self):
         self.router = APIRouter()
         self.router.add_api_route(
-            settings.api.user,
-            self.create_user,
+            settings.api.users,
+            self.update_user,
             methods=["PATCH"],
             response_model=SSuccessfulRequest,
             status_code=200,
         )
 
-    async def create_user(
+    async def update_user(
         self,
         APIAccessProvider: APIAccessProvider,
         UsersUseCase: UsersUseCase,

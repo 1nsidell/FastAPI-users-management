@@ -21,6 +21,11 @@ class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
         user = await self.users_service.get_user_by_id(user_id)
         return user
 
+    async def get_list_users_by_id(
+        self: Self,
+        users_id: list[int],
+    ) -> list[SInfoUser]: ...
+
     async def create_user(
         self: Self,
         data: SAddInfoUser,

@@ -9,7 +9,7 @@ class UserInfo:
     def __init__(self):
         self.router = APIRouter()
         self.router.add_api_route(
-            settings.api.user,
+            settings.api.users,
             self.create_user,
             methods=["POST"],
             response_model=SSuccessfulRequest,

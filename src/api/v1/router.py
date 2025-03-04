@@ -14,8 +14,8 @@ v1_router = APIRouter(
 )
 
 v1_sub_routers = (
-    create_user_router,
     get_user_router,
+    create_user_router,
     update_user_router,
     delete_user_router,
 )

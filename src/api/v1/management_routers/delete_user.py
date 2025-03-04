@@ -8,14 +8,14 @@ class UserInfo:
     def __init__(self):
         self.router = APIRouter()
         self.router.add_api_route(
-            settings.api.user,
-            self.create_user,
+            settings.api.users,
+            self.delete_user,
             methods=["DELETE"],
             response_model=None,
             status_code=204,
         )
 
-    async def create_user(
+    async def delete_user(
         self,
         APIAccessProvider: APIAccessProvider,
         UsersUseCase: UsersUseCase,
