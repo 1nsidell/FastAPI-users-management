@@ -103,6 +103,7 @@ class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
         self.__session = self.__session_factory()
         self.__transaction = await self.__session.begin()
         log.info(f"Session [{id(self.__session)}] started.")
+        return self.__session
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         try:
