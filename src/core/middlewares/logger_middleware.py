@@ -10,8 +10,13 @@ from starlette.middleware.base import BaseHTTPMiddleware
 log = logging.getLogger("request")
 
 
-def log_info(method: str, endpoint: str, status_code: int, client_ip: str):
-    request_id = uuid.uuid4()
+def log_info(
+    request_id: str,
+    method: str,
+    endpoint: str,
+    status_code: int,
+    client_ip: str,
+):
     log.info(
         "Request ID: %s. Method: %s. Endpoint: %s. Status: %s. Client IP: %s",
         request_id,
@@ -32,6 +37,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
 
         task = BackgroundTask(
             log_info,
+            request.headers.get("X-Request-ID"),
             method,
             endpoint,
             response.status_code,

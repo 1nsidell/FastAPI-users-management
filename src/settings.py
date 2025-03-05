@@ -73,6 +73,7 @@ class RedisConfig(BaseModel):
 
 
 class Settings:
+    mode: bool = str(os.getenv("MODE"))
     api_key: str = os.getenv("API_KEY")
     run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
