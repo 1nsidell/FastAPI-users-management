@@ -1,7 +1,7 @@
 import logging
 from typing import Any, Dict, Self
 
-from core.db import SQLRepositoryUOWProtocol
+from src.core.db import SQLRepositoryUOWProtocol
 from src.app.exceptions import RedisCacheDBException
 from src.app.repositories import (
     CacheRepositoryProtocol,
