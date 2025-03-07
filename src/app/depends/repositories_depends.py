@@ -2,15 +2,15 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from src.app.repositories.sql.impls.users_repository import (
-    UsersSQLRepositoryImpl,
+from src.app.repositories import (
+    CacheRepositoryProtocol,
+    UsersSQLRepositoryProtocol,
 )
 from src.app.repositories.redis.impls.users_cache_repository import (
     RedisUsersCacheImpl,
 )
-from src.app.repositories import (
-    UsersSQLRepositoryProtocol,
-    CacheRepositoryProtocol,
+from src.app.repositories.sql.impls.users_repository import (
+    UsersSQLRepositoryImpl,
 )
 from src.core import SettingsService, UsersRedisPool
 

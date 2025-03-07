@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Header, Path
+
 from src.app.depends import APIAccessProvider, UsersUseCase
 from src.app.schemas.users import SInfoUser
 from src.settings import settings

@@ -5,13 +5,13 @@ Service protocol responsible for user management.
 from abc import abstractmethod
 from typing import Any, Dict, Protocol, Self
 
+from src.app.repositories import (
+    CacheRepositoryProtocol,
+    UsersSQLRepositoryProtocol,
+)
 from src.app.schemas.users import SInfoUser
 from src.core.db import SQLRepositoryUOWProtocol
 from src.core.schemas import SAddInfoUser
-from src.app.repositories import (
-    UsersSQLRepositoryProtocol,
-    CacheRepositoryProtocol,
-)
 
 
 class UsersManagementServiceProtocol(Protocol):
@@ -23,15 +23,15 @@ class UsersManagementServiceProtocol(Protocol):
     @abstractmethod
     async def get_user_by_id(
         self: Self,
-        data: Any,
+        user_id: int,
     ) -> SInfoUser:
         """Get information about the user.
 
         Args:
-            user_id (int): argument to search for user data
+            user_id (int): ID to search for user data
 
         Returns:
-            SUser: user model.
+            SInfoUser: user model.
         """
         ...
 

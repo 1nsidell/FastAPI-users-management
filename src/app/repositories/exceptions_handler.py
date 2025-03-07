@@ -6,8 +6,7 @@ from sqlalchemy.exc import SQLAlchemyError
 
 from src.app.exceptions import RedisCacheDBException, SQLRepositoryException
 
-
-log = logging.getLogger("repositories")
+log = logging.getLogger("exception_handler")
 
 
 def handle_repository_exceptions(

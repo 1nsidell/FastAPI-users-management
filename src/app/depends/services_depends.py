@@ -2,12 +2,12 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from src.core import UoW
-from src.app.services import UsersManagementServiceProtocol
 from src.app.depends.repositories_depends import (
-    UsersSQLRepository,
     RedisUsersCacheRepository,
+    UsersSQLRepository,
 )
+from src.app.services import UsersManagementServiceProtocol
+from src.core import UoW
 
 from ..services.impls.users_management_service import UsersManagementServiceImpl
 

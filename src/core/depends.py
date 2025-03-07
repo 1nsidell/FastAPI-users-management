@@ -2,17 +2,15 @@
 
 from typing import Annotated
 
-from fastapi import Depends
 import redis.asyncio as redis
-
-
+from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker
 
 from src.core import DatabaseHelperProtocol, SQLRepositoryUOWProtocol
 from src.core.db import (
     DatabaseHelperImpl,
-    SQLRepositoryUOWImpl,
     RedisPoolManagerImpl,
+    SQLRepositoryUOWImpl,
 )
 from src.settings import Settings, get_settings, settings
 

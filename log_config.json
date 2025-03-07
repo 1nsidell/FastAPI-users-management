@@ -13,7 +13,7 @@
                 "message": "message",
                 "asctime": "asctime",
                 "module": "module",
-                "lineno": "lineno",
+                "line": "line",
                 "name": "name"
             },
             "time_format": "%Y-%m-%dT%H:%M:%S",
@@ -32,23 +32,13 @@
             "filename": "logs/app.log",
             "formatter": "json",
             "level": "DEBUG",
-            "maxBytes": 10485760,
+            "maxBytes": 104857600,
             "backupCount": 40,
             "encoding": "utf8"
         }
     },
     "loggers": {
-        "dependencies": {
-            "level": "DEBUG",
-            "handlers": ["file", "console"],
-            "propagate": false
-        },
         "app": {
-            "level": "DEBUG",
-            "handlers": ["file", "console"],
-            "propagate": false
-        },
-        "request": {
             "level": "DEBUG",
             "handlers": ["file", "console"],
             "propagate": false
@@ -58,8 +48,8 @@
             "handlers": ["file", "console"],
             "propagate": false
         },
-        "repositories": {
-            "level": "DEBUG",
+        "requests": {
+            "level": "INFO",
             "handlers": ["file", "console"],
             "propagate": false
         }

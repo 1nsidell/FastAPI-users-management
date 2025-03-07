@@ -1,12 +1,12 @@
 from fastapi import APIRouter
 from sqlalchemy.future import select
 
-from src.core.schemas import SSuccessfulRequest
 from src.app.exceptions import (
     RedisHealthException,
     SQLRepositoryHealthException,
 )
-from src.core.depends import RedisPoolManager, DBHelper
+from src.core.depends import DBHelper, RedisPoolManager
+from src.core.schemas import SSuccessfulRequest
 from src.settings import settings
 
 

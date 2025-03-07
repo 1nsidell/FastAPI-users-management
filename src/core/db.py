@@ -1,8 +1,8 @@
 """Module somehow related to connection to repositories."""
 
 import logging
-from typing import Callable, Optional, Protocol, Self
 from abc import abstractmethod
+from typing import Callable, Optional, Protocol, Self
 
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import (
@@ -16,7 +16,7 @@ from sqlalchemy.ext.asyncio import (
 from src.app.exceptions import TransactionException
 from src.settings import Settings
 
-log = logging.getLogger("repositories")
+log = logging.getLogger("app")
 
 
 class DatabaseHelperProtocol(Protocol):

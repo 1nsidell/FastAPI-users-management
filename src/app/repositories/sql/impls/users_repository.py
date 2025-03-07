@@ -4,9 +4,9 @@ that must be defined for the application to work
 """
 
 import logging
-from typing import Any, Dict, Optional, Self
+from typing import Any, Dict, Self
 
-from sqlalchemy import RowMapping, delete, insert, select, update
+from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.models import InfoUser, Role
@@ -17,7 +17,7 @@ from src.app.repositories import (
 from src.app.schemas.users import SInfoUser
 from src.core.schemas import SAddInfoUser
 
-log = logging.getLogger("repositories")
+log = logging.getLogger("app")
 
 
 class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
@@ -25,12 +25,12 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     ROLE_MODEL = Role
 
     @handle_sql_exceptions
-    async def get_user_by_id(
+    async def get_user(
         self: Self,
         session: AsyncSession,
-        user_id: int,
+        **filter_by: Any,
     ) -> SInfoUser:
-        log.info("Request user information with ID: %s.", user_id)
+        log.info("Request user information with filter: %s.", filter_by)
         stmt = (
             select(
                 self.USER_INFO_MODEL.user_id,
@@ -40,7 +40,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
                 self.USER_INFO_MODEL.avatar,
                 self.ROLE_MODEL.role,
             )
-            .where(self.USER_INFO_MODEL.user_id == user_id)
+            .filter_by(**filter_by)
             .join(
                 self.ROLE_MODEL,
                 self.ROLE_MODEL.role_id == self.USER_INFO_MODEL.role_id,
@@ -49,9 +49,9 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         result = await session.execute(stmt)
         user = result.mappings().one_or_none()
         if not user:
-            log.info("User not found with ID: %s.", user_id)
+            log.info("User not found with filter: %s.", filter_by)
             return None
-        log.info("User information found with ID: %s.", user_id)
+        log.info("User information found with filter: %s.", filter_by)
         return SInfoUser.model_validate(user, from_attributes=True)
 
     @handle_sql_exceptions
@@ -108,16 +108,3 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         )
         await session.execute(stmt)
         log.info("Successful deletion user with ID: %s.", user_id)
-
-    @handle_sql_exceptions
-    async def user_exists(
-        self,
-        session: AsyncSession,
-        nickname: str,
-    ) -> bool:
-        log.info("Check if there is a user with a nickname: %s.")
-        stmt = select(self.USER_INFO_MODEL).where(
-            self.USER_INFO_MODEL.nickname == nickname
-        )
-        result = await session.execute(stmt)
-        return result.mappings().one_or_none() is not None

@@ -4,9 +4,8 @@ that must be defined for the application to work
 """
 
 from abc import abstractmethod
-from typing import Any, Dict, Optional, Protocol, Self
+from typing import Any, Dict, Protocol, Self
 
-from sqlalchemy import RowMapping
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from src.app.schemas.users import SInfoUser
@@ -16,16 +15,16 @@ from src.core.schemas import SAddInfoUser
 class UsersSQLRepositoryProtocol(Protocol):
 
     @abstractmethod
-    async def get_user_by_id(
+    async def get_user(
         self: Self,
         session: AsyncSession,
-        user_id: int,
+        **filter_by: Any,
     ) -> SInfoUser:
         """Get information about the user.
 
         Args:
             session (AsyncSession): transaction session.
-            user_id (int): argument to search for user data
+            **filter_by (Any): argument to search for user data
 
         Returns:
             SUser: user model.
@@ -73,22 +72,5 @@ class UsersSQLRepositoryProtocol(Protocol):
         Args:
             session (AsyncSession): transaction session.
             user_id (int): user id.
-        """
-        ...
-
-    @abstractmethod
-    async def user_exists(
-        self: Self,
-        session: AsyncSession,
-        nickname: str,
-    ) -> bool:
-        """Check if a user with the given nickname exists.
-
-        Args:
-            session (AsyncSession): transaction session.
-            nickname (str): nickname to check.
-
-        Returns:
-            bool: True if user exists, False otherwise.
         """
         ...

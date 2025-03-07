@@ -2,6 +2,7 @@
 
 import logging
 from typing import Union
+
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
@@ -28,7 +29,7 @@ def structured_exception_handler(
         error_data,
     )
     return JSONResponse(
-        content=error_data, status_code=error_data["error_code"]
+        content=error_data, status_code=getattr(exc, "status_code", 500)
     )
 
 
