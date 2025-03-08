@@ -1,0 +1,16 @@
+services:
+  app:
+    container_name: FastAPI-users-management
+    restart: unless-stopped
+    build: ./
+    ports:
+      - ${APP_HOST_PORT}:8000
+    networks:
+      - fastapi_net
+    env_file:
+      - .env
+
+networks:
+  fastapi_net:
+    external: true
+    name: FastAPI_app
