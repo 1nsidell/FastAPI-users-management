@@ -3,9 +3,9 @@ from sqlalchemy.future import select
 
 from src.app.exceptions import (
     RedisHealthException,
-    SQLRepositoryHealthException,
+    SQLRepositoryException,
 )
-from src.core.depends import DBHelper, RedisPoolManager
+from src.core.depends import DBHelper, RedisManager
 from src.core.schemas import SSuccessfulRequest
 from src.settings import settings
 
@@ -25,7 +25,7 @@ class Readiness:
         self,
     ) -> SSuccessfulRequest:
         try:
-            pong = await RedisPoolManager.redis.ping()
+            pong = await RedisManager.redis.ping()
             if pong is not True:
                 raise RedisHealthException("Redis ping failed.")
         except Exception as e:
@@ -35,9 +35,7 @@ class Readiness:
             async with DBHelper.async_session_factory() as session:
                 await session.execute(select(1))
         except Exception as e:
-            raise SQLRepositoryHealthException(
-                f"SQL connectivity error: {e}"
-            ) from e
+            raise SQLRepositoryException(f"SQL connectivity error: {e}") from e
 
         return SSuccessfulRequest()
 

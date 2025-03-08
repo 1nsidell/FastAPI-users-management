@@ -1,8 +1,7 @@
 """Module somehow related to connection to repositories."""
 
 import logging
-from abc import abstractmethod
-from typing import Callable, Optional, Protocol, Self
+from typing import Callable, Optional, Self
 
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import (
@@ -19,26 +18,9 @@ from src.settings import Settings
 log = logging.getLogger("app")
 
 
-class DatabaseHelperProtocol(Protocol):
+class SQLDatabaseHelper:
     """Class helping to async connect to SQL database."""
 
-    url: str
-    echo: bool
-    echo_pool: bool
-    pool_size: int
-    max_overflow: int
-
-    engine: Optional[AsyncEngine]
-    async_session_factory: async_sessionmaker[AsyncSession]
-
-    @abstractmethod
-    async def startup(self: Self) -> None: ...
-
-    @abstractmethod
-    async def shutdown(self: Self) -> None: ...
-
-
-class DatabaseHelperImpl(DatabaseHelperProtocol):
     def __init__(
         self,
         url: str,
@@ -82,21 +64,16 @@ class DatabaseHelperImpl(DatabaseHelperProtocol):
             log.info("Releasing database resources.")
 
 
-class SQLRepositoryUOWProtocol(Protocol):
-    """UOW for working with SQL database transactions."""
+class SQLRepositoryUOW:
+    """Unit of Work for async SQL transactions."""
 
-    __session_factory: Callable[[], AsyncSession]
-    __session: Optional[AsyncSession]
-    __transaction: Optional[AsyncSessionTransaction]
-
-    async def __aenter__(self: Self) -> AsyncSession: ...
-
-    async def __aexit__(self, exc_type, exc_val, exc_tb) -> None: ...
-
-
-class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
     def __init__(self, session_factory: Callable[[], AsyncSession]):
-        self.__session_factory: Callable[[], AsyncSession] = session_factory
+        """Initialize UoW with a session factory.
+
+        Args:
+            session_factory: Callable that returns an AsyncSession instance.
+        """
+        self.__session_factory = session_factory
         self.__session: Optional[AsyncSession] = None
         self.__transaction: Optional[AsyncSessionTransaction] = None
 
@@ -122,7 +99,7 @@ class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
             else:
                 try:
                     await self.__transaction.commit()
-                    log.info(
+                    log.debug(
                         f"Commit successful for session [{id(self.__session)}]."
                     )
                 except Exception as e:
@@ -144,7 +121,7 @@ class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
             self.__transaction = None
 
 
-class RedisPoolManagerImpl:
+class RedisConnectionManager:
     def __init__(self: Self, settings: Settings):
         self.settings: Settings = settings
         self.pool: Optional[redis.ConnectionPool] = None

@@ -1,15 +1,18 @@
 import logging
 from typing import Any, Dict, Self
 
-from src.core.db import SQLRepositoryUOWProtocol
-from src.app.exceptions import RedisCacheDBException
+from src.app.exceptions import (
+    RedisCacheDBException,
+    UserAlreadyExistException,
+    UserNotFoundException,
+)
 from src.app.repositories import (
     CacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
 from src.app.schemas.users import SInfoUser
 from src.app.services import UsersManagementServiceProtocol
-from src.core.exceptions import UserAlreadyExistException, UserNotFoundException
+from src.core.db import SQLRepositoryUOW
 from src.core.schemas import SAddInfoUser
 
 log = logging.getLogger("app")
@@ -21,7 +24,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         self,
         users_sql_repository: UsersSQLRepositoryProtocol,
         redis_users_cache: CacheRepositoryProtocol,
-        uow: SQLRepositoryUOWProtocol,
+        uow: SQLRepositoryUOW,
     ):
         self.users_sql_repository = users_sql_repository
         self.redis_users_cache = redis_users_cache

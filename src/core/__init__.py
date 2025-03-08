@@ -1,10 +1,6 @@
-from src.core.db import (
-    DatabaseHelperProtocol as DatabaseHelperProtocol,
-    SQLRepositoryUOWProtocol as SQLRepositoryUOWProtocol,
-)
-from src.core.depends import (
-    UoW as UoW,
-    UsersRedisPool as UsersRedisPool,
-    SettingsService as SettingsService,
-    RedisPoolManager as RedisPoolManager,
-)
+from src.core.db import RedisConnectionManager as RedisConnectionManager
+from src.core.db import SQLDatabaseHelper as SQLDatabaseHelper
+from src.core.db import SQLRepositoryUOW as SQLRepositoryUOW
+from src.core.depends import SettingsService as SettingsService
+from src.core.depends import UoW as UoW
+from src.core.depends import UsersRedisPool as UsersRedisPool

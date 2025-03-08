@@ -1,13 +1,11 @@
 """Error Handler Module."""
 
 import logging
-from typing import Union
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
-from src.app.exceptions import BaseCustomInfrastructureException
-from src.core.exceptions import BaseCustomDomainException
+from src.core.exceptions import BaseCustomException
 from src.settings import settings
 
 log = logging.getLogger("exception_handler")
@@ -15,7 +13,7 @@ log = logging.getLogger("exception_handler")
 
 def structured_exception_handler(
     request: Request,
-    exc: Union[BaseCustomInfrastructureException, BaseCustomDomainException],
+    exc: BaseCustomException,
 ) -> JSONResponse:
     """Custom exception handler."""
     error_data = {
@@ -55,12 +53,7 @@ def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
 def apply_exceptions_handlers(app: FastAPI) -> FastAPI:
     """Registration of error handlers."""
 
-    app.add_exception_handler(
-        BaseCustomInfrastructureException, structured_exception_handler
-    )
-    app.add_exception_handler(
-        BaseCustomDomainException, structured_exception_handler
-    )
+    app.add_exception_handler(BaseCustomException, structured_exception_handler)
     app.add_exception_handler(Exception, general_exception_handler)
 
     return app
