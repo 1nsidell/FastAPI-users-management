@@ -2,7 +2,7 @@ import logging
 from typing import Self
 
 from src.app.providers import APIAccessProviderProtocol
-from src.core.exceptions import CustomAccessDeniedException
+from src.app.exceptions import CustomAccessDeniedException
 
 log = logging.getLogger("app")
 

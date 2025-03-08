@@ -10,7 +10,7 @@ from src.app.repositories import (
     UsersSQLRepositoryProtocol,
 )
 from src.app.schemas.users import SInfoUser
-from src.core.db import SQLRepositoryUOWProtocol
+from src.core.db import SQLRepositoryUOW
 from src.core.schemas import SAddInfoUser
 
 
@@ -18,7 +18,7 @@ class UsersManagementServiceProtocol(Protocol):
 
     users_sql_repository: UsersSQLRepositoryProtocol
     redis_users_cache: CacheRepositoryProtocol
-    uow: SQLRepositoryUOWProtocol
+    uow: SQLRepositoryUOW
 
     @abstractmethod
     async def get_user_by_id(
