@@ -85,8 +85,9 @@ class DatabaseHelperImpl(DatabaseHelperProtocol):
 class SQLRepositoryUOWProtocol(Protocol):
     """UOW for working with SQL database transactions."""
 
-    session: Optional[AsyncSession]
-    transaction: Optional[AsyncSessionTransaction]
+    __session_factory: Callable[[], AsyncSession]
+    __session: Optional[AsyncSession]
+    __transaction: Optional[AsyncSessionTransaction]
 
     async def __aenter__(self: Self) -> AsyncSession: ...
 
@@ -94,7 +95,7 @@ class SQLRepositoryUOWProtocol(Protocol):
 
 
 class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
-    def __init__(self, session_factory: async_sessionmaker[AsyncSession]):
+    def __init__(self, session_factory: Callable[[], AsyncSession]):
         self.__session_factory: Callable[[], AsyncSession] = session_factory
         self.__session: Optional[AsyncSession] = None
         self.__transaction: Optional[AsyncSessionTransaction] = None
@@ -130,7 +131,7 @@ class SQLRepositoryUOWImpl(SQLRepositoryUOWProtocol):
                         await self.__transaction.rollback()
                     except Exception:
                         log.exception("Rollback after commit failure failed.")
-                    raise TransactionException("Commit failed") from e
+                    raise TransactionException(e) from e
         finally:
             try:
                 await self.__session.close()

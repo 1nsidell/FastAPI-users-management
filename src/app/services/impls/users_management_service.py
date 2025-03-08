@@ -76,6 +76,8 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         data: Dict[str, Any],
     ) -> None:
         async with self.uow as session:
+            if not await self.users_sql_repository.get_user(session, user_id):
+                raise UserNotFoundException()
             await self.users_sql_repository.update_user(session, user_id, data)
             user = await self.users_sql_repository.get_user(
                 session, user_id=user_id

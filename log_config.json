@@ -13,7 +13,7 @@
                 "message": "message",
                 "asctime": "asctime",
                 "module": "module",
-                "line": "line",
+                "line": "lineno",
                 "name": "name"
             },
             "time_format": "%Y-%m-%dT%H:%M:%S",
@@ -39,17 +39,17 @@
     },
     "loggers": {
         "app": {
-            "level": "DEBUG",
+            "level": "WARNING",
             "handlers": ["file", "console"],
             "propagate": false
         },
         "exception_handler": {
-            "level": "DEBUG",
+            "level": "WARNING",
             "handlers": ["file", "console"],
             "propagate": false
         },
         "requests": {
-            "level": "INFO",
+            "level": "WARNING",
             "handlers": ["file", "console"],
             "propagate": false
         }

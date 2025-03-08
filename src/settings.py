@@ -12,11 +12,6 @@ class Paths:
     PATH_TO_BASE_FOLDER = Path(__file__).parent.parent
 
 
-class RunConfig(BaseModel):
-    host: str = "127.0.0.1"
-    port: int = 8002
-
-
 class ApiPrefix(BaseModel):
     prefix: str = "/api/users-management"
     healthcheck: str = "/healthcheck"
@@ -75,7 +70,6 @@ class RedisConfig(BaseModel):
 class Settings:
     mode: bool = str(os.getenv("MODE"))
     api_key: str = os.getenv("API_KEY")
-    run: RunConfig = RunConfig()
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig = DatabaseConfig()
     redis: RedisConfig = RedisConfig()

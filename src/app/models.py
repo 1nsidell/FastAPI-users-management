@@ -14,7 +14,7 @@ class InfoUser(Base, CreatedTimestampMixin, UpdatedTimestampMixin):
 
     user_id: Mapped[int] = mapped_column(primary_key=True)
     role_id: Mapped[int] = mapped_column(
-        ForeignKey("roles.role_id", ondelete="SET NULL"),
+        ForeignKey("roles.role_id", ondelete="SET DEFAULT"),
         nullable=False,
         default=1,
     )
