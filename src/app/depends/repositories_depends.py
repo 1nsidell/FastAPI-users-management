@@ -13,7 +13,7 @@ from src.app.repositories import (
 from src.app.repositories.impls.users_cache_repository import (
     UsersCacheRepositoryImpl,
 )
-from app.repositories.impls.users_sql_repository import (
+from src.app.repositories.impls.users_sql_repository import (
     UsersSQLRepositoryImpl,
 )
 from src.core import SettingsService, UsersRedisPool
