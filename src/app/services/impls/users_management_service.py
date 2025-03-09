@@ -6,10 +6,10 @@ import logging
 from typing import Any, Dict, Self
 
 from src.app.exceptions import (
+    DataNotTransmitted,
     RedisCacheDBException,
     UserAlreadyExistException,
     UserNotFoundException,
-    DataNotTransmitted,
 )
 from src.app.repositories import (
     CacheRepositoryProtocol,

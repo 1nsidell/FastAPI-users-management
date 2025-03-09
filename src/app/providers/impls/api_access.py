@@ -3,8 +3,8 @@
 import logging
 from typing import Self
 
-from src.app.providers import APIAccessProviderProtocol
 from src.app.exceptions import CustomAccessDeniedException
+from src.app.providers import APIAccessProviderProtocol
 
 log = logging.getLogger("app")
 

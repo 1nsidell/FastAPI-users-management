@@ -4,7 +4,7 @@ that must be defined for the application to work
 """
 
 import logging
-from typing import Any, Dict, Self
+from typing import Any, Dict, Optional, Self
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -29,7 +29,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         self: Self,
         session: AsyncSession,
         **filter_by: Any,
-    ) -> SInfoUser:
+    ) -> Optional[SInfoUser]:
         log.info("Request user information with filter: %s.", filter_by)
         stmt = (
             select(

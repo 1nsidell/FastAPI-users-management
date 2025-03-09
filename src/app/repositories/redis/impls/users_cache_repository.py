@@ -25,7 +25,7 @@ class RedisUsersCacheImpl(CacheRepositoryProtocol):
         self.settings = settings
 
     @handle_redis_exceptions
-    async def add_user(self: Self, key: str, data: Dict[str, Any]) -> None:
+    async def add_user(self: Self, key: int, data: Dict[str, Any]) -> None:
         log.info("Adding cache by key: %s.", key)
         expiration = int(
             timedelta(
@@ -36,20 +36,20 @@ class RedisUsersCacheImpl(CacheRepositoryProtocol):
         await self.redis.set(key, json_data, ex=expiration)
 
     @handle_redis_exceptions
-    async def get_user(self: Self, key: str) -> Optional[Dict[str, Any]]:
+    async def get_user(self: Self, key: int) -> Optional[Dict[str, Any]]:
         log.info("Searching the cache by key: %s.", key)
         value = await self.redis.get(key)
         return json.loads(value) if value else None
 
     @handle_redis_exceptions
-    async def delete_user(self: Self, key: str) -> None:
+    async def delete_user(self: Self, key: int) -> None:
         log.info("Deleting the cache by key: %s.", key)
         await self.redis.delete(key)
 
     @handle_redis_exceptions
     async def add_list_users(
         self,
-        keys: List[str],
+        keys: List[int],
         data_list: List[Dict],
     ) -> None:
         if len(keys) != len(data_list):
@@ -71,7 +71,7 @@ class RedisUsersCacheImpl(CacheRepositoryProtocol):
         log.info("Cached %d items: %s.", len(keys), keys)
 
     @handle_redis_exceptions
-    async def get_list_users(self, keys: List[str]) -> Optional[List[Dict]]:
+    async def get_list_users(self, keys: List[int]) -> Optional[List[Dict]]:
         values = await self.redis.mget(keys)
 
         if any(v is None for v in values):
@@ -81,6 +81,6 @@ class RedisUsersCacheImpl(CacheRepositoryProtocol):
         return [json.loads(v) for v in values]
 
     @handle_redis_exceptions
-    async def delete_list_users(self, keys: List[str]) -> None:
+    async def delete_list_users(self, keys: List[int]) -> None:
         await self.redis.delete(*keys)
         log.info("Deleted %d items: %s.", len(keys), keys)

@@ -1,7 +1,6 @@
 """Middleware for response/request logging."""
 
 import logging
-import uuid
 
 from fastapi import Request
 from starlette.background import BackgroundTask

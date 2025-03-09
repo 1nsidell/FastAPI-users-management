@@ -3,10 +3,10 @@
 from typing import Optional
 
 from src.core.exceptions import (
+    CustomDataException,
     CustomRepositoriesException,
     CustomSecurityException,
     CustomUsersException,
-    CustomDataException,
 )
 
 

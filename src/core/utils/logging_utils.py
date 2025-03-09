@@ -5,6 +5,7 @@ import logging
 import re
 import time
 from datetime import datetime, timezone
+from typing import Optional, Dict, Any
 
 
 class UTCFormatter(logging.Formatter):  # UTC for logging
@@ -38,7 +39,7 @@ class JsonFormatter(logging.Formatter):
 
     def __init__(
         self,
-        fmt_dict: dict = None,
+        fmt_dict: Optional[Dict[Any, Any]] = None,
         time_format: str = "%Y-%m-%dT%H:%M:%S",
         msec_format: str = "%s.%03dZ",
     ):

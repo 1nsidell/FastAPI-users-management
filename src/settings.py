@@ -29,16 +29,16 @@ class ApiPrefix(BaseModel):
 class DatabaseConfig(BaseModel):
     """Config to connect to SQL database"""
 
-    DRIVER: str = os.getenv("DB_DRIVER")
-    USER: str = os.getenv("DB_USER")
-    PASS: str = os.getenv("DB_PASS")
-    HOST: str = os.getenv("DB_HOST")
-    PORT: int = int(os.getenv("DB_PORT"))
-    NAME: str = os.getenv("DB_NAME")
-    ECHO: bool = bool(int(os.getenv("DB_ECHO")))
-    ECHO_POOL: bool = bool(int(os.getenv("DB_ECHO_POOL")))
-    POOL_SIZE: int = int(os.getenv("DB_POOL_SIZE"))
-    MAX_OVERFLOW: int = int(os.getenv("DB_MAX_OVERFLOW"))
+    DRIVER: str = os.getenv("DB_DRIVER", "postgresql+asyncpg")
+    USER: str = os.getenv("DB_USER", "guest")
+    PASS: str = os.getenv("DB_PASS", "guest")
+    HOST: str = os.getenv("DB_HOST", "localhost")
+    PORT: int = int(os.getenv("DB_PORT", "5432"))
+    NAME: str = os.getenv("DB_NAME", "postgres")
+    ECHO: bool = bool(int(os.getenv("DB_ECHO", "0")))
+    ECHO_POOL: bool = bool(int(os.getenv("DB_ECHO_POOL", "0")))
+    POOL_SIZE: int = int(os.getenv("DB_POOL_SIZE", "5"))
+    MAX_OVERFLOW: int = int(os.getenv("DB_MAX_OVERFLOW", "10"))
 
     @property
     def url(self) -> URL:
@@ -63,13 +63,15 @@ class DatabaseConfig(BaseModel):
 class RedisConfig(BaseModel):
     """Config to connect to Redis database"""
 
-    HOST: str = os.getenv("REDIS_HOST")
-    PORT: int = int(os.getenv("REDIS_PORT"))
-    CACHE_DB: int = int(os.getenv("REDIS_CACHE_DB"))
-    USERNAME: str = os.getenv("REDIS_USERNAME")
-    PASSWORD: str = os.getenv("REDIS_PASSWORD")
+    HOST: str = os.getenv("REDIS_HOST", "loaclhost")
+    PORT: int = int(os.getenv("REDIS_PORT", "6379"))
+    CACHE_DB: int = int(os.getenv("REDIS_CACHE_DB", "0"))
+    USERNAME: str = os.getenv("REDIS_USERNAME", "guest")
+    PASSWORD: str = os.getenv("REDIS_PASSWORD", "guest")
 
-    USERS_CACHE_LIFETIME: int = int(os.getenv("REDIS_USERS_CACHE_LIFETIME"))
+    USERS_CACHE_LIFETIME: int = int(
+        os.getenv("REDIS_USERS_CACHE_LIFETIME", "5")
+    )
 
     @property
     def users_cache_url(self) -> str:
@@ -77,8 +79,8 @@ class RedisConfig(BaseModel):
 
 
 class Settings:
-    mode: bool = str(os.getenv("MODE"))
-    api_key: str = os.getenv("API_KEY")
+    mode: bool = str(os.getenv("MODE", "PROD"))
+    api_key: str = os.getenv("API_KEY", "secret")
     api: ApiPrefix = ApiPrefix()
     db: DatabaseConfig = DatabaseConfig()
     redis: RedisConfig = RedisConfig()
