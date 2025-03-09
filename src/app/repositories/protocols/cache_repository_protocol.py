@@ -8,29 +8,29 @@ from typing import Any, Dict, List, Optional, Protocol, Self
 
 class CacheRepositoryProtocol(Protocol):
     @abstractmethod
-    async def add_user(self: Self, key: int, data: Dict[str, Any]) -> None:
+    async def add_user(self: Self, key: Any, data: Dict[str, Any]) -> None:
         """Add user information to the cache.
         Args:
-            key (int): the key is the user id.
+            key (Any): the key is the user id.
             data (Dict[str, Any]): user information.
         """
         ...
 
     @abstractmethod
-    async def delete_user(self: Self, key: int) -> None:
+    async def delete_user(self: Self, key: Any) -> None:
         """Delete user information from the cache.
 
         Args:
-            key (int): the key is the user id.
+            key (Any): the key is the user id.
         """
         ...
 
     @abstractmethod
-    async def get_user(self: Self, key: int) -> Dict[str, Any]:
+    async def get_user(self: Self, key: Any) -> Dict[str, Any]:
         """Get user information from the cache.
 
         Args:
-            key (int): the key is the user id.
+            key (Any): the key is the user id.
 
         Returns:
             Dict[str, Any]: user information.
@@ -40,12 +40,12 @@ class CacheRepositoryProtocol(Protocol):
     @abstractmethod
     async def add_list_users(
         self,
-        keys: List[int],
+        keys: List[Any],
         data_list: List[Dict],
     ) -> None: ...
 
     @abstractmethod
-    async def get_list_users(self, keys: List[int]) -> Optional[List[Dict]]: ...
+    async def get_list_users(self, keys: List[Any]) -> Optional[List[Dict]]: ...
 
     @abstractmethod
-    async def delete_list_users(self, keys: List[int]) -> None: ...
+    async def delete_list_users(self, keys: List[Any]) -> None: ...

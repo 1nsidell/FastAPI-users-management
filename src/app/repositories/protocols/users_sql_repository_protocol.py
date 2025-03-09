@@ -1,6 +1,6 @@
 """
 A protocol describing the methods and attributes of a repository,
-that must be defined for the application to work
+that must be defined for the application to work.
 """
 
 from abc import abstractmethod

@@ -19,7 +19,7 @@ from src.settings import Settings
 log = logging.getLogger("app")
 
 
-class RedisUsersCacheImpl(CacheRepositoryProtocol):
+class UsersCacheRepositoryImpl(CacheRepositoryProtocol):
     def __init__(self: Self, redis: redis.Redis, settings: Settings) -> None:
         self.redis = redis
         self.settings = settings
