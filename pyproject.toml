@@ -1,7 +1,7 @@
 [project]
-name = "fastapi-user-management"
+name = "fastapi-users-management"
 version = "0.1.0"
-description = "Add your description here"
+description = "a microservice for user information management."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
@@ -10,7 +10,6 @@ dependencies = [
     "asyncpg>=0.30.0",
     "fastapi>=0.115.8",
     "redis>=5.2.1",
-    "setuptools>=75.8.1",
 ]
 
 [tool.black]

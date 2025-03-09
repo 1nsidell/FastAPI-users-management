@@ -98,7 +98,7 @@ wheels = [
 ]
 
 [[package]]
-name = "fastapi-user-management"
+name = "fastapi-users-management"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
@@ -106,7 +106,6 @@ dependencies = [
     { name = "asyncpg" },
     { name = "fastapi" },
     { name = "redis" },
-    { name = "setuptools" },
     { name = "uvicorn" },
 ]
 
@@ -116,7 +115,6 @@ requires-dist = [
     { name = "asyncpg", specifier = ">=0.30.0" },
     { name = "fastapi", specifier = ">=0.115.8" },
     { name = "redis", specifier = ">=5.2.1" },
-    { name = "setuptools", specifier = ">=75.8.1" },
     { name = "uvicorn", specifier = ">=0.34.0" },
 ]
 
@@ -281,15 +279,6 @@ source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/47/da/d283a37303a995cd36f8b92db85135153dc4f7a8e4441aa827721b442cfb/redis-5.2.1.tar.gz", hash = "sha256:16f2e22dff21d5125e8481515e386711a34cbec50f0e44413dd7d9c060a54e0f", size = 4608355 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/3c/5f/fa26b9b2672cbe30e07d9a5bdf39cf16e3b80b42916757c5f92bca88e4ba/redis-5.2.1-py3-none-any.whl", hash = "sha256:ee7e1056b9aea0f04c6c2ed59452947f34c4940ee025f5dd83e6a6418b6989e4", size = 261502 },
-]
-
-[[package]]
-name = "setuptools"
-version = "75.8.1"
-source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/e8/42/0e5f75d734f181367de4acd9aba8f875453a5905169c5485ca8416b015ae/setuptools-75.8.1.tar.gz", hash = "sha256:65fb779a8f28895242923582eadca2337285f0891c2c9e160754df917c3d2530", size = 1343534 }
-wheels = [
-    { url = "https://files.pythonhosted.org/packages/da/bd/ac215d31c2904e47ec5332897442bdc19fd6b21a82068d057152f4e9c1cf/setuptools-75.8.1-py3-none-any.whl", hash = "sha256:3bc32c0b84c643299ca94e77f834730f126efd621de0cc1de64119e0e17dab1f", size = 1228867 },
 ]
 
 [[package]]
