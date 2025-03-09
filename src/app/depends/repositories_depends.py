@@ -10,10 +10,10 @@ from src.app.repositories import (
     CacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
-from src.app.repositories.redis.impls.users_cache_repository import (
+from src.app.repositories.impls.users_cache_repository import (
     RedisUsersCacheImpl,
 )
-from src.app.repositories.sql.impls.users_repository import (
+from src.app.repositories.impls.users_repository import (
     UsersSQLRepositoryImpl,
 )
 from src.core import SettingsService, UsersRedisPool
