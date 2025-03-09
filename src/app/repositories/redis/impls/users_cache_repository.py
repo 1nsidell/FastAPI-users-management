@@ -1,3 +1,7 @@
+"""
+A module that describes an implementation for interacting with cache storage.
+"""
+
 import json
 import logging
 from datetime import timedelta
@@ -21,7 +25,7 @@ class RedisUsersCacheImpl(CacheRepositoryProtocol):
         self.settings = settings
 
     @handle_redis_exceptions
-    async def add_user(self: Self, key: str, data: Dict[Any, Any]) -> None:
+    async def add_user(self: Self, key: str, data: Dict[str, Any]) -> None:
         log.info("Adding cache by key: %s.", key)
         expiration = int(
             timedelta(
@@ -32,7 +36,7 @@ class RedisUsersCacheImpl(CacheRepositoryProtocol):
         await self.redis.set(key, json_data, ex=expiration)
 
     @handle_redis_exceptions
-    async def get_user(self: Self, key: str) -> Optional[Dict[Any, Any]]:
+    async def get_user(self: Self, key: str) -> Optional[Dict[str, Any]]:
         log.info("Searching the cache by key: %s.", key)
         value = await self.redis.get(key)
         return json.loads(value) if value else None

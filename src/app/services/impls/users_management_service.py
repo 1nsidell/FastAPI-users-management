@@ -1,3 +1,7 @@
+"""
+Service implementation responsible for user management.
+"""
+
 import logging
 from typing import Any, Dict, Self
 
@@ -5,6 +9,7 @@ from src.app.exceptions import (
     RedisCacheDBException,
     UserAlreadyExistException,
     UserNotFoundException,
+    DataNotTransmitted,
 )
 from src.app.repositories import (
     CacheRepositoryProtocol,
@@ -57,6 +62,8 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         self: Self,
         data: SAddInfoUser,
     ) -> None:
+        if not data:
+            raise DataNotTransmitted()
         async with self.uow as session:
             if await self.users_sql_repository.get_user(
                 session, nickname=data.nickname
@@ -78,6 +85,8 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         user_id: int,
         data: Dict[str, Any],
     ) -> None:
+        if not data:
+            raise DataNotTransmitted()
         async with self.uow as session:
             if not await self.users_sql_repository.get_user(session, user_id):
                 raise UserNotFoundException()

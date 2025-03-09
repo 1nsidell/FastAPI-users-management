@@ -1,4 +1,6 @@
-"""The basic module for application roots."""
+"""
+Main module for application roots.
+"""
 
 from fastapi import FastAPI
 

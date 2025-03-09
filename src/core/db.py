@@ -1,4 +1,4 @@
-"""Module somehow related to connection to repositories."""
+"""Module related to connection to repositories."""
 
 import logging
 from typing import Callable, Optional, Self
@@ -36,6 +36,7 @@ class SQLDatabaseHelper:
         self.max_overflow = max_overflow
 
         self.engine: Optional[AsyncEngine] = None
+        self.async_session_factory: Optional[async_sessionmaker[AsyncSession]]
 
     async def startup(self: Self) -> None:
         self.engine: AsyncEngine = create_async_engine(
@@ -122,6 +123,8 @@ class SQLRepositoryUOW:
 
 
 class RedisConnectionManager:
+    """A class for getting an instance of the redis pool"""
+
     def __init__(self: Self, settings: Settings):
         self.settings: Settings = settings
         self.pool: Optional[redis.ConnectionPool] = None

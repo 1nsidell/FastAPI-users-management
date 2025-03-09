@@ -1,3 +1,7 @@
+"""
+ioc container for creating use cases.
+"""
+
 from typing import Annotated
 
 from fastapi import Depends

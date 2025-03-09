@@ -1,3 +1,7 @@
+"""
+Module describes the provider protocol for checking incoming requests.
+"""
+
 from abc import abstractmethod
 from typing import Protocol, Self
 

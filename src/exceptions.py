@@ -1,4 +1,6 @@
-"""Error Handler Module."""
+"""
+Exception Handler Module.
+"""
 
 import logging
 

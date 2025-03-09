@@ -1,4 +1,4 @@
-"""Custom exceptions."""
+"""Custom application exceptions."""
 
 from typing import Optional
 
@@ -6,6 +6,7 @@ from src.core.exceptions import (
     CustomRepositoriesException,
     CustomSecurityException,
     CustomUsersException,
+    CustomDataException,
 )
 
 
@@ -80,6 +81,17 @@ class UserAlreadyExistException(CustomUsersException):
 
     error_type: str = "USER_EXIST"
     status_code: int = 409
+
+    def __init__(self, message: Optional[str] = None):
+        self.message = message or self.__doc__
+        super().__init__(self.message)
+
+
+class DataNotTransmitted(CustomDataException):
+    """The data was not transmitted."""
+
+    error_type: str = "MISSING DATA"
+    status_code: int = 400
 
     def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__

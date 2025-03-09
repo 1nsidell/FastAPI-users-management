@@ -1,6 +1,6 @@
-"""Custom base exceptions."""
-
-from typing import Optional
+"""
+Custom base exceptions.
+"""
 
 
 class BaseCustomException(Exception):
@@ -12,7 +12,7 @@ class BaseCustomException(Exception):
 
 
 class CustomRepositoriesException(BaseCustomException):
-    """Base class for all custom exception databases."""
+    """Base class for all custom exceptions databases."""
 
     error_type: str
     status_code: int
@@ -28,7 +28,15 @@ class CustomSecurityException(BaseCustomException):
 
 
 class CustomUsersException(BaseCustomException):
-    """Base class for all user-related errors."""
+    """Base class for all user-related exceptions."""
+
+    error_type: str
+    status_code: int
+    message: str
+
+
+class CustomDataException(BaseCustomException):
+    """Base class for exceptions with data."""
 
     error_type: str
     status_code: int

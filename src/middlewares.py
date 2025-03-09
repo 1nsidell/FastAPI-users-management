@@ -11,7 +11,7 @@ middlewares = [RequestLoggingMiddleware]
 
 def apply_middlewares(app: FastAPI) -> FastAPI:
     """
-    Применяем middleware.
+    Applying middleware.
     """
     for middleware in middlewares:
         app.add_middleware(middleware)

@@ -1,3 +1,7 @@
+"""
+Application config.
+"""
+
 import os
 from pathlib import Path
 from typing import Dict
@@ -6,13 +10,14 @@ from pydantic import BaseModel
 from sqlalchemy import URL
 
 
-# ----------------------------- BaseProjectConfig -----------------------------
 class Paths:
     ROOT_DIR_SRC: Path = Path(__file__).parent
     PATH_TO_BASE_FOLDER = Path(__file__).parent.parent
 
 
 class ApiPrefix(BaseModel):
+    """URL paths."""
+
     prefix: str = "/api/users-management"
     healthcheck: str = "/healthcheck"
     liveness: str = "/liveness"
@@ -22,6 +27,8 @@ class ApiPrefix(BaseModel):
 
 
 class DatabaseConfig(BaseModel):
+    """Config to connect to SQL database"""
+
     DRIVER: str = os.getenv("DB_DRIVER")
     USER: str = os.getenv("DB_USER")
     PASS: str = os.getenv("DB_PASS")
@@ -54,6 +61,8 @@ class DatabaseConfig(BaseModel):
 
 
 class RedisConfig(BaseModel):
+    """Config to connect to Redis database"""
+
     HOST: str = os.getenv("REDIS_HOST")
     PORT: int = int(os.getenv("REDIS_PORT"))
     CACHE_DB: int = int(os.getenv("REDIS_CACHE_DB"))
@@ -80,4 +89,4 @@ def get_settings() -> Settings:
     return Settings()
 
 
-settings: Settings = get_settings()
+settings: Settings = get_settings()  # Setting class singleton.
