@@ -29,6 +29,17 @@ class UsersManagementUseCaseProtocol(Protocol):
         """
         ...
 
+    async def find_user_by_nickname(
+        self: Self,
+        nickname: str,
+    ) -> None:
+        """Nickname check.
+
+        Args:
+            nickname (str): user nickname.
+        """
+        ...
+
     @abstractmethod
     async def get_list_users_by_id(
         self: Self,
@@ -40,7 +51,7 @@ class UsersManagementUseCaseProtocol(Protocol):
             user_id (list[int]): arguments to search for users data
 
         Returns:
-            SInfoUser: list of users model.
+            SInfoUser: list of users data.
         """
         ...
 
@@ -48,11 +59,14 @@ class UsersManagementUseCaseProtocol(Protocol):
     async def create_user(
         self: Self,
         data: SAddInfoUser,
-    ) -> None:
+    ) -> SInfoUser:
         """Add a new user.
 
         Args:
             **data (SAddInfoUser): data to be user create.
+
+        Returns:
+            SInfoUser: created user data.
         """
         ...
 
@@ -61,12 +75,15 @@ class UsersManagementUseCaseProtocol(Protocol):
         self: Self,
         user_id: int,
         data: Dict[str, Any],
-    ) -> None:
+    ) -> SInfoUser:
         """Update user information by user ID.
 
         Args:
             user_id (int): user id.
             **data (Dict[str, Any]): Data set to be updated.
+
+        Returns:
+            SInfoUser: updated user data.
         """
         ...
 

@@ -12,7 +12,7 @@ from src.app.exceptions import (
     UserNotFoundException,
 )
 from src.app.repositories import (
-    CacheRepositoryProtocol,
+    UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
 from src.app.schemas.users import SInfoUser
@@ -28,7 +28,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
     def __init__(
         self,
         users_sql_repository: UsersSQLRepositoryProtocol,
-        redis_users_cache: CacheRepositoryProtocol,
+        redis_users_cache: UsersCacheRepositoryProtocol,
         uow: SQLRepositoryUOW,
     ):
         self.users_sql_repository = users_sql_repository
@@ -58,10 +58,33 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
             log.warning("Cache operation failed.", exc_info=True)
         return user
 
+    async def get_users_list(
+        self: Self,
+        users_id: list[int],
+    ) -> list[SInfoUser]:
+        try:
+            users = await self.redis_users_cache.get_list_users(users_id)
+        except RedisCacheDBException:
+            users = None
+            log.warning("Cache operation failed.", exc_info=True)
+        if users:
+            return users
+        async with self.uow as session:
+            users = await self.users_sql_repository.get_users_list(
+                session, users_id=users_id
+            )
+        if not users:
+            raise UserNotFoundException()
+        try:
+            await self.redis_users_cache.add_list_users(users)
+        except RedisCacheDBException:
+            log.warning("Cache operation failed.", exc_info=True)
+        return users
+
     async def find_user_by_nickname(
         self: Self,
         nickname: str,
-    ) -> SInfoUser:
+    ) -> None:
         async with self.uow as session:
             user = await self.users_sql_repository.get_user(
                 session, nickname=nickname
@@ -72,7 +95,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
     async def create_user(
         self: Self,
         data: SAddInfoUser,
-    ) -> None:
+    ) -> SInfoUser:
         if not data:
             raise DataNotTransmitted()
         async with self.uow as session:
@@ -83,12 +106,13 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
             )
         except RedisCacheDBException:
             log.warning("Cache operation failed.", exc_info=True)
+        return user
 
     async def update_user(
         self: Self,
         user_id: int,
         data: Dict[str, Any],
-    ) -> None:
+    ) -> SInfoUser:
         if not data:
             raise DataNotTransmitted()
         async with self.uow as session:
@@ -99,6 +123,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
             await self.redis_users_cache.add_user(user_id, user.model_dump())
         except RedisCacheDBException:
             log.warning("Cache operation failed.", exc_info=True)
+        return user
 
     async def delete_user(
         self: Self,

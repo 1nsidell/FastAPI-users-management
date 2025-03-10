@@ -24,10 +24,26 @@ class UsersSQLRepositoryProtocol(Protocol):
 
         Args:
             session (AsyncSession): transaction session.
-            **filter_by (Any): argument to search for user data
+            **filter_by (Any): argument to search for user data.
 
         Returns:
-            SInfoUser: user model.
+            SInfoUser: user data.
+        """
+        ...
+
+    async def get_users_list(
+        self: Self,
+        session: AsyncSession,
+        users_id: list[int],
+    ) -> list[SInfoUser]:
+        """Getting information about the list of user.
+
+        Args:
+            session (AsyncSession): transaction session.
+            users_id (list[int]): list of user.
+
+        Returns:
+            list[SInfoUser]: list of requested user data.
         """
         ...
 
@@ -44,7 +60,7 @@ class UsersSQLRepositoryProtocol(Protocol):
             data (SAddInfoUser): data to be added.
 
         Returns:
-            SInfoUser: user model.
+            SInfoUser: user data.
         """
         ...
 
@@ -63,7 +79,7 @@ class UsersSQLRepositoryProtocol(Protocol):
             data (Dict[str, Any]): Data set to be updated.
 
         Returns:
-            SInfoUser: user model.
+            SInfoUser: user data.
         """
         ...
 

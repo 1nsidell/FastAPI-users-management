@@ -7,7 +7,7 @@ from typing import Annotated
 from fastapi import Depends
 
 from src.app.repositories import (
-    CacheRepositoryProtocol,
+    UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
 from src.app.repositories.impls.users_cache_repository import (
@@ -31,10 +31,10 @@ UsersSQLRepository = Annotated[
 def get_users_cache_repository(
     redis_pool: UsersRedisPool,
     settings: SettingsService,
-) -> CacheRepositoryProtocol:
+) -> UsersCacheRepositoryProtocol:
     return UsersCacheRepositoryImpl(redis_pool, settings)
 
 
 RedisUsersCacheRepository = Annotated[
-    CacheRepositoryProtocol, Depends(get_users_cache_repository)
+    UsersCacheRepositoryProtocol, Depends(get_users_cache_repository)
 ]

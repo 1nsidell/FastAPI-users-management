@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Header
 
 from src.app.depends import APIAccessProvider, UsersUseCase
-from src.core.schemas import SAddInfoUser, SSuccessfulRequest
+from src.core.schemas import SAddInfoUser
+from src.app.schemas.users import SInfoUser
 from src.settings import settings
 
 
@@ -12,7 +13,7 @@ class UserInfo:
             settings.api.users,
             self.create_user,
             methods=["POST"],
-            response_model=SSuccessfulRequest,
+            response_model=SInfoUser,
             status_code=201,
         )
 
@@ -22,10 +23,9 @@ class UserInfo:
         UsersUseCase: UsersUseCase,
         user_info: SAddInfoUser,
         api_key: str = Header(..., alias="X-API-Key"),
-    ) -> SSuccessfulRequest:
+    ) -> SInfoUser:
         APIAccessProvider.check_api_key(api_key)
-        await UsersUseCase.create_user(user_info)
-        return SSuccessfulRequest()
+        return await UsersUseCase.create_user(user_info)
 
 
 user_info = UserInfo()

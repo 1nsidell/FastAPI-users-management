@@ -28,7 +28,7 @@ def handle_repository_exceptions(
                     kwargs,
                     e,
                 )
-                raise custom_exception()
+                raise custom_exception(e)
 
         return wrapper
 

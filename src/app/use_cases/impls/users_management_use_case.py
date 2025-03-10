@@ -2,6 +2,7 @@
 Module for users use case implementation.
 """
 
+import re
 from typing import Any, Dict, Self
 
 from src.app.schemas.users import SInfoUser
@@ -25,23 +26,31 @@ class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
         user = await self.users_service.get_user_by_id(user_id)
         return user
 
+    async def find_user_by_nickname(
+        self: Self,
+        nickname: str,
+    ) -> None:
+        await self.users_service.find_user_by_nickname(nickname)
+
     async def get_list_users_by_id(
         self: Self,
         users_id: list[int],
-    ) -> list[SInfoUser]: ...
+    ) -> list[SInfoUser]:
+        users_data = await self.users_service.get_users_list(users_id)
+        return users_data
 
     async def create_user(
         self: Self,
         data: SAddInfoUser,
-    ) -> None:
-        await self.users_service.create_user(data)
+    ) -> SInfoUser:
+        return await self.users_service.create_user(data)
 
     async def update_user(
         self: Self,
         user_id: int,
         data: Dict[str, Any],
-    ) -> None:
-        await self.users_service.update_user(user_id, data)
+    ) -> SInfoUser:
+        return await self.users_service.update_user(user_id, data)
 
     async def delete_user(
         self: Self,

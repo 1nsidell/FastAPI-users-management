@@ -9,9 +9,9 @@ from typing import Any, Dict, List, Optional, Self
 
 import redis.asyncio as redis
 
-from src.app.exceptions import RedisCacheDBException
+from src.app.schemas.users import SInfoUser
 from src.app.repositories import (
-    CacheRepositoryProtocol,
+    UsersCacheRepositoryProtocol,
     handle_redis_exceptions,
 )
 from src.settings import Settings
@@ -19,7 +19,7 @@ from src.settings import Settings
 log = logging.getLogger("app")
 
 
-class UsersCacheRepositoryImpl(CacheRepositoryProtocol):
+class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
     def __init__(self: Self, redis: redis.Redis, settings: Settings) -> None:
         self.redis = redis
         self.settings = settings
@@ -49,26 +49,19 @@ class UsersCacheRepositoryImpl(CacheRepositoryProtocol):
     @handle_redis_exceptions
     async def add_list_users(
         self,
-        keys: List[int],
-        data_list: List[Dict],
+        data_list: List[SInfoUser],
     ) -> None:
-        if len(keys) != len(data_list):
-            raise RedisCacheDBException(
-                "Keys and data_list must have the same length."
-            )
-
         expiration = int(
             timedelta(
                 minutes=self.settings.redis.USERS_CACHE_LIFETIME
             ).total_seconds()
         )
         pipeline = self.redis.pipeline()
-
-        for key, data in zip(keys, data_list):
-            pipeline.set(key, json.dumps(data), ex=expiration)
-
+        for user in data_list:
+            key = user.user_id
+            value = user.model_dump_json()
+            pipeline.set(key, value, ex=expiration)
         await pipeline.execute()
-        log.info("Cached %d items: %s.", len(keys), keys)
 
     @handle_redis_exceptions
     async def get_list_users(self, keys: List[int]) -> Optional[List[Dict]]:
@@ -79,8 +72,3 @@ class UsersCacheRepositoryImpl(CacheRepositoryProtocol):
             return None
 
         return [json.loads(v) for v in values]
-
-    @handle_redis_exceptions
-    async def delete_list_users(self, keys: List[int]) -> None:
-        await self.redis.delete(*keys)
-        log.info("Deleted %d items: %s.", len(keys), keys)

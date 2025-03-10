@@ -3,7 +3,7 @@ from typing import Any, Dict
 from fastapi import APIRouter, Header
 
 from src.app.depends import APIAccessProvider, UsersUseCase
-from src.core.schemas import SSuccessfulRequest
+from src.app.schemas.users import SInfoUser
 from src.settings import settings
 
 
@@ -14,7 +14,7 @@ class UserInfo:
             settings.api.users,
             self.update_user,
             methods=["PATCH"],
-            response_model=SSuccessfulRequest,
+            response_model=SInfoUser,
             status_code=200,
         )
 
@@ -25,10 +25,9 @@ class UserInfo:
         user_id: int,
         user_info: Dict[str, Any],
         api_key: str = Header(..., alias="X-API-Key"),
-    ) -> SSuccessfulRequest:
+    ) -> SInfoUser:
         APIAccessProvider.check_api_key(api_key)
-        await UsersUseCase.update_user(user_id, user_info)
-        return SSuccessfulRequest()
+        return await UsersUseCase.update_user(user_id, user_info)
 
 
 user_info = UserInfo()
