@@ -58,6 +58,17 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
             log.warning("Cache operation failed.", exc_info=True)
         return user
 
+    async def find_user_by_nickname(
+        self: Self,
+        nickname: str,
+    ) -> SInfoUser:
+        async with self.uow as session:
+            user = await self.users_sql_repository.get_user(
+                session, nickname=nickname
+            )
+        if user:
+            raise UserAlreadyExistException()
+
     async def create_user(
         self: Self,
         data: SAddInfoUser,
@@ -65,14 +76,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         if not data:
             raise DataNotTransmitted()
         async with self.uow as session:
-            if await self.users_sql_repository.get_user(
-                session, nickname=data.nickname
-            ):
-                raise UserAlreadyExistException()
-            await self.users_sql_repository.add_user(session, data)
-            user = await self.users_sql_repository.get_user(
-                session, user_id=data.user_id
-            )
+            user = await self.users_sql_repository.add_user(session, data)
         try:
             await self.redis_users_cache.add_user(
                 data.user_id, user.model_dump()
@@ -88,11 +92,8 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         if not data:
             raise DataNotTransmitted()
         async with self.uow as session:
-            if not await self.users_sql_repository.get_user(session, user_id):
-                raise UserNotFoundException()
-            await self.users_sql_repository.update_user(session, user_id, data)
-            user = await self.users_sql_repository.get_user(
-                session, user_id=user_id
+            user = await self.users_sql_repository.update_user(
+                session, user_id, data
             )
         try:
             await self.redis_users_cache.add_user(user_id, user.model_dump())

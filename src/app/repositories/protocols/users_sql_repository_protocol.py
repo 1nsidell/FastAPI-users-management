@@ -27,7 +27,7 @@ class UsersSQLRepositoryProtocol(Protocol):
             **filter_by (Any): argument to search for user data
 
         Returns:
-            SUser: user model.
+            SInfoUser: user model.
         """
         ...
 
@@ -36,12 +36,15 @@ class UsersSQLRepositoryProtocol(Protocol):
         self: Self,
         session: AsyncSession,
         data: SAddInfoUser,
-    ) -> None:
+    ) -> SInfoUser:
         """Add a new user.
 
         Args:
             session (AsyncSession): transaction session.
             data (SAddInfoUser): data to be added.
+
+        Returns:
+            SInfoUser: user model.
         """
         ...
 
@@ -51,13 +54,16 @@ class UsersSQLRepositoryProtocol(Protocol):
         session: AsyncSession,
         user_id: int,
         data: Dict[str, Any],
-    ) -> None:
+    ) -> SInfoUser:
         """Update user information by user ID.
 
         Args:
             session (AsyncSession): transaction session.
             user_id (int): user id.
             data (Dict[str, Any]): Data set to be updated.
+
+        Returns:
+            SInfoUser: user model.
         """
         ...
 

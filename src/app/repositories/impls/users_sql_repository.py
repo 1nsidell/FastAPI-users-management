@@ -9,7 +9,7 @@ from typing import Any, Dict, Optional, Self
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from src.app.models import InfoUser, Role
+from src.app.models import InfoUser
 from src.app.repositories import (
     UsersSQLRepositoryProtocol,
     handle_sql_exceptions,
@@ -22,7 +22,6 @@ log = logging.getLogger("app")
 
 class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     USER_INFO_MODEL = InfoUser
-    ROLE_MODEL = Role
 
     @handle_sql_exceptions
     async def get_user(
@@ -31,21 +30,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         **filter_by: Any,
     ) -> Optional[SInfoUser]:
         log.info("Request user information with filter: %s.", filter_by)
-        stmt = (
-            select(
-                self.USER_INFO_MODEL.user_id,
-                self.USER_INFO_MODEL.nickname,
-                self.USER_INFO_MODEL.is_active,
-                self.USER_INFO_MODEL.is_verified,
-                self.USER_INFO_MODEL.avatar,
-                self.ROLE_MODEL.role,
-            )
-            .filter_by(**filter_by)
-            .join(
-                self.ROLE_MODEL,
-                self.ROLE_MODEL.role_id == self.USER_INFO_MODEL.role_id,
-            )
-        )
+        stmt = select(self.USER_INFO_MODEL).filter_by(**filter_by)
         result = await session.execute(stmt)
         user = result.mappings().one_or_none()
         if not user:
@@ -59,7 +44,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         self: Self,
         session: AsyncSession,
         data: SAddInfoUser,
-    ) -> None:
+    ) -> SInfoUser:
         log.info(
             "Adding new user with ID: %s and nickname: %s.",
             data.user_id,
@@ -68,14 +53,16 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         stmt = (
             insert(self.USER_INFO_MODEL)
             .values(data.model_dump())
+            .returning()
             .execution_options(synchronize_session="fetch")
         )
-        await session.execute(stmt)
+        user = await session.execute(stmt)
         log.info(
             "User successfully added with ID: %s and nickname: %s.",
             data.user_id,
             data.nickname,
         )
+        return SInfoUser.model_validate(user, from_attributes=True)
 
     @handle_sql_exceptions
     async def update_user(
@@ -83,16 +70,18 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         session: AsyncSession,
         user_id: int,
         data: Dict[str, Any],
-    ) -> None:
+    ) -> SInfoUser:
         log.info("User data update: %s.", user_id)
         stmt = (
             update(self.USER_INFO_MODEL)
             .where(self.USER_INFO_MODEL.user_id == user_id)
             .values(**data)
+            .returning()
             .execution_options(synchronize_session="fetch")
         )
-        await session.execute(stmt)
+        user = await session.execute(stmt)
         log.info("Successful update user with ID: %s.", user_id)
+        return SInfoUser.model_validate(user, from_attributes=True)
 
     @handle_sql_exceptions
     async def delete_user(

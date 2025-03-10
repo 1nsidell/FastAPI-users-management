@@ -10,6 +10,7 @@ dependencies = [
     "asyncpg>=0.30.0",
     "fastapi>=0.115.8",
     "redis>=5.2.1",
+    "black>=25.1.0",
 ]
 
 [tool.black]

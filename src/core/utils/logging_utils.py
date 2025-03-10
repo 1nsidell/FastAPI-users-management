@@ -5,7 +5,7 @@ import logging
 import re
 import time
 from datetime import datetime, timezone
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
 
 
 class UTCFormatter(logging.Formatter):  # UTC for logging
