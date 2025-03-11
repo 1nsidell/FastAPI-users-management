@@ -70,9 +70,7 @@ class RedisConfig(BaseModel):
     USERNAME: str = os.getenv("REDIS_USERNAME", "guest")
     PASSWORD: str = os.getenv("REDIS_PASSWORD", "guest")
 
-    USERS_CACHE_LIFETIME: int = int(
-        os.getenv("REDIS_USERS_CACHE_LIFETIME", "5")
-    )
+    CACHE_LIFETIME: int = int(os.getenv("REDIS_CACHE_LIFETIME", "5"))
 
     @property
     def users_cache_url(self) -> str:

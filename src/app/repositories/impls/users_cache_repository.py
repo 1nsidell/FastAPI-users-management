@@ -23,17 +23,17 @@ class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
     def __init__(self: Self, redis: redis.Redis, settings: Settings) -> None:
         self.redis = redis
         self.settings = settings
+        self.expiration = int(
+            timedelta(
+                minutes=self.settings.redis.CACHE_LIFETIME
+            ).total_seconds()
+        )
 
     @handle_redis_exceptions
     async def add_user(self: Self, key: int, data: Dict[str, Any]) -> None:
         log.info("Adding cache by key: %s.", key)
-        expiration = int(
-            timedelta(
-                minutes=self.settings.redis.USERS_CACHE_LIFETIME
-            ).total_seconds()
-        )
         json_data = json.dumps(data)
-        await self.redis.set(key, json_data, ex=expiration)
+        await self.redis.set(key, json_data, ex=self.expiration)
 
     @handle_redis_exceptions
     async def get_user(self: Self, key: int) -> Optional[Dict[str, Any]]:
@@ -51,16 +51,11 @@ class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
         self,
         data_list: List[SInfoUser],
     ) -> None:
-        expiration = int(
-            timedelta(
-                minutes=self.settings.redis.USERS_CACHE_LIFETIME
-            ).total_seconds()
-        )
         pipeline = self.redis.pipeline()
         for user in data_list:
             key = user.user_id
             value = user.model_dump_json()
-            pipeline.set(key, value, ex=expiration)
+            pipeline.set(key, value, ex=self.expiration)
         await pipeline.execute()
 
     @handle_redis_exceptions

@@ -1,16 +1,21 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name": "FastAPI",
-        "type": "debugpy",
-        "request": "launch",
-        "program": "${file}",
-        "console": "integratedTerminal",
-        "env": {
-          "PYTHONPATH": "${workspaceFolder}/src"
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "FastAPI Debug",
+      "type": "debugpy",
+      "request": "attach",
+      "connect": {
+        "host": "0.0.0.0",
+        "port": 5678
+      },
+      "pathMappings": [
+        {
+          "localRoot": "${workspaceFolderBasename}",
+          "remoteRoot": "/workspaces/${localWorkspaceFolderBasename}"
         }
-      }
-    ]
-  }
-  
+      ],
+      "justMyCode": false
+    }
+  ]
+}
