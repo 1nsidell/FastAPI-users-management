@@ -54,7 +54,7 @@ class TransactionException(CustomRepositoriesException):
         super().__init__(self.message)
 
 
-class CustomAccessDeniedException(CustomSecurityException):
+class AccessDeniedException(CustomSecurityException):
     """API key rejected."""
 
     error_type: str = "API_KEY_ERROR"

@@ -9,7 +9,7 @@ class UserNickname:
     def __init__(self):
         self.router = APIRouter()
         self.router.add_api_route(
-            f"{settings.api.users}/{{nickname}}",
+            f"{settings.api.nicknames}/{{nickname}}",
             self.find_nickname,
             methods=["GET"],
             response_model=SSuccessfulRequest,
@@ -24,7 +24,8 @@ class UserNickname:
         api_key: str = Header(..., alias="X-API-Key"),
     ) -> SSuccessfulRequest:
         APIAccessProvider.check_api_key(api_key)
-        return await UsersUseCase.find_user_by_nickname(nickname)
+        await UsersUseCase.find_user_by_nickname(nickname)
+        return SSuccessfulRequest()
 
 
 user_nickname = UserNickname()

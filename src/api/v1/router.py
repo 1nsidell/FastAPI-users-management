@@ -3,10 +3,10 @@ from fastapi import APIRouter
 from src.api.v1 import (
     get_user_router,
     get_list_users_router,
-    find_nickname_router,
     create_user_router,
     delete_user_router,
     update_user_router,
+    find_nickname_router,
 )
 from src.settings import settings
 
@@ -18,10 +18,10 @@ v1_router = APIRouter(
 v1_sub_routers = (
     get_user_router,
     get_list_users_router,
-    find_nickname_router,
     create_user_router,
     update_user_router,
     delete_user_router,
+    find_nickname_router,
 )
 
 for router in v1_sub_routers:

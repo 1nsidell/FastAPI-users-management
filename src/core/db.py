@@ -46,7 +46,7 @@ class SQLDatabaseHelper:
             max_overflow=self.max_overflow,
             pool_size=self.pool_size,
         )
-        log.info(f"Created Postgres DB engine [{id(self.engine)}].")
+        log.info("Created Postgres DB engine [%s].", id(self.engine))
         self.async_session_factory: async_sessionmaker[AsyncSession] = (
             async_sessionmaker(
                 bind=self.engine,
@@ -56,7 +56,8 @@ class SQLDatabaseHelper:
             )
         )
         log.info(
-            f"Created Postgres DB async session factory [{id(self.async_session_factory)}]."
+            "Created Postgres DB async session factory [%s].",
+            id(self.async_session_factory),
         )
 
     async def shutdown(self: Self) -> None:
@@ -81,17 +82,21 @@ class SQLRepositoryUOW:
     async def __aenter__(self) -> AsyncSession:
         self.__session = self.__session_factory()
         self.__transaction = await self.__session.begin()
-        log.info(f"Session [{id(self.__session)}] started.")
+        log.info("Session [%s] started.", id(self.__session))
         return self.__session
 
     async def __aexit__(self, exc_type, exc_val, exc_tb) -> None:
         try:
             if exc_type is not None:
                 log.error(
-                    f"Exception occurred in session [{id(self.__session)}]: {exc_type.__name__}: {exc_val}."
+                    "Exception occurred in session [%s]: %s: %s.",
+                    id(self.__session),
+                    exc_type.__name__,
+                    exc_val,
                 )
                 log.warning(
-                    f"Rolling back transaction for session [{id(self.__session)}]."
+                    "Rolling back transaction for session [%s].",
+                    id(self.__session),
                 )
                 try:
                     await self.__transaction.rollback()
@@ -101,7 +106,8 @@ class SQLRepositoryUOW:
                 try:
                     await self.__transaction.commit()
                     log.debug(
-                        f"Commit successful for session [{id(self.__session)}]."
+                        "Commit successful for session [%s].",
+                        id(self.__session),
                     )
                 except Exception as e:
                     log.exception("Commit failed.")
@@ -113,10 +119,10 @@ class SQLRepositoryUOW:
         finally:
             try:
                 await self.__session.close()
-                log.info(f"Session [{id(self.__session)}] closed.")
+                log.info("Session [] closed.", id(self.__session))
             except Exception:
                 log.exception(
-                    f"Failed to close session [{id(self.__session)}]."
+                    "Failed to close session [%s].", id(self.__session)
                 )
             self.__session = None
             self.__transaction = None
@@ -135,14 +141,14 @@ class RedisConnectionManager:
             self.settings.redis.users_cache_url,
             decode_responses=True,
         )
-        log.info(f"Redis conn pool [{id(self.pool)}] is created.")
+        log.info("Redis conn pool [%s] is created.", id(self.pool))
         self.redis = redis.Redis(connection_pool=self.pool)
-        log.info(f"Redis instance [{id(self.redis)}] is created.")
+        log.info("Redis instance [%s] is created.", id(self.redis))
 
     async def shutdown(self: Self) -> None:
         if self.redis:
             await self.redis.aclose()
-            log.info(f"Redis instance [{id(self.redis)}] is close.")
+            log.info("Redis instance [%s] is close.", id(self.redis))
         if self.pool:
             await self.pool.disconnect()
-            log.info(f"Redis conn pool [{id(self.pool)}] is close.")
+            log.info("Redis conn pool [%s] is close.", id(self.pool))

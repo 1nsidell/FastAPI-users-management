@@ -3,7 +3,7 @@
 import logging
 from typing import Self
 
-from src.app.exceptions import CustomAccessDeniedException
+from src.app.exceptions import AccessDeniedException
 from src.app.providers import APIAccessProviderProtocol
 
 log = logging.getLogger("app")
@@ -15,5 +15,5 @@ class APIAccessProviderImpl(APIAccessProviderProtocol):
 
     def check_api_key(self: Self, api_key: str) -> None:
         if api_key != self.valid_api_key:
-            raise CustomAccessDeniedException()
+            raise AccessDeniedException()
         log.debug("API key successfully verified.")
