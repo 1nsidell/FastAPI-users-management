@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from src.core.depends import DBHelper, RedisManager
+from src.core.depends import SQLDBHelper, RedisManager
 from src.core.loggers import setup_logging
 from src.exceptions import apply_exceptions_handlers
 from src.middlewares import apply_middlewares
@@ -21,11 +21,11 @@ async def lifespan(app: FastAPI):
     """
     # startup
     setup_logging(settings)
-    await DBHelper.startup()
-    await RedisManager.startup()
+    SQLDBHelper.startup()
+    RedisManager.startup()
     yield
     # shutdown
-    await DBHelper.shutdown()
+    await SQLDBHelper.shutdown()
     await RedisManager.shutdown()
 
 

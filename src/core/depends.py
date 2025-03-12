@@ -25,12 +25,12 @@ def get_sql_db_helper(settings: Settings) -> SQLDatabaseHelper:
 
 
 # Singleton DBHelper instance
-DBHelper: SQLDatabaseHelper = get_sql_db_helper(settings)
+SQLDBHelper: SQLDatabaseHelper = get_sql_db_helper(settings)
 
 
 def get_async_session_factory() -> Callable[[], AsyncSession]:
     """Getting async session factory for Depends object."""
-    return DBHelper.async_session_factory
+    return SQLDBHelper.async_session_factory
 
 
 AsyncSessionFactory = Annotated[
@@ -56,9 +56,9 @@ def get_redis_pool_manager(settings: Settings) -> RedisConnectionManager:
 RedisManager: RedisConnectionManager = get_redis_pool_manager(settings)
 
 
-def get_users_redis_pool() -> redis.Redis:
+def get_redis_pool() -> redis.Redis:
     """Create a Depends instance of Redis."""
     return RedisManager.redis
 
 
-UsersRedisPool = Annotated[redis.Redis, Depends(get_users_redis_pool)]
+RedisPool = Annotated[redis.Redis, Depends(get_redis_pool)]

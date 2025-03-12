@@ -24,7 +24,7 @@ class ApiPrefix(BaseModel):
     readiness: str = "/readiness"
     v1_prefix: str = "/v1"
     users: str = "/users"
-    nicknames: str = "/nicknames"
+    nicknames: str = users + "/nicknames"
 
 
 class DatabaseConfig(BaseModel):

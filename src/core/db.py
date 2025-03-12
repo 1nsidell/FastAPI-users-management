@@ -3,6 +3,7 @@
 import logging
 from typing import Callable, Optional, Self
 
+
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -38,7 +39,7 @@ class SQLDatabaseHelper:
         self.engine: Optional[AsyncEngine] = None
         self.async_session_factory: Optional[async_sessionmaker[AsyncSession]]
 
-    async def startup(self: Self) -> None:
+    def startup(self: Self) -> None:
         self.engine: AsyncEngine = create_async_engine(
             url=self.url,
             echo=self.echo,
@@ -129,14 +130,14 @@ class SQLRepositoryUOW:
 
 
 class RedisConnectionManager:
-    """A class for getting an instance of the redis pool"""
+    """A class for getting an instance of the redis pool."""
 
     def __init__(self: Self, settings: Settings):
-        self.settings: Settings = settings
-        self.pool: Optional[redis.ConnectionPool] = None
-        self.redis: Optional[redis.Redis] = None
+        self.settings = settings
+        self.pool: redis.ConnectionPool
+        self.redis: redis.Redis
 
-    async def startup(self: Self) -> None:
+    def startup(self: Self) -> None:
         self.pool = redis.ConnectionPool.from_url(
             self.settings.redis.users_cache_url,
             decode_responses=True,

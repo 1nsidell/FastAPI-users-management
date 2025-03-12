@@ -5,7 +5,7 @@ from src.app.exceptions import (
     RedisHealthException,
     SQLRepositoryException,
 )
-from src.core.depends import DBHelper, RedisManager
+from src.core.depends import SQLDBHelper, RedisManager
 from src.core.schemas import SSuccessfulRequest
 from src.settings import settings
 
@@ -32,7 +32,7 @@ class Readiness:
             raise RedisHealthException(f"Redis connection error: {e}") from e
 
         try:
-            async with DBHelper.async_session_factory() as session:
+            async with SQLDBHelper.async_session_factory() as session:
                 await session.execute(select(1))
         except Exception as e:
             raise SQLRepositoryException(f"SQL connectivity error: {e}") from e
