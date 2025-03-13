@@ -9,11 +9,11 @@ from typing import Any, Dict, List, Optional, Self
 
 import redis.asyncio as redis
 
-from src.app.schemas.users import SInfoUser
 from src.app.repositories import (
     UsersCacheRepositoryProtocol,
     handle_redis_exceptions,
 )
+from src.app.schemas.users import SInfoUser
 from src.settings import Settings
 
 log = logging.getLogger("app")

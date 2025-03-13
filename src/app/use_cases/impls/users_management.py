@@ -2,7 +2,6 @@
 Module for users use case implementation.
 """
 
-import re
 from typing import Any, Dict, Self
 
 from src.app.schemas.users import SInfoUser

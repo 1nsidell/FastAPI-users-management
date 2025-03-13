@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Header
 
 from src.app.depends import APIAccessProvider, UsersUseCase
-from src.core.schemas import SAddInfoUser
 from src.app.schemas.users import SInfoUser
+from src.core.schemas import SAddInfoUser
 from src.settings import settings
 
 

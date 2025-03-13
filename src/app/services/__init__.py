@@ -1,3 +1,3 @@
-from .protocols.users_management_service_protocol import (
+from .protocols.users_management_protocol import (
     UsersManagementServiceProtocol as UsersManagementServiceProtocol,
 )

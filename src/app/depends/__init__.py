@@ -1,9 +1,9 @@
-from ..depends.providers_depends import APIAccessProvider as APIAccessProvider
-from ..depends.repositories_depends import (
+from .providers import APIAccessProvider as APIAccessProvider
+from .repositories import (
     RedisUsersCacheRepository as RedisUsersCacheRepository,
 )
-from ..depends.repositories_depends import (
+from .repositories import (
     UsersSQLRepository as UsersSQLRepository,
 )
-from ..depends.services_depends import UsersService as UsersService
-from ..depends.use_cases_depends import UsersUseCase as UsersUseCase
+from .services import UsersService as UsersService
+from .use_cases import UsersUseCase as UsersUseCase

@@ -10,13 +10,13 @@ from src.app.repositories import (
     UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
-from src.app.repositories.impls.users_cache_repository import (
+from src.app.repositories.impls.users_cache import (
     UsersCacheRepositoryImpl,
 )
-from src.app.repositories.impls.users_sql_repository import (
+from src.app.repositories.impls.users_sql import (
     UsersSQLRepositoryImpl,
 )
-from src.core import SettingsService, RedisPool
+from src.core import RedisPool, SettingsService
 
 
 def get_users_sql_repository() -> UsersSQLRepositoryProtocol:

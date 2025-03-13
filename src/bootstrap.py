@@ -6,7 +6,7 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from src.core.depends import SQLDBHelper, RedisManager
+from src.core.depends import RedisManager, SQLDBHelper
 from src.core.loggers import setup_logging
 from src.exceptions import apply_exceptions_handlers
 from src.middlewares import apply_middlewares

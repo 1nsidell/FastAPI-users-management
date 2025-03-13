@@ -1,3 +1,3 @@
-from .protocols.users_management_use_case_protocol import (
+from .protocols.users_management_protocol import (
     UsersManagementUseCaseProtocol as UsersManagementUseCaseProtocol,
 )

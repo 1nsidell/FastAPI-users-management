@@ -5,7 +5,7 @@ from src.app.exceptions import (
     RedisHealthException,
     SQLRepositoryException,
 )
-from src.core.depends import SQLDBHelper, RedisManager
+from src.core.depends import RedisManager, SQLDBHelper
 from src.core.schemas import SSuccessfulRequest
 from src.settings import settings
 

@@ -3,7 +3,6 @@
 import logging
 from typing import Callable, Optional, Self
 
-
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,

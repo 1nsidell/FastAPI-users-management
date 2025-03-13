@@ -9,12 +9,12 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from src.core import RedisConnectionManager, SQLDatabaseHelper, SQLRepositoryUOW
 from src.settings import Settings, get_settings, settings
 
-# Depends Settings instance
+# Depends Settings
 SettingsService = Annotated[Settings, Depends(get_settings)]
 
 
 def get_sql_db_helper(settings: Settings) -> SQLDatabaseHelper:
-    """Create an singleton instance of DB helper."""
+    """Create an singleton instance of SQL DB helper."""
     return SQLDatabaseHelper(
         url=settings.db.url,
         echo=settings.db.ECHO,
@@ -24,7 +24,7 @@ def get_sql_db_helper(settings: Settings) -> SQLDatabaseHelper:
     )
 
 
-# Singleton DBHelper instance
+# Singleton SQLDBHelper instance
 SQLDBHelper: SQLDatabaseHelper = get_sql_db_helper(settings)
 
 
@@ -49,7 +49,7 @@ UoW = Annotated[SQLRepositoryUOW, Depends(get_uow)]
 
 
 def get_redis_pool_manager(settings: Settings) -> RedisConnectionManager:
-    """Create an singleton instance of Redis pool connection."""
+    """Create an singleton instance of Redis pool connection manager."""
     return RedisConnectionManager(settings)
 
 
@@ -57,7 +57,7 @@ RedisManager: RedisConnectionManager = get_redis_pool_manager(settings)
 
 
 def get_redis_pool() -> redis.Redis:
-    """Create a Depends instance of Redis."""
+    """Create a Depends instance of Redis connection."""
     return RedisManager.redis
 
 

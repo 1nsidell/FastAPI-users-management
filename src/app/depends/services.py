@@ -6,14 +6,14 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from src.app.depends.repositories_depends import (
+from src.app.depends.repositories import (
     RedisUsersCacheRepository,
     UsersSQLRepository,
 )
 from src.app.services import UsersManagementServiceProtocol
 from src.core import UoW
 
-from ..services.impls.users_management_service import UsersManagementServiceImpl
+from ..services.impls.users_management import UsersManagementServiceImpl
 
 
 def get_users_service(
