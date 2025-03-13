@@ -25,7 +25,7 @@ class UsersManagementServiceProtocol(Protocol):
         self: Self,
         user_id: int,
     ) -> SInfoUser:
-        """Get information about the user.
+        """Get data about the user.
 
         Args:
             user_id (int): ID to search for user data

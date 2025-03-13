@@ -16,7 +16,7 @@ from src.core import UoW
 from ..services.impls.users_management import UsersManagementServiceImpl
 
 
-def get_users_service(
+def get_users_management_service(
     users_sql_repository: UsersSQLRepository,
     redis_users_cache: RedisUsersCacheRepository,
     uow: UoW,
@@ -29,5 +29,5 @@ def get_users_service(
 
 
 UsersService = Annotated[
-    UsersManagementServiceProtocol, Depends(get_users_service)
+    UsersManagementServiceProtocol, Depends(get_users_management_service)
 ]
