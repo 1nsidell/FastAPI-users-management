@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta" 
+
 [project]
 name = "fastapi-users-management"
 version = "0.1.0"
@@ -12,6 +16,10 @@ dependencies = [
     "redis>=5.2.1",
     "black>=25.1.0",
 ]
+
+[tool.setuptools]
+packages = ["users_management"]
+package-dir = {"" = "src"}
 
 [tool.black]
 line-length = 80

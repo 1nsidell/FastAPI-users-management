@@ -7,6 +7,8 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     UV_COMPILE_BYTECODE=1 \
     UV_LINK_MODE=copy
 
+COPY pyproject.toml uv.lock /app/
+
 RUN --mount=type=cache,target=/root/.cache/uv \
     --mount=type=bind,source=uv.lock,target=uv.lock \
     --mount=type=bind,source=pyproject.toml,target=pyproject.toml \
@@ -15,7 +17,8 @@ RUN --mount=type=cache,target=/root/.cache/uv \
 ADD . /app
 
 RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-dev
+    uv sync --frozen --no-dev \
+    && uv pip install -e . 
 
 FROM python:3.12.9-alpine3.20 AS runner
 
@@ -23,8 +26,13 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
-ENV PATH="/app/.venv/bin:$PATH"
-
 RUN rm -rf /root/.cache
 
-CMD ["sh", "-c", "python -m uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers ${APP_WORKERS:-4}"]
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+    && chown -R appuser:appgroup /app
+
+USER appuser
+
+ENV PATH="/app/.venv/bin:$PATH"
+
+CMD ["sh", "-c", "python -m uvicorn users_management.main:app --host 0.0.0.0 --port 8000 --workers ${APP_WORKERS:-4}"]
