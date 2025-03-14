@@ -63,7 +63,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         ]
 
     @handle_sql_exceptions
-    async def add_user(
+    async def create_user(
         self: Self,
         session: AsyncSession,
         data: SAddInfoUser,

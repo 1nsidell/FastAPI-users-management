@@ -99,7 +99,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         if not data:
             raise DataNotTransmitted()
         async with self.uow as session:
-            user = await self.users_sql_repository.add_user(session, data)
+            user = await self.users_sql_repository.create_user(session, data)
         try:
             await self.redis_users_cache.add_user(
                 data.user_id, user.model_dump()

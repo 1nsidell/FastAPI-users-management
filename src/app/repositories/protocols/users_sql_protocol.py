@@ -48,7 +48,7 @@ class UsersSQLRepositoryProtocol(Protocol):
         ...
 
     @abstractmethod
-    async def add_user(
+    async def create_user(
         self: Self,
         session: AsyncSession,
         data: SAddInfoUser,
