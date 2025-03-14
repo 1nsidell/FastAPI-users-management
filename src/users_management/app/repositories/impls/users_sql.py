@@ -8,7 +8,9 @@ from typing import Any, Dict, Optional, Self
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.exc import DuplicateColumnError
 
+from users_management.app.exceptions import UserAlreadyExistException
 from users_management.app.models import InfoUser
 from users_management.app.repositories import (
     UsersSQLRepositoryProtocol,
@@ -78,7 +80,10 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
             .values(data.model_dump())
             .returning(self.USER_INFO_MODEL)
         )
-        result = await session.execute(stmt)
+        try:
+            result = await session.execute(stmt)
+        except DuplicateColumnError:
+            raise UserAlreadyExistException()
         user = result.scalar_one_or_none()
         log.info(
             "User successfully added with ID: %s and nickname: %s.",
@@ -101,7 +106,10 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
             .values(**data)
             .returning(self.USER_INFO_MODEL)
         )
-        result = await session.execute(stmt)
+        try:
+            result = await session.execute(stmt)
+        except DuplicateColumnError:
+            raise UserAlreadyExistException()
         user = result.scalar_one_or_none()
         log.info("Successful update user with ID: %s.", user_id)
         return SInfoUser.model_validate(user, from_attributes=True)

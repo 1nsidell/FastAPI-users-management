@@ -21,7 +21,6 @@ def structured_exception_handler(
     error_data = {
         "error_type": getattr(exc, "error_type", "UNKNOWN_ERROR"),
         "message": (str(exc) if settings.mode != "PROD" else exc.__doc__),
-        "error_code": getattr(exc, "status_code", 500),
     }
     log.error(
         "Request ID: %s. Error context: %s",
@@ -40,7 +39,6 @@ def general_exception_handler(request: Request, exc: Exception) -> JSONResponse:
         "message": (
             str(exc) if settings.mode != "PROD" else "Internal server error"
         ),
-        "error_code": 500,
     }
 
     log.error(
