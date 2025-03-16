@@ -87,10 +87,21 @@ class UserAlreadyExistException(CustomUsersException):
         super().__init__(self.message)
 
 
+class UserAlreadyExist_Nickname(CustomUsersException):
+    """A user with this name already exists."""
+
+    error_type = "USERNAME_ALREADY_EXIST"
+    status_code = 409
+
+    def __init__(self, message: Optional[str] = None):
+        self.message = message or self.__doc__
+        super().__init__(self.message)
+
+
 class DataNotTransmitted(CustomDataException):
     """The data was not transmitted."""
 
-    error_type: str = "MISSING DATA"
+    error_type: str = "MISSING_DATA"
     status_code: int = 400
 
     def __init__(self, message: Optional[str] = None):

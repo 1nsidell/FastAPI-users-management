@@ -8,9 +8,7 @@ from typing import Any, Dict, Optional, Self
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy.exc import DuplicateColumnError
 
-from users_management.app.exceptions import UserAlreadyExistException
 from users_management.app.models import InfoUser
 from users_management.app.repositories import (
     UsersSQLRepositoryProtocol,
@@ -38,7 +36,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         if not user:
             log.info("User not found with filter: %s.", filter_by)
             return None
-        log.info("User data found with filter: %s.", filter_by)
+        log.info("User data found filter by: %s.", filter_by)
         return SInfoUser.model_validate(user, from_attributes=True)
 
     @handle_sql_exceptions
@@ -47,7 +45,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         session: AsyncSession,
         users_id: list[int],
     ) -> Optional[list[SInfoUser]]:
-        log.info("Request users data with ID: %s.", users_id)
+        log.info("Request list of users data with IDs: %s.", users_id)
         stmt = select(self.USER_INFO_MODEL).filter(
             self.USER_INFO_MODEL.user_id.in_(users_id)
         )
@@ -71,7 +69,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         data: SAddInfoUser,
     ) -> SInfoUser:
         log.info(
-            "Adding new user with ID: %s and nickname: %s.",
+            "Creating new user with ID: %s and nickname: %s.",
             data.user_id,
             data.nickname,
         )
@@ -80,13 +78,10 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
             .values(data.model_dump())
             .returning(self.USER_INFO_MODEL)
         )
-        try:
-            result = await session.execute(stmt)
-        except DuplicateColumnError:
-            raise UserAlreadyExistException()
+        result = await session.execute(stmt)
         user = result.scalar_one_or_none()
         log.info(
-            "User successfully added with ID: %s and nickname: %s.",
+            "User successfully created with ID: %s and nickname: %s.",
             data.user_id,
             data.nickname,
         )
@@ -99,19 +94,20 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         user_id: int,
         data: Dict[str, Any],
     ) -> SInfoUser:
-        log.info("User data update: %s.", user_id)
+        log.info(
+            "User with ID: %s is trying to update the data on: %s.",
+            data,
+            user_id,
+        )
         stmt = (
             update(self.USER_INFO_MODEL)
             .where(self.USER_INFO_MODEL.user_id == user_id)
             .values(**data)
             .returning(self.USER_INFO_MODEL)
         )
-        try:
-            result = await session.execute(stmt)
-        except DuplicateColumnError:
-            raise UserAlreadyExistException()
+        result = await session.execute(stmt)
         user = result.scalar_one_or_none()
-        log.info("Successful update user with ID: %s.", user_id)
+        log.info("User with ID: %s successful updated data: %s.", user_id, data)
         return SInfoUser.model_validate(user, from_attributes=True)
 
     @handle_sql_exceptions

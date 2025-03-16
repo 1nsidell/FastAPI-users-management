@@ -8,6 +8,7 @@ from typing import Any, Dict, Self
 from users_management.app.exceptions import (
     DataNotTransmitted,
     RedisCacheDBException,
+    UserAlreadyExist_Nickname,
     UserAlreadyExistException,
     UserNotFoundException,
 )
@@ -96,16 +97,12 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         self: Self,
         data: SAddInfoUser,
     ) -> SInfoUser:
-        if not data:
-            raise DataNotTransmitted()
         async with self.uow as session:
+            if await self.users_sql_repository.get_user(
+                session, nickname=data.nickname
+            ):
+                raise UserAlreadyExist_Nickname()
             user = await self.users_sql_repository.create_user(session, data)
-        try:
-            await self.redis_users_cache.add_user(
-                data.user_id, user.model_dump()
-            )
-        except RedisCacheDBException:
-            log.warning("Cache operation failed.", exc_info=True)
         return user
 
     async def update_user(

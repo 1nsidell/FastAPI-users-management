@@ -28,14 +28,14 @@ class Readiness:
             pong = await RedisManager.redis.ping()
             if pong is not True:
                 raise RedisHealthException("Redis ping failed.")
-        except Exception as e:
-            raise RedisHealthException(f"Redis connection error: {e}") from e
+        except Exception:
+            raise RedisHealthException("Redis connection error.")
 
         try:
             async with SQLDBHelper.async_session_factory() as session:
                 await session.execute(select(1))
-        except Exception as e:
-            raise SQLRepositoryException(f"SQL connectivity error: {e}") from e
+        except Exception:
+            raise SQLRepositoryException("SQL connectivity error.")
 
         return SSuccessfulRequest()
 
