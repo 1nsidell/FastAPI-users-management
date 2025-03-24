@@ -1,31 +1,17 @@
-from fastapi import APIRouter, Header
+from fastapi import APIRouter, Header, Path
 
 from users_management.app.depends import APIAccessProvider, UsersUseCase
 from users_management.settings import settings
 
-
-class UserInfo:
-    def __init__(self):
-        self.router = APIRouter()
-        self.router.add_api_route(
-            settings.api.users,
-            self.delete_user,
-            methods=["DELETE"],
-            response_model=None,
-            status_code=204,
-        )
-
-    async def delete_user(
-        self,
-        APIAccessProvider: APIAccessProvider,
-        UsersUseCase: UsersUseCase,
-        user_id: int,
-        api_key: str = Header(..., alias="X-API-Key"),
-    ) -> None:
-        APIAccessProvider.check_api_key(api_key)
-        await UsersUseCase.delete_user(user_id)
+router = APIRouter()
 
 
-user_info = UserInfo()
-
-router = user_info.router
+@router.delete(f"{settings.api.users}/{{user_id}}", status_code=204)
+async def delete_user(
+    api_access_provider: APIAccessProvider,
+    users_use_case: UsersUseCase,
+    user_id: int = Path(...),
+    api_key: str = Header(..., alias="X-API-Key"),
+) -> None:
+    api_access_provider.check_api_key(api_key)
+    await users_use_case.delete_user(user_id)

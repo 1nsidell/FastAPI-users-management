@@ -12,7 +12,7 @@ from users_management.settings import settings
 
 v1_router = APIRouter(
     prefix=settings.api.v1_prefix,
-    tags=["USER-MANAGEMENT-V1"],
+    tags=["USERS-MANAGEMENT-V1"],
 )
 
 v1_sub_routers = (

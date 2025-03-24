@@ -153,8 +153,8 @@ class RedisConnectionManager:
 
     def __init__(self: Self, settings: Settings):
         self.__settings = settings
-        self.__pool: Optional[redis.ConnectionPool]
-        self.__redis: Optional[redis.Redis]
+        self.__pool: redis.ConnectionPool
+        self.__redis: redis.Redis
 
     def startup(self: Self) -> None:
         """Redis pool creation."""

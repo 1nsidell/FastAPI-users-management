@@ -4,29 +4,20 @@ from users_management.app.depends import APIAccessProvider, UsersUseCase
 from users_management.core.schemas import SSuccessfulRequest
 from users_management.settings import settings
 
-
-class UserNickname:
-    def __init__(self):
-        self.router = APIRouter()
-        self.router.add_api_route(
-            f"{settings.api.nicknames}/{{nickname}}",
-            self.find_nickname,
-            methods=["GET"],
-            response_model=SSuccessfulRequest,
-            status_code=200,
-        )
-
-    async def find_nickname(
-        self,
-        APIAccessProvider: APIAccessProvider,
-        UsersUseCase: UsersUseCase,
-        nickname: str = Path(...),
-        api_key: str = Header(..., alias="X-API-Key"),
-    ) -> SSuccessfulRequest:
-        APIAccessProvider.check_api_key(api_key)
-        await UsersUseCase.find_user_by_nickname(nickname)
-        return SSuccessfulRequest()
+router = APIRouter()
 
 
-user_nickname = UserNickname()
-router = user_nickname.router
+@router.get(
+    f"{settings.api.nicknames}/{{nickname}}",
+    response_model=SSuccessfulRequest,
+    status_code=200,
+)
+async def find_nickname(
+    api_access_provider: APIAccessProvider,
+    users_use_case: UsersUseCase,
+    nickname: str = Path(...),
+    api_key: str = Header(..., alias="X-API-Key"),
+) -> SSuccessfulRequest:
+    api_access_provider.check_api_key(api_key)
+    await users_use_case.find_user_by_nickname(nickname)
+    return SSuccessfulRequest()
