@@ -111,9 +111,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
         result = await session.execute(stmt)
         user_orm = result.scalars().one_or_none()
         log.info("User with ID: %s successful updated data: %s.", user_id, data)
-        user = SInfoUser.model_validate(
-            user_orm["InfoUser"], from_attributes=True
-        )
+        user = SInfoUser.model_validate(user_orm, from_attributes=True)
         return user
 
     @handle_sql_exceptions
