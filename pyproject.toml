@@ -14,7 +14,13 @@ dependencies = [
     "asyncpg>=0.30.0",
     "fastapi>=0.115.8",
     "redis>=5.2.1",
+]
+
+[dependency-groups]
+dev = [
     "black>=25.1.0",
+    "pytest>=8.3.5",
+    "ruff>=0.11.0",
 ]
 
 [tool.setuptools]

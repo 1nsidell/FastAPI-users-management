@@ -16,7 +16,7 @@ from users_management.app.repositories import (
 from users_management.app.schemas.users import SInfoUser
 from users_management.settings import Settings
 
-log = logging.getLogger("app")
+log = logging.getLogger(__name__)
 
 
 class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):

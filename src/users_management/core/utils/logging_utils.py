@@ -1,11 +1,11 @@
-"""A utils module for the logger."""
+"""A utils module for logger."""
 
 import json
 import logging
 import re
 import time
 from datetime import datetime, timezone
-from typing import Any, Dict, Optional
+from typing import Optional
 
 
 class UTCFormatter(logging.Formatter):  # UTC for logging
@@ -14,7 +14,7 @@ class UTCFormatter(logging.Formatter):  # UTC for logging
 
 class MaskingFilter(logging.Filter):
     def filter(self, record):
-        record.msg = self.mask_sensitive_data(record.msg)
+        record.msg = self.mask_sensitive_data(str(record.msg))
         return True
 
     @staticmethod
@@ -39,7 +39,7 @@ class JsonFormatter(logging.Formatter):
 
     def __init__(
         self,
-        fmt_dict: Optional[Dict[Any, Any]] = None,
+        fmt_dict: Optional[dict] = None,
         time_format: str = "%Y-%m-%dT%H:%M:%S",
         msec_format: str = "%s.%03dZ",
     ):

@@ -19,13 +19,7 @@ SettingsService = Annotated[Settings, Depends(get_settings)]
 
 def get_sql_db_helper(settings: Settings) -> SQLDatabaseHelper:
     """Create an singleton instance of SQL DB helper."""
-    return SQLDatabaseHelper(
-        url=settings.db.url,
-        echo=settings.db.ECHO,
-        echo_pool=settings.db.ECHO_POOL,
-        pool_size=settings.db.POOL_SIZE,
-        max_overflow=settings.db.MAX_OVERFLOW,
-    )
+    return SQLDatabaseHelper(settings=settings)
 
 
 # Singleton SQLDBHelper instance

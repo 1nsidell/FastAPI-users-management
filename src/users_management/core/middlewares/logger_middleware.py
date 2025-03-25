@@ -6,7 +6,7 @@ from fastapi import Request
 from starlette.background import BackgroundTask
 from starlette.middleware.base import BaseHTTPMiddleware
 
-log = logging.getLogger("requests")
+log = logging.getLogger(__name__)
 
 
 def log_info(

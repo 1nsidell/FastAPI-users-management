@@ -9,7 +9,7 @@ from users_management.settings import settings
 
 class Base(DeclarativeBase):
     __abstract__ = True
-    metadata = MetaData(naming_convention=settings.db.naming_convention)
+    metadata = MetaData(naming_convention=settings.sql_db.naming_convention)
 
     @declared_attr.directive
     def __tablename__(cls) -> str:

@@ -6,7 +6,7 @@ from typing import Self
 from users_management.app.exceptions import AccessDeniedException
 from users_management.app.providers import APIAccessProviderProtocol
 
-log = logging.getLogger("app")
+log = logging.getLogger(__name__)
 
 
 class APIAccessProviderImpl(APIAccessProviderProtocol):

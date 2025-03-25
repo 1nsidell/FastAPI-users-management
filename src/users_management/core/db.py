@@ -21,25 +21,19 @@ from users_management.app.exceptions import (
 )
 from users_management.settings import Settings
 
-log = logging.getLogger("app")
+log = logging.getLogger(__name__)
 
 
 class SQLDatabaseHelper:
     """Class helping to async connect to SQL database."""
 
-    def __init__(
-        self,
-        url: str,
-        echo: bool,
-        echo_pool: bool,
-        pool_size: int,
-        max_overflow: int,
-    ):
-        self.__url = url
-        self.__echo = echo
-        self.__echo_pool = echo_pool
-        self.__pool_size = pool_size
-        self.__max_overflow = max_overflow
+    def __init__(self: Self, settings: Settings):
+        self.__settings = settings
+        self.__url: str = self.__settings.sql_db.url
+        self.__echo: bool = self.__settings.sql_db.ECHO
+        self.__echo_pool: bool = self.__settings.sql_db.ECHO_POOL
+        self.__pool_size: int = self.__settings.sql_db.POOL_SIZE
+        self.__max_overflow: int = self.__settings.sql_db.MAX_OVERFLOW
 
         self.__engine: Optional[AsyncEngine]
         self.__async_session_factory: Optional[async_sessionmaker[AsyncSession]]
@@ -153,6 +147,7 @@ class RedisConnectionManager:
 
     def __init__(self: Self, settings: Settings):
         self.__settings = settings
+        self.__url: str = self.__settings.redis.users_cache_url
         self.__pool: redis.ConnectionPool
         self.__redis: redis.Redis
 
@@ -160,7 +155,7 @@ class RedisConnectionManager:
         """Redis pool creation."""
         try:
             self.__pool = redis.ConnectionPool.from_url(
-                self.__settings.redis.users_cache_url,
+                self.__url,
                 decode_responses=True,
             )
             log.info("Redis conn pool [%s] is created.", id(self.__pool))

@@ -10,7 +10,7 @@ from fastapi.responses import JSONResponse
 from users_management.core.exceptions import BaseCustomException
 from users_management.settings import settings
 
-log = logging.getLogger("exception_handler")
+log = logging.getLogger(__name__)
 
 
 def structured_exception_handler(

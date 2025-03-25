@@ -17,7 +17,7 @@ from users_management.app.repositories import (
 from users_management.app.schemas.users import SInfoUser
 from users_management.core.schemas import SAddInfoUser
 
-log = logging.getLogger("app")
+log = logging.getLogger(__name__)
 
 
 class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):

@@ -27,19 +27,19 @@ class ApiPrefix(BaseModel):
     nicknames: str = users + "/nicknames"
 
 
-class DatabaseConfig(BaseModel):
+class SQLDatabaseConfig(BaseModel):
     """Config to connect to SQL database"""
 
-    DRIVER: str = os.getenv("DB_DRIVER", "postgresql+asyncpg")
-    USER: str = os.getenv("DB_USER", "guest")
-    PASS: str = os.getenv("DB_PASS", "guest")
-    HOST: str = os.getenv("DB_HOST", "localhost")
-    PORT: int = int(os.getenv("DB_PORT", "5432"))
-    NAME: str = os.getenv("DB_NAME", "postgres")
-    ECHO: bool = bool(int(os.getenv("DB_ECHO", "0")))
-    ECHO_POOL: bool = bool(int(os.getenv("DB_ECHO_POOL", "0")))
-    POOL_SIZE: int = int(os.getenv("DB_POOL_SIZE", "5"))
-    MAX_OVERFLOW: int = int(os.getenv("DB_MAX_OVERFLOW", "10"))
+    DRIVER: str = os.getenv("SQL_DRIVER", "postgresql+asyncpg")
+    USER: str = os.getenv("SQL_USER", "guest")
+    PASS: str = os.getenv("SQL_PASS", "guest")
+    HOST: str = os.getenv("SQL_HOST", "localhost")
+    PORT: int = int(os.getenv("SQL_PORT", "5432"))
+    NAME: str = os.getenv("SQL_NAME", "postgres")
+    ECHO: bool = bool(int(os.getenv("SQL_ECHO", "0")))
+    ECHO_POOL: bool = bool(int(os.getenv("SQL_ECHO_POOL", "0")))
+    POOL_SIZE: int = int(os.getenv("SQL_POOL_SIZE", "5"))
+    MAX_OVERFLOW: int = int(os.getenv("SQL_MAX_OVERFLOW", "10"))
 
     @property
     def url(self) -> URL:
@@ -81,7 +81,7 @@ class Settings:
     mode: bool = str(os.getenv("MODE", "PROD"))
     api_key: str = os.getenv("API_KEY", "secret")
     api: ApiPrefix = ApiPrefix()
-    db: DatabaseConfig = DatabaseConfig()
+    sql_db: SQLDatabaseConfig = SQLDatabaseConfig()
     redis: RedisConfig = RedisConfig()
     paths: Paths = Paths()
 

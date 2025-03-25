@@ -30,7 +30,7 @@ target_metadata = Base.metadata
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
 config.set_main_option(
-    "sqlalchemy.url", settings.db.url.render_as_string(hide_password=False)
+    "sqlalchemy.url", settings.sql_db.url.render_as_string(hide_password=False)
 )
 
 
