@@ -1,9 +1,10 @@
-import logging
 from functools import wraps
+import logging
 from typing import Tuple, Type, Union
 
 from redis.exceptions import RedisError
 from sqlalchemy.exc import SQLAlchemyError
+
 from users_management.app.exceptions import (
     RedisCacheDBException,
     SQLRepositoryException,

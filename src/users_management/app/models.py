@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column
+
 from users_management.core.models.base import Base
 from users_management.core.models.mixins import (
     CreatedTimestampMixin,

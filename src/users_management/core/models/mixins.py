@@ -1,6 +1,7 @@
 import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
+
 from users_management.core.models.utils.to_utc_converter import to_utc_converter
 
 

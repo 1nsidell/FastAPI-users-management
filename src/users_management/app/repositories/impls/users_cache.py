@@ -2,12 +2,13 @@
 A module that describes an implementation for interacting with cache storage.
 """
 
+from datetime import timedelta
 import json
 import logging
-from datetime import timedelta
 from typing import Any, Dict, List, Optional, Self
 
 import redis.asyncio as redis
+
 from users_management.app.repositories import (
     UsersCacheRepositoryProtocol,
     handle_redis_exceptions,

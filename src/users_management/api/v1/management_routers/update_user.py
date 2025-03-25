@@ -1,6 +1,7 @@
 from typing import Any, Dict
 
 from fastapi import APIRouter, Header, Path
+
 from users_management.app.depends import APIAccessProvider, UsersUseCase
 from users_management.app.schemas.users import SInfoUser
 from users_management.settings import settings

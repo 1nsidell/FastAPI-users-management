@@ -95,4 +95,18 @@ docstring-code-line-length = "dynamic"
 [lint.isort]
 known-third-party = [
     "alembic",
+    "fastapi",
+    "pytest",
+    "redis",
+    "uvicorn",
+]
+combine-as-imports = true
+force-sort-within-sections = true
+known-first-party = ["users_management"]
+section-order = [
+    "future",
+    "standard-library",
+    "third-party",
+    "first-party",
+    "local-folder",
 ]

@@ -8,6 +8,7 @@ from typing import Any, Dict, Optional, Self
 
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from users_management.app.models import InfoUser
 from users_management.app.repositories import (
     UsersSQLRepositoryProtocol,

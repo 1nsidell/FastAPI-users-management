@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+
 from users_management.core.schemas import SSuccessfulRequest
 from users_management.settings import settings
 

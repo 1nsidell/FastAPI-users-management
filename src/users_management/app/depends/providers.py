@@ -5,6 +5,7 @@ ioc container for creating providers.
 from typing import Annotated
 
 from fastapi import Depends
+
 from users_management.app.providers import APIAccessProviderProtocol
 from users_management.app.providers.impls.api_access import (
     APIAccessProviderImpl,

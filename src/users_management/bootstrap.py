@@ -9,7 +9,6 @@ from fastapi import FastAPI
 from users_management.core.depends import RedisManager, SQLDBHelper
 from users_management.core.loggers import setup_logging
 from users_management.exceptions import apply_exceptions_handlers
-from users_management.middlewares import apply_middlewares
 from users_management.routers import apply_routes
 from users_management.settings import settings
 
@@ -35,4 +34,4 @@ def create_app() -> FastAPI:
         docs_url="/docs",
         openapi_url="/docs.json",
     )
-    return apply_exceptions_handlers(apply_routes(apply_middlewares(app)))
+    return apply_exceptions_handlers(apply_routes(app))

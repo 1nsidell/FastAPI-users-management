@@ -91,3 +91,6 @@ venv/
 */*.swp
 */*/*.swp
 */*/*/*.swp
+
+# other
+.ruff_cache/

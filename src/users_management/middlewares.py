@@ -4,11 +4,7 @@ Main module for middleware application.
 
 from fastapi import FastAPI
 
-from users_management.core.middlewares.logger_middleware import (
-    RequestLoggingMiddleware,
-)
-
-middlewares = [RequestLoggingMiddleware]
+middlewares = []
 
 
 def apply_middlewares(app: FastAPI) -> FastAPI:

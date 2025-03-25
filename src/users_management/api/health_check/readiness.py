@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 from sqlalchemy.future import select
+
 from users_management.app.exceptions import (
     RedisHealthException,
     SQLRepositoryException,

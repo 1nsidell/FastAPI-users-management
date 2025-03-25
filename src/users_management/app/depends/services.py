@@ -5,6 +5,7 @@ ioc container for creating services.
 from typing import Annotated
 
 from fastapi import Depends
+
 from users_management.app.depends.repositories import (
     RedisUsersCacheRepository,
     UsersSQLRepository,

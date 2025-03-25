@@ -2,8 +2,8 @@
 
 from typing import Annotated, Callable
 
-import redis.asyncio as redis
 from fastapi import Depends
+import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from users_management.core import (

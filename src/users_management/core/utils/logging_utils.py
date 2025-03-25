@@ -1,10 +1,10 @@
 """A utils module for logger."""
 
+from datetime import datetime, timezone
 import json
 import logging
 import re
 import time
-from datetime import datetime, timezone
 from typing import Optional
 
 
