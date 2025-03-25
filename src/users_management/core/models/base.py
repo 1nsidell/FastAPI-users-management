@@ -1,6 +1,5 @@
 from sqlalchemy import MetaData
 from sqlalchemy.orm import DeclarativeBase, declared_attr
-
 from users_management.core.models.utils.tablename_converter import (
     tablename_converter,
 )

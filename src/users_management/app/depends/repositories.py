@@ -5,7 +5,6 @@ ioc container for creating repositories.
 from typing import Annotated
 
 from fastapi import Depends
-
 from users_management.app.repositories import (
     UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,

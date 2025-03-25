@@ -7,13 +7,11 @@ from abc import abstractmethod
 from typing import Any, Dict, Protocol, Self
 
 from sqlalchemy.ext.asyncio import AsyncSession
-
 from users_management.app.schemas.users import SInfoUser
 from users_management.core.schemas import SAddInfoUser
 
 
 class UsersSQLRepositoryProtocol(Protocol):
-
     @abstractmethod
     async def get_user(
         self: Self,

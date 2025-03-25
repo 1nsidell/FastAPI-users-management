@@ -8,7 +8,6 @@ from datetime import timedelta
 from typing import Any, Dict, List, Optional, Self
 
 import redis.asyncio as redis
-
 from users_management.app.repositories import (
     UsersCacheRepositoryProtocol,
     handle_redis_exceptions,

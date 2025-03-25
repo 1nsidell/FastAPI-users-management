@@ -11,7 +11,6 @@ from users_management.core.schemas import SAddInfoUser
 
 
 class UsersManagementUseCaseProtocol(Protocol):
-
     UsersService: UsersManagementServiceProtocol
 
     @abstractmethod

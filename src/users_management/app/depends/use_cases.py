@@ -5,7 +5,6 @@ ioc container for creating use cases.
 from typing import Annotated
 
 from fastapi import Depends
-
 from users_management.app.depends.services import UsersService
 from users_management.app.use_cases import UsersManagementUseCaseProtocol
 

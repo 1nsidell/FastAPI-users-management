@@ -25,7 +25,6 @@ log = logging.getLogger(__name__)
 
 
 class UsersManagementServiceImpl(UsersManagementServiceProtocol):
-
     def __init__(
         self,
         users_sql_repository: UsersSQLRepositoryProtocol,

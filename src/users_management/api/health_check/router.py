@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from users_management.api.health_check import liveness_router, readiness_router
 from users_management.settings import settings
 

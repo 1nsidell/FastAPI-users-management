@@ -8,10 +8,10 @@ from ..v1.management_routers.get_user import router as get_user_router
 from ..v1.management_routers.update_user import router as update_user_router
 
 __all__ = [
-    "get_user_router",
-    "get_list_users_router",
     "create_user_router",
     "delete_user_router",
-    "update_user_router",
     "find_nickname_router",
+    "get_list_users_router",
+    "get_user_router",
+    "update_user_router",
 ]

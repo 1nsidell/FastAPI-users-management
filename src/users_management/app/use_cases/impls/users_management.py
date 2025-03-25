@@ -11,7 +11,6 @@ from users_management.core.schemas import SAddInfoUser
 
 
 class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
-
     def __init__(
         self,
         UsersService: UsersManagementServiceProtocol,

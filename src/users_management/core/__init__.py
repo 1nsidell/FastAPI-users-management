@@ -7,9 +7,9 @@ from users_management.core.depends import RedisPool, SettingsService, UoW
 
 __all__ = [
     "RedisConnectionManager",
+    "RedisPool",
     "SQLDatabaseHelper",
     "SQLRepositoryUOW",
-    "RedisPool",
     "SettingsService",
     "UoW",
 ]

@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from users_management.api.v1 import (
     create_user_router,
     delete_user_router,

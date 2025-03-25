@@ -15,7 +15,6 @@ from users_management.core.schemas import SAddInfoUser
 
 
 class UsersManagementServiceProtocol(Protocol):
-
     users_sql_repository: UsersSQLRepositoryProtocol
     redis_users_cache: UsersCacheRepositoryProtocol
     uow: SQLRepositoryUOW
