@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 from users_management.core.exceptions import BaseCustomException
 from users_management.settings import settings
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("ExceptionsLogger")
 
 
 async def read_request_body(request: Request) -> str:
