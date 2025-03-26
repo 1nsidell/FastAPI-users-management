@@ -2,15 +2,34 @@ services:
   app:
     container_name: FastAPI-users-management
     restart: unless-stopped
-    build: ./
+    build:
+      context: .
+      dockerfile: app.Dockerfile
     ports:
       - ${APP_HOST_PORT}:8000
     networks:
       - fastapi_net
     env_file:
       - .env
+    volumes:
+      - logs:/app/logs
+
+  filebeat:
+    build:
+      context: .
+      dockerfile: filebeat.Dockerfile
+    container_name: filebeat
+    restart: unless-stopped
+    user: root
+    volumes:
+      - logs:/app/logs
+    networks:
+      - fastapi_net
 
 networks:
   fastapi_net:
     external: true
     name: FastAPI_app
+
+volumes:
+  logs:

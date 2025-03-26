@@ -41,7 +41,7 @@ class JsonFormatter(logging.Formatter):
         self,
         fmt_dict: Optional[dict] = None,
         time_format: str = "%Y-%m-%dT%H:%M:%S",
-        msec_format: str = "%s.%03dZ",
+        msec_format: str = "%s.%03dz",
     ):
         self.fmt_dict = (
             fmt_dict if fmt_dict is not None else {"message": "message"}

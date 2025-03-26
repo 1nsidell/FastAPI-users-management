@@ -1,0 +1,10 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      - /app/logs/app.log
+    fields:
+      service: "fastapi_users_management"
+
+output.logstash:
+  hosts: ["logstash:5044"]

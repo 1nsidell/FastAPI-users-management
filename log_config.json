@@ -43,7 +43,7 @@
         }
     },
     "root": {
-        "level": "INFO",
-        "handlers": ["console", "file"]
+        "level": "WARNING",
+        "handlers": ["file"]
     }
 }
