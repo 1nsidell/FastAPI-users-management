@@ -53,7 +53,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         if not user:
             raise UserNotFoundException()
         try:
-            await self.redis_users_cache.add_user(user_id, user.model_dump())
+            await self.redis_users_cache.add_user(user_id, user)
         except RedisCacheDBException:
             log.warning("Cache operation failed.", exc_info=True)
         return user

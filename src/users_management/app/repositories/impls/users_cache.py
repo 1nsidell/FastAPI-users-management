@@ -3,9 +3,8 @@ A module that describes an implementation for interacting with cache storage.
 """
 
 from datetime import timedelta
-import json
 import logging
-from typing import Any, Dict, List, Optional, Self
+from typing import List, Optional, Self
 
 import redis.asyncio as redis
 
@@ -30,16 +29,16 @@ class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
         )
 
     @handle_redis_exceptions
-    async def add_user(self: Self, key: int, data: Dict[str, Any]) -> None:
+    async def add_user(self: Self, key: int, data: SInfoUser) -> None:
         log.info("Adding cache by key: %s.", key)
-        json_data = json.dumps(data)
+        json_data = data.model_dump_json()
         await self.__redis.set(key, json_data, ex=self.__expiration)
 
     @handle_redis_exceptions
-    async def get_user(self: Self, key: int) -> Optional[Dict[str, Any]]:
+    async def get_user(self: Self, key: int) -> Optional[SInfoUser]:
         log.info("Searching the cache by key: %s.", key)
         value = await self.__redis.get(key)
-        return json.loads(value) if value else None
+        return SInfoUser.model_validate_json(value) if value else None
 
     @handle_redis_exceptions
     async def delete_user(self: Self, key: int) -> None:
@@ -59,11 +58,13 @@ class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
         await pipeline.execute()
 
     @handle_redis_exceptions
-    async def get_list_users(self, keys: List[int]) -> Optional[List[Dict]]:
+    async def get_list_users(
+        self, keys: List[int]
+    ) -> Optional[List[SInfoUser]]:
         values = await self.__redis.mget(keys)
 
         if any(v is None for v in values):
             log.info("Some keys not found in cache: %s.", keys)
             return None
 
-        return [json.loads(v) for v in values]
+        return [SInfoUser.model_validate_json(v) for v in values if v]
