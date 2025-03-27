@@ -24,7 +24,7 @@ class MaskingFilter(logging.Filter):
             "***@***.com",
             data,
         )
-        data = re.sub(r"(?<=password=)[^&]*", "*****", data)
+        data = re.sub(r"(?<=password:)[^&]*", "*****", data)
         return data
 
 
@@ -43,9 +43,7 @@ class JsonFormatter(logging.Formatter):
         time_format: str = "%Y-%m-%dT%H:%M:%S",
         msec_format: str = "%s.%03dz",
     ):
-        self.fmt_dict = (
-            fmt_dict if fmt_dict is not None else {"message": "message"}
-        )
+        self.fmt_dict = fmt_dict or {"message": "message"}
         self.default_time_format = time_format
         self.default_msec_format = msec_format
         self.datefmt = None

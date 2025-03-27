@@ -10,7 +10,7 @@ from users_management.app.repositories import (
     UsersSQLRepositoryProtocol,
 )
 from users_management.app.schemas.users import SInfoUser
-from users_management.core.db import SQLRepositoryUOW
+from users_management.core import SQLRepositoryUOW
 from users_management.core.schemas import SAddInfoUser
 
 
