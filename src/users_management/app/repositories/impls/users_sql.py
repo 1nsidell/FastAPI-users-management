@@ -1,8 +1,3 @@
-"""
-A protocol describing the methods and attributes of a repository,
-that must be defined for the application to work
-"""
-
 import logging
 from typing import Any, Dict, Optional, Self
 

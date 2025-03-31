@@ -11,11 +11,11 @@ from fastapi import Depends
 import redis.asyncio as redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from users_management.core import (
+from users_management.core.db import (
     RedisConnectionManager,
     SQLDatabaseHelper,
-    SQLRepositoryUOW,
 )
+from users_management.core.services.transactions import SQLRepositoryUOW
 from users_management.settings import Settings, get_settings, settings
 
 # ================== Global Instances (for lifespan) ==================

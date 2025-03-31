@@ -14,18 +14,6 @@ services:
     volumes:
       - logs:/app/logs
 
-  filebeat:
-    build:
-      context: .
-      dockerfile: filebeat.Dockerfile
-    container_name: filebeat
-    restart: unless-stopped
-    user: root
-    volumes:
-      - logs:/app/logs
-    networks:
-      - fastapi_net
-
 networks:
   fastapi_net:
     external: true
