@@ -25,10 +25,11 @@ WORKDIR /app
 
 COPY --from=builder /app /app
 
-RUN rm -rf /root/.cache
-
-RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
-    && chown -R appuser:appgroup /app
+RUN rm -rf /root/.cache \
+    && addgroup -S appgroup \
+    && adduser -S appuser -G appgroup \
+    && chown -R appuser:appgroup /app \
+    && apk add --no-cache curl
 
 USER appuser
 

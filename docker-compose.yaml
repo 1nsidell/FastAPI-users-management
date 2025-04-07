@@ -4,15 +4,16 @@ services:
     restart: unless-stopped
     build:
       context: .
-      dockerfile: app.Dockerfile
+      dockerfile: deploy.Dockerfile
     ports:
       - ${APP_HOST_PORT}:8000
     networks:
       - fastapi_net
     env_file:
       - .env
-    volumes:
-      - logs:/app/logs
+    mem_limit: 512m
+    cpus: '1'
+
 
 networks:
   fastapi_net:
@@ -20,6 +21,3 @@ networks:
     name: FastAPI_app
     # If the network does not exist, create it:
     # docker network create FastAPI_app
-
-volumes:
-  logs:

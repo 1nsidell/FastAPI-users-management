@@ -95,3 +95,10 @@ venv/
 # other
 .ruff_cache/
 .vscode/
+
+# tests
+tests/
+.coverage
+.pytest_cache/
+htmlcov/
+coverage.xml

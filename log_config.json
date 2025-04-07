@@ -14,7 +14,7 @@
                 "asctime": "asctime",
                 "module": "module",
                 "lineno": "lineno",
-                "from": "name"
+                "logger": "name"
             }
         }
     },
@@ -43,7 +43,7 @@
         }
     },
     "root": {
-        "level": "WARNING",
+        "level": "INFO",
         "handlers": ["file"]
     }
 }
