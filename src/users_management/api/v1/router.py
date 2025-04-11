@@ -3,7 +3,7 @@ from fastapi import APIRouter
 from users_management.api.v1 import (
     create_user_router,
     delete_user_router,
-    find_nickname_router,
+    exist_nickname_router,
     get_list_users_router,
     get_user_router,
     update_user_router,
@@ -18,7 +18,7 @@ v1_router = APIRouter(
 v1_sub_routers = (
     get_user_router,
     get_list_users_router,
-    find_nickname_router,
+    exist_nickname_router,
     create_user_router,
     update_user_router,
     delete_user_router,

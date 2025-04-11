@@ -23,7 +23,11 @@ log = logging.getLogger(__name__)
 
 
 class SQLDatabaseHelper:
-    """Class helping to async connect to SQL database."""
+    """Class helping to async connect to SQL database.
+
+    Args:
+        __settings (Settings): Application config.
+    """
 
     def __init__(self: Self, settings: Settings):
         self.__settings = settings
@@ -73,7 +77,11 @@ class SQLDatabaseHelper:
 
 
 class RedisConnectionManager:
-    """A class for getting an instance of the redis pool."""
+    """A class for getting an instance of the redis pool.
+
+    Args:
+        __settings (Settings): Application config.
+    """
 
     def __init__(self: Self, settings: Settings):
         self.__settings = settings

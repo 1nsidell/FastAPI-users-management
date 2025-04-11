@@ -16,3 +16,10 @@ class SSuccessfulRequest(BaseModel):
     """Response on a successful request that does not require data."""
 
     message: str = "success"
+
+
+class SErrorResponse(BaseModel):
+    """Schema for error responses."""
+
+    error_type: str
+    message: str

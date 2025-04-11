@@ -90,4 +90,4 @@ def get_settings() -> Settings:
     return Settings()
 
 
-settings: Settings = get_settings()  # Setting class singleton.
+settings: Settings = get_settings()  # Global settings instance.

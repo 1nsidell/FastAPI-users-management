@@ -25,7 +25,7 @@ class RedisCacheDBException(CustomRepositoriesException):
     """Cache operation failed."""
 
     error_type = "REDIS_ERROR"
-    status_code = 202
+    status_code = 500
 
     def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__
@@ -36,7 +36,7 @@ class RedisHealthException(CustomRepositoriesException):
     """Redis connection error."""
 
     error_type = "REDIS_ERROR"
-    status_code = 500
+    status_code = 503
 
     def __init__(self, message: Optional[str] = None):
         self.message = message or self.__doc__

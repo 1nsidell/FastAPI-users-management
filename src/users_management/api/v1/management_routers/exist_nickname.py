@@ -1,17 +1,16 @@
-from fastapi import APIRouter, Header, status
+from fastapi import APIRouter, Header, Path, status
 
 from users_management.app.depends import APIAccessProvider, UsersUseCase
-from users_management.app.schemas.users import SInfoUser
-from users_management.core.schemas import SAddInfoUser, SErrorResponse
+from users_management.core.schemas import SErrorResponse, SSuccessfulRequest
 from users_management.settings import settings
 
 router = APIRouter()
 
 
-@router.post(
-    settings.api.users,
-    response_model=SInfoUser,
-    status_code=status.HTTP_201_CREATED,
+@router.get(
+    f"{settings.api.nicknames}/{{nickname}}",
+    response_model=SSuccessfulRequest,
+    status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_403_FORBIDDEN: {
             "model": SErrorResponse,
@@ -27,12 +26,12 @@ router = APIRouter()
         },
         status.HTTP_409_CONFLICT: {
             "model": SErrorResponse,
-            "description": "Username conflict",
+            "description": "Username exists",
             "content": {
                 "application/json": {
                     "example": {
-                        "error_type": "USERNAME_ALREADY_EXIST",
-                        "message": "A user with this name already exists.",
+                        "error_type": "USER_EXIST",
+                        "message": "User already exist.",
                     }
                 }
             },
@@ -63,49 +62,36 @@ router = APIRouter()
         },
     },
 )
-async def create_user(
+async def exist_nickname(
     api_access_provider: APIAccessProvider,
     users_use_case: UsersUseCase,
-    user_info: SAddInfoUser,
+    nickname: str = Path(...),
     api_key: str = Header(..., alias="X-API-Key"),
-) -> SInfoUser:
-    """Create a new user in the system.
+) -> SSuccessfulRequest:
+    """Check if a nickname is available in the system.
 
     Args:
-        user_info (SAddInfoUser): User information with required fields:
-            - user_id (PositiveInt): Unique user identifier
-            - nickname (str): Unique user nickname
+        nickname (str): Nickname to check for availability
         api_key (str): API key for authentication (passed in X-API-Key header)
 
     Returns:
-        SInfoUser: Created user information containing:
-            - user_id (int): User's unique identifier
-            - nickname (str): User's nickname
-            - is_active (bool): User's active status (default: True)
-            - is_verified (bool): User's verification status (default: False)
-            - avatar (bool): User's avatar status (default: False)
+        SSuccessfulRequest: Empty success response if nickname is available
+            Response body: {"message": "success"}
 
     Example Request:
-        POST /api/users-management/v1/users
+        GET /api/users-management/v1/nicknames/john_doe
         Headers:
             X-API-Key: your-api-key
-        Body:
-            {
-                "user_id": 123,
-                "nickname": "john_doe"
-            }
 
     Example Success Response:
-        Status: 201 Created
-        Body:
-            {
-                "user_id": 123,
-                "nickname": "john_doe",
-                "is_active": true,
-                "is_verified": false,
-                "avatar": false
-            }
+        Status: 200 OK
+        Body: {"message": "success"}
+
+    Note:
+        - Returns 200 OK if the nickname is available
+        - Returns 409 Conflict if the nickname is already taken
     """
 
     api_access_provider.check_api_key(api_key)
-    return await users_use_case.create_user(user_info)
+    await users_use_case.find_user_by_nickname(nickname)
+    return SSuccessfulRequest()
