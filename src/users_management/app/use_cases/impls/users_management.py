@@ -4,10 +4,10 @@ Module for users use case implementation.
 
 from typing import Any, Dict, Self
 
+from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
 from users_management.app.services import UsersManagementServiceProtocol
 from users_management.app.use_cases import UsersManagementUseCaseProtocol
-from users_management.core.schemas import SAddInfoUser
 
 
 class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
@@ -39,7 +39,7 @@ class UsersManagementUseCaseImpl(UsersManagementUseCaseProtocol):
 
     async def create_user(
         self: Self,
-        data: SAddInfoUser,
+        data: CreateUserRequest,
     ) -> SInfoUser:
         return await self.users_service.create_user(data)
 

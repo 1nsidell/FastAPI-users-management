@@ -6,14 +6,14 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from users_management.app.repositories import (
+from users_management.app.gateways import (
     UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
-from users_management.app.repositories.impls.users_cache import (
+from users_management.app.gateways.impls.users_cache import (
     UsersCacheRepositoryImpl,
 )
-from users_management.app.repositories.impls.users_sql import (
+from users_management.app.gateways.impls.users_sql import (
     UsersSQLRepositoryImpl,
 )
 from users_management.core import RedisPool, SettingsService

@@ -8,8 +8,8 @@ from typing import Any, Dict, Protocol, Self
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
-from users_management.core.schemas import SAddInfoUser
 
 
 class UsersSQLRepositoryProtocol(Protocol):
@@ -50,13 +50,13 @@ class UsersSQLRepositoryProtocol(Protocol):
     async def create_user(
         self: Self,
         session: AsyncSession,
-        data: SAddInfoUser,
+        data: CreateUserRequest,
     ) -> SInfoUser:
         """Add a new user.
 
         Args:
             session (AsyncSession): transaction session.
-            data (SAddInfoUser): data to be added.
+            data (CreateUserRequest): data to be added.
 
         Returns:
             SInfoUser: user data.

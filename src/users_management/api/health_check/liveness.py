@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from users_management.core.schemas import SSuccessfulRequest
+from users_management.app.schemas.responses import SuccessResponse
 from users_management.settings import settings
 
 router = APIRouter()
@@ -8,10 +8,10 @@ router = APIRouter()
 
 @router.get(
     settings.api.liveness,
-    response_model=SSuccessfulRequest,
+    response_model=SuccessResponse,
     status_code=status.HTTP_200_OK,
 )
-async def get_liveness() -> SSuccessfulRequest:
+async def get_liveness() -> SuccessResponse:
     """Check if the service is alive.
 
     This endpoint performs a basic health check to verify that the service
@@ -19,7 +19,7 @@ async def get_liveness() -> SSuccessfulRequest:
     a connection error instead of an HTTP response.
 
     Returns:
-        SSuccessfulRequest: A success response indicating the service is alive
+        SuccessResponse: A success response indicating the service is alive
             Response body: {"message": "success"}
 
     Example Request:
@@ -33,4 +33,4 @@ async def get_liveness() -> SSuccessfulRequest:
         If the service is completely down, no HTTP response will be returned
         and the client will receive a connection error or timeout.
     """
-    return SSuccessfulRequest()
+    return SuccessResponse()

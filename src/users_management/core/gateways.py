@@ -42,6 +42,8 @@ class SQLDatabaseHelper:
 
     def startup(self: Self) -> None:
         """Initialize the database engine and session factory."""
+        if self.__engine or self.__async_session_factory:
+            raise SQLRepositoryException("Already connected to DB")
         try:
             self.__engine = create_async_engine(
                 url=self.__url,
@@ -91,6 +93,8 @@ class RedisConnectionManager:
 
     def startup(self: Self) -> None:
         """Redis pool creation."""
+        if self.__pool:
+            raise RedisCacheDBException("Already connected to Redis.")
         try:
             self.__pool = redis.ConnectionPool.from_url(
                 self.__url,

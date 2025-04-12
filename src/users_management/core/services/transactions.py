@@ -1,7 +1,7 @@
 import logging
 from typing import Callable, Optional
 
-from sqlalchemy.ext.asyncio import AsyncSession, AsyncSessionTransaction
+from sqlalchemy.ext.asyncio import AsyncSession
 
 from users_management.app.exceptions import TransactionException
 
@@ -19,11 +19,9 @@ class SQLRepositoryUOW:
         """
         self.__session_factory = session_factory
         self.__session: Optional[AsyncSession]
-        self.__transaction: Optional[AsyncSessionTransaction]
 
     async def __aenter__(self) -> AsyncSession:
         self.__session = self.__session_factory()
-        self.__transaction = await self.__session.begin()
         log.info("Session [%s] started.", id(self.__session))
         return self.__session
 
@@ -45,7 +43,7 @@ class SQLRepositoryUOW:
 
     async def _rollback(self):
         try:
-            await self.__transaction.rollback()
+            await self.__session.rollback()
             log.warning(
                 "Rolled back transaction for session [%s]", id(self.__session)
             )
@@ -56,7 +54,7 @@ class SQLRepositoryUOW:
 
     async def _commit(self):
         try:
-            await self.__transaction.commit()
+            await self.__session.commit()
             log.debug(
                 "Committed transaction for session [%s]", id(self.__session)
             )
@@ -73,4 +71,3 @@ class SQLRepositoryUOW:
             log.exception("Failed to close session [%s]", id(self.__session))
         finally:
             self.__session = None
-            self.__transaction = None

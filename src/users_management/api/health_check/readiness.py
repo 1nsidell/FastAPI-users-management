@@ -5,8 +5,11 @@ from users_management.app.exceptions import (
     RedisHealthException,
     SQLRepositoryException,
 )
+from users_management.app.schemas.responses import (
+    ErrorResponse,
+    SuccessResponse,
+)
 from users_management.core.depends import RedisManager, SQLDBHelper
-from users_management.core.schemas import SErrorResponse, SSuccessfulRequest
 from users_management.settings import settings
 
 router = APIRouter()
@@ -14,11 +17,11 @@ router = APIRouter()
 
 @router.get(
     settings.api.readiness,
-    response_model=SSuccessfulRequest,
+    response_model=SuccessResponse,
     status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_503_SERVICE_UNAVAILABLE: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "Service dependencies are not ready",
             "content": {
                 "application/json": {
@@ -49,7 +52,7 @@ router = APIRouter()
             },
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "Internal server error",
             "content": {
                 "application/json": {
@@ -62,7 +65,7 @@ router = APIRouter()
         },
     },
 )
-async def get_readiness() -> SSuccessfulRequest:
+async def get_readiness() -> SuccessResponse:
     """Check if the service and its dependencies are ready to handle requests.
 
     This endpoint performs a deep health check by verifying connectivity to:
@@ -70,7 +73,7 @@ async def get_readiness() -> SSuccessfulRequest:
     - SQL database
 
     Returns:
-        SSuccessfulRequest: A success response if all dependencies are available
+        SuccessResponse: A success response if all dependencies are available
             Response body: {"message": "success"}
 
     Example Request:
@@ -97,4 +100,4 @@ async def get_readiness() -> SSuccessfulRequest:
     except Exception:
         raise SQLRepositoryException("SQL connectivity error.")
 
-    return SSuccessfulRequest()
+    return SuccessResponse()

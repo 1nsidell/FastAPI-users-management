@@ -1,4 +1,4 @@
-from ..repositories.exceptions_handler import (
+from ..gateways.exceptions_handler import (
     handle_redis_exceptions,
     handle_sql_exceptions,
 )

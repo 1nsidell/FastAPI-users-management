@@ -1,8 +1,9 @@
 from fastapi import APIRouter, Header, status
 
 from users_management.app.depends import APIAccessProvider, UsersUseCase
+from users_management.app.schemas.requests import CreateUserRequest
+from users_management.app.schemas.responses import ErrorResponse
 from users_management.app.schemas.users import SInfoUser
-from users_management.core.schemas import SAddInfoUser, SErrorResponse
 from users_management.settings import settings
 
 router = APIRouter()
@@ -14,7 +15,7 @@ router = APIRouter()
     status_code=status.HTTP_201_CREATED,
     responses={
         status.HTTP_403_FORBIDDEN: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "API key validation failed",
             "content": {
                 "application/json": {
@@ -26,7 +27,7 @@ router = APIRouter()
             },
         },
         status.HTTP_409_CONFLICT: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "Username conflict",
             "content": {
                 "application/json": {
@@ -38,7 +39,7 @@ router = APIRouter()
             },
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "Internal server error",
             "content": {
                 "application/json": {
@@ -66,13 +67,13 @@ router = APIRouter()
 async def create_user(
     api_access_provider: APIAccessProvider,
     users_use_case: UsersUseCase,
-    user_info: SAddInfoUser,
+    user_info: CreateUserRequest,
     api_key: str = Header(..., alias="X-API-Key"),
 ) -> SInfoUser:
     """Create a new user in the system.
 
     Args:
-        user_info (SAddInfoUser): User information with required fields:
+        user_info (CreateUserRequest): User information with required fields:
             - user_id (PositiveInt): Unique user identifier
             - nickname (str): Unique user nickname
         api_key (str): API key for authentication (passed in X-API-Key header)

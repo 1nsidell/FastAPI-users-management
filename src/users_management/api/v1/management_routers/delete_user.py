@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Header, Path, status
 
 from users_management.app.depends import APIAccessProvider, UsersUseCase
-from users_management.core.schemas import SErrorResponse
+from users_management.app.schemas.responses import ErrorResponse
 from users_management.settings import settings
 
 router = APIRouter()
@@ -12,7 +12,7 @@ router = APIRouter()
     status_code=status.HTTP_204_NO_CONTENT,
     responses={
         status.HTTP_403_FORBIDDEN: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "API key validation failed",
             "content": {
                 "application/json": {
@@ -24,7 +24,7 @@ router = APIRouter()
             },
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "Internal server error",
             "content": {
                 "application/json": {

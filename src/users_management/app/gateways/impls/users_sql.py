@@ -4,13 +4,13 @@ from typing import Any, Dict, Optional, Self
 from sqlalchemy import delete, insert, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from users_management.app.models import InfoUser
-from users_management.app.repositories import (
+from users_management.app.gateways import (
     UsersSQLRepositoryProtocol,
     handle_sql_exceptions,
 )
+from users_management.app.models import InfoUser
+from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
-from users_management.core.schemas import SAddInfoUser
 
 log = logging.getLogger(__name__)
 
@@ -63,7 +63,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     async def create_user(
         self: Self,
         session: AsyncSession,
-        data: SAddInfoUser,
+        data: CreateUserRequest,
     ) -> SInfoUser:
         log.info(
             "Creating new user with ID: %s and nickname: %s.",

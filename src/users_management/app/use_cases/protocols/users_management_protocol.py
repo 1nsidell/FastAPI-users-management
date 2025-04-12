@@ -5,9 +5,9 @@ Module for users use case description.
 from abc import abstractmethod
 from typing import Any, Dict, Protocol, Self
 
+from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
 from users_management.app.services import UsersManagementServiceProtocol
-from users_management.core.schemas import SAddInfoUser
 
 
 class UsersManagementUseCaseProtocol(Protocol):
@@ -57,12 +57,12 @@ class UsersManagementUseCaseProtocol(Protocol):
     @abstractmethod
     async def create_user(
         self: Self,
-        data: SAddInfoUser,
+        data: CreateUserRequest,
     ) -> SInfoUser:
         """Add a new user.
 
         Args:
-            **data (SAddInfoUser): data to be user create.
+            **data (CreateUserRequest): data to be user create.
 
         Returns:
             SInfoUser: created user data.

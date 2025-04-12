@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Header, Path, status
 
 from users_management.app.depends import APIAccessProvider, UsersUseCase
+from users_management.app.schemas.responses import ErrorResponse
 from users_management.app.schemas.users import SInfoUser
-from users_management.core.schemas import SErrorResponse
 from users_management.settings import settings
 
 router = APIRouter()
@@ -14,7 +14,7 @@ router = APIRouter()
     status_code=status.HTTP_200_OK,
     responses={
         status.HTTP_403_FORBIDDEN: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "API key rejected",
             "content": {
                 "application/json": {
@@ -26,7 +26,7 @@ router = APIRouter()
             },
         },
         status.HTTP_404_NOT_FOUND: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "User not found",
             "content": {
                 "application/json": {
@@ -38,7 +38,7 @@ router = APIRouter()
             },
         },
         status.HTTP_500_INTERNAL_SERVER_ERROR: {
-            "model": SErrorResponse,
+            "model": ErrorResponse,
             "description": "Database operation failed",
             "content": {
                 "application/json": {

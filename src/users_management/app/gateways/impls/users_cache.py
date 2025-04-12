@@ -8,7 +8,7 @@ from typing import List, Optional, Self
 
 import redis.asyncio as redis
 
-from users_management.app.repositories import (
+from users_management.app.gateways import (
     UsersCacheRepositoryProtocol,
     handle_redis_exceptions,
 )
