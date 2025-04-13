@@ -1,5 +1,8 @@
+from ...gateways.depends.repositories import (
+    RedisUsersCacheRepository,
+    UsersSQLRepository,
+)
 from .providers import APIAccessProvider
-from .repositories import RedisUsersCacheRepository, UsersSQLRepository
 from .services import UsersService
 from .use_cases import UsersUseCase
 

@@ -1,23 +1,19 @@
-from users_management.core.depends import (
-    RedisManager,
-    RedisPool,
-    SettingsService,
-    SQLDBHelper,
-    UoW,
-)
-from users_management.core.gateways import (
-    RedisConnectionManager,
-    SQLDatabaseHelper,
-)
-from users_management.core.services.transactions import SQLRepositoryUOW
+"""Core module for base components."""
 
-__all__ = [
-    "RedisConnectionManager",
-    "RedisManager",
-    "RedisPool",
-    "SQLDBHelper",
-    "SQLDatabaseHelper",
-    "SQLRepositoryUOW",
-    "SettingsService",
-    "UoW",
-]
+from ..core.loggers import setup_logging
+from .models import (
+    Base,
+    CreatedTimestampMixin,
+    IntIdPkMixin,
+    UpdatedTimestampMixin,
+)
+from .schemas import BaseSchema
+
+__all__ = (
+    "Base",
+    "BaseSchema",
+    "CreatedTimestampMixin",
+    "IntIdPkMixin",
+    "UpdatedTimestampMixin",
+    "setup_logging",
+)

@@ -4,7 +4,7 @@ Main module for application roots.
 
 from fastapi import FastAPI
 
-from users_management.api.root_router import root_router
+from users_management.api.http.root_router import root_router
 
 
 def apply_routes(app: FastAPI) -> FastAPI:

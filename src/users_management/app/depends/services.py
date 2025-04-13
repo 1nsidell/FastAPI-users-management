@@ -6,24 +6,24 @@ from typing import Annotated
 
 from fastapi import Depends
 
-from users_management.app.depends.repositories import (
+from users_management.app.services import UsersManagementServiceProtocol
+from users_management.gateways.depends import UoW
+from users_management.gateways.depends.repositories import (
     RedisUsersCacheRepository,
     UsersSQLRepository,
 )
-from users_management.app.services import UsersManagementServiceProtocol
-from users_management.core import UoW
 
 from ..services.impls.users_management import UsersManagementServiceImpl
 
 
 def get_users_management_service(
-    users_sql_repository: UsersSQLRepository,
-    redis_users_cache: RedisUsersCacheRepository,
+    users_repository: UsersSQLRepository,
+    users_cache: RedisUsersCacheRepository,
     uow: UoW,
 ) -> UsersManagementServiceProtocol:
     return UsersManagementServiceImpl(
-        users_sql_repository,
-        redis_users_cache,
+        users_repository,
+        users_cache,
         uow,
     )
 

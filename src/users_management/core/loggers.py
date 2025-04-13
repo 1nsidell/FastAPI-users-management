@@ -9,7 +9,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from users_management.settings import Settings
+    from users_management.core.settings import Settings
 
 
 def setup_logging(settings: Settings) -> None:

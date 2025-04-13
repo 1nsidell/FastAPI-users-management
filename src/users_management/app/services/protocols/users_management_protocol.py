@@ -5,19 +5,19 @@ Service protocol responsible for user management.
 from abc import abstractmethod
 from typing import Any, Dict, Protocol, Self
 
-from users_management.app.gateways import (
+from users_management.app.schemas.requests import CreateUserRequest
+from users_management.app.schemas.users import SInfoUser
+from users_management.gateways.repositories import (
     UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
-from users_management.app.schemas.requests import CreateUserRequest
-from users_management.app.schemas.users import SInfoUser
-from users_management.core import SQLRepositoryUOW
+from users_management.gateways.transactions import UnitOfWorkProtocol
 
 
 class UsersManagementServiceProtocol(Protocol):
-    users_sql_repository: UsersSQLRepositoryProtocol
-    redis_users_cache: UsersCacheRepositoryProtocol
-    uow: SQLRepositoryUOW
+    users_repository: UsersSQLRepositoryProtocol
+    users_cache: UsersCacheRepositoryProtocol
+    uow: UnitOfWorkProtocol
 
     @abstractmethod
     async def get_user_by_id(

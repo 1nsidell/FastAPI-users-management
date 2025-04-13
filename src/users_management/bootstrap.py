@@ -6,11 +6,11 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from users_management.core.depends import RedisManager, SQLDBHelper
-from users_management.core.loggers import setup_logging
+from users_management.core import setup_logging
+from users_management.core.settings import settings
 from users_management.exceptions import apply_exceptions_handlers
+from users_management.gateways.depends import RedisManager, SQLDBHelper
 from users_management.routers import apply_routes
-from users_management.settings import settings
 
 
 @asynccontextmanager

@@ -9,7 +9,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from users_management.core.exceptions import BaseCustomException
-from users_management.settings import settings
+from users_management.core.settings import settings
 
 log = logging.getLogger("ExceptionsLogger")
 
