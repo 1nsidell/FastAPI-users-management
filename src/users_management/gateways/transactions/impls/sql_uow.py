@@ -6,9 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from users_management.app.exceptions import (
     TransactionException,
 )
-from users_management.gateways.transactions.protocols.uow_protocol import (
-    UnitOfWorkProtocol,
-)
+from users_management.gateways.transactions import UnitOfWorkProtocol
 
 log = logging.getLogger(__name__)
 
