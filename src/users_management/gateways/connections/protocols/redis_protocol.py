@@ -1,9 +1,7 @@
 """Module related to connection to repositories."""
 
 from abc import abstractmethod
-from typing import Protocol, Self
-
-import redis.asyncio as redis
+from typing import Any, Protocol, Self
 
 
 class RedisConnectionManagerProtocol(Protocol):
@@ -15,7 +13,9 @@ class RedisConnectionManagerProtocol(Protocol):
         ...
 
     @abstractmethod
-    def redis(self) -> redis.Redis: ...
+    def redis(self) -> Any:
+        """Return redis connection."""
+        ...
 
     @abstractmethod
     async def shutdown(self: Self) -> None: ...
