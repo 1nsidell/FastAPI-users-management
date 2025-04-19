@@ -1,5 +1,5 @@
 services:
-  app:
+  users-management:
     container_name: FastAPI-users-management
     restart: unless-stopped
     build:

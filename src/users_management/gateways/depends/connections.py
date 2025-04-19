@@ -15,7 +15,9 @@ from users_management.gateways.connections.impls.redis import (
 from users_management.gateways.connections.impls.sql import (
     SQLDatabaseHelperImpl,
 )
-from users_management.gateways.transactions import SQLRepositoryUOW
+from users_management.gateways.transactions.impls.sql_uow import (
+    SQLRepositoryUOW,
+)
 
 
 # ================== Global Instances (for lifespan) ==================

@@ -19,7 +19,7 @@ from users_management.gateways.repositories import (
     UsersCacheRepositoryProtocol,
     UsersSQLRepositoryProtocol,
 )
-from users_management.gateways.transactions import SQLRepositoryUOW
+from users_management.gateways.transactions import UnitOfWorkProtocol
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +29,7 @@ class UsersManagementServiceImpl(UsersManagementServiceProtocol):
         self,
         users_repository: UsersSQLRepositoryProtocol,
         users_cache: UsersCacheRepositoryProtocol,
-        uow: SQLRepositoryUOW,
+        uow: UnitOfWorkProtocol,
     ):
         self.users_repository = users_repository
         self.users_cache = users_cache
