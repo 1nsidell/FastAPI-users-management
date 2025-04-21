@@ -9,6 +9,7 @@ from .models import (
 )
 from .schemas import BaseSchema
 
+
 __all__ = (
     "Base",
     "BaseSchema",

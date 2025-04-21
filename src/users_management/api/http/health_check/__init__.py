@@ -5,4 +5,5 @@ from ..health_check.readiness import (
     router as readiness_router,
 )
 
+
 __all__ = ["liveness_router", "readiness_router"]

@@ -19,6 +19,7 @@ from users_management.gateways.connections import (
     SQLDatabaseHelperProtocol,
 )
 
+
 log = logging.getLogger(__name__)
 
 
@@ -30,36 +31,36 @@ class SQLDatabaseHelperImpl(SQLDatabaseHelperProtocol):
     """
 
     def __init__(self: Self, settings: Settings):
-        self.__settings = settings
-        self.__url: str = self.__settings.sql_db.url
-        self.__echo: bool = self.__settings.sql_db.ECHO
-        self.__echo_pool: bool = self.__settings.sql_db.ECHO_POOL
-        self.__pool_size: int = self.__settings.sql_db.POOL_SIZE
-        self.__max_overflow: int = self.__settings.sql_db.MAX_OVERFLOW
+        self._settings = settings
+        self._url: str = self._settings.sql_db.url
+        self._echo: bool = self._settings.sql_db.ECHO
+        self._echo_pool: bool = self._settings.sql_db.ECHO_POOL
+        self._pool_size: int = self._settings.sql_db.POOL_SIZE
+        self._max_overflow: int = self._settings.sql_db.MAX_OVERFLOW
 
-        self.__engine: Optional[AsyncEngine]
-        self.__async_session_factory: Optional[async_sessionmaker[AsyncSession]]
+        self._engine: Optional[AsyncEngine]
+        self._async_session_factory: Optional[async_sessionmaker[AsyncSession]]
 
     def startup(self: Self) -> None:
         """Initialize the database engine and session factory."""
         try:
-            self.__engine = create_async_engine(
-                url=self.__url,
-                echo=self.__echo,
-                echo_pool=self.__echo_pool,
-                max_overflow=self.__max_overflow,
-                pool_size=self.__pool_size,
+            self._engine = create_async_engine(
+                url=self._url,
+                echo=self._echo,
+                echo_pool=self._echo_pool,
+                max_overflow=self._max_overflow,
+                pool_size=self._pool_size,
             )
-            log.info("Created SQL database engine [%s].", id(self.__engine))
-            self.__async_session_factory = async_sessionmaker(
-                bind=self.__engine,
+            log.info("Created SQL database engine [%s].", id(self._engine))
+            self._async_session_factory = async_sessionmaker(
+                bind=self._engine,
                 autoflush=False,
                 autocommit=False,
                 expire_on_commit=False,
             )
             log.info(
                 "Created SQL database async session factory [%s].",
-                id(self.__async_session_factory),
+                id(self._async_session_factory),
             )
         except SQLAlchemyError as e:
             log.error("Failed to initialize SQL database.", exc_info=True)
@@ -67,10 +68,10 @@ class SQLDatabaseHelperImpl(SQLDatabaseHelperProtocol):
 
     @property
     def async_session_factory(self) -> Callable[[], AsyncSession]:
-        return self.__async_session_factory
+        return self._async_session_factory
 
     async def shutdown(self: Self) -> None:
         """Dispose of the database engine and release resources."""
-        if self.__engine:
-            await self.__engine.dispose()
+        if self._engine:
+            await self._engine.dispose()
             log.info("Disposing database engine.")

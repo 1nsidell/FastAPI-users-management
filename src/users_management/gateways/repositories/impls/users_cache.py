@@ -15,16 +15,17 @@ from users_management.gateways.repositories import (
     handle_redis_exceptions,
 )
 
+
 log = logging.getLogger(__name__)
 
 
 class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
     def __init__(self: Self, redis: redis.Redis, settings: Settings) -> None:
-        self.__redis = redis
-        self.__settings = settings
-        self.__expiration = int(
+        self._redis = redis
+        self._settings = settings
+        self._expiration = int(
             timedelta(
-                minutes=self.__settings.redis.CACHE_LIFETIME
+                minutes=self._settings.redis.CACHE_LIFETIME
             ).total_seconds()
         )
 
@@ -32,36 +33,36 @@ class UsersCacheRepositoryImpl(UsersCacheRepositoryProtocol):
     async def add_user(self: Self, key: int, data: SInfoUser) -> None:
         log.info("Adding cache by key: %s.", key)
         json_data = data.model_dump_json()
-        await self.__redis.set(key, json_data, ex=self.__expiration)
+        await self._redis.set(key, json_data, ex=self._expiration)
 
     @handle_redis_exceptions
     async def get_user(self: Self, key: int) -> Optional[SInfoUser]:
         log.info("Searching the cache by key: %s.", key)
-        value = await self.__redis.get(key)
+        value = await self._redis.get(key)
         return SInfoUser.model_validate_json(value) if value else None
 
     @handle_redis_exceptions
     async def delete_user(self: Self, key: int) -> None:
         log.info("Deleting the cache by key: %s.", key)
-        await self.__redis.delete(key)
+        await self._redis.delete(key)
 
     @handle_redis_exceptions
     async def add_list_users(
         self,
         data_list: List[SInfoUser],
     ) -> None:
-        pipeline = self.__redis.pipeline()
+        pipeline = self._redis.pipeline()
         for user in data_list:
             key = user.user_id
             value = user.model_dump_json()
-            pipeline.set(key, value, ex=self.__expiration)
+            pipeline.set(key, value, ex=self._expiration)
         await pipeline.execute()
 
     @handle_redis_exceptions
     async def get_list_users(
         self, keys: List[int]
     ) -> Optional[List[SInfoUser]]:
-        values = await self.__redis.mget(keys)
+        values = await self._redis.mget(keys)
 
         if any(v is None for v in values):
             log.info("Some keys not found in cache: %s.", keys)

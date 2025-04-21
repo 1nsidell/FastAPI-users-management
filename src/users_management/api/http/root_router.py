@@ -4,6 +4,7 @@ from users_management.api.http.health_check.router import healthcheck_router
 from users_management.api.http.v1.router import v1_router
 from users_management.core.settings import settings
 
+
 root_router = APIRouter(prefix=settings.api.prefix)
 
 root_sub_routers = (

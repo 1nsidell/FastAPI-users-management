@@ -3,6 +3,7 @@ from fastapi import APIRouter, status
 from users_management.app.schemas.responses import SuccessResponse
 from users_management.core.settings import settings
 
+
 router = APIRouter()
 
 

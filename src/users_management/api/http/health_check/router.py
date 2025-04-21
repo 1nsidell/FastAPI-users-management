@@ -6,6 +6,7 @@ from users_management.api.http.health_check import (
 )
 from users_management.core.settings import settings
 
+
 healthcheck_router = APIRouter(
     prefix=settings.api.healthcheck,
     tags=["HEALTH-CHECK"],

@@ -5,6 +5,7 @@ from ..models.mixins import (
     UpdatedTimestampMixin,
 )
 
+
 __all__ = (
     "Base",
     "CreatedTimestampMixin",

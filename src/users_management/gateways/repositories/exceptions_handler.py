@@ -10,6 +10,7 @@ from users_management.app.exceptions import (
     SQLRepositoryException,
 )
 
+
 log = logging.getLogger(__name__)
 
 

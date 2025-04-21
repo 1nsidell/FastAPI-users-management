@@ -12,6 +12,7 @@ from users_management.gateways.repositories import (
     handle_sql_exceptions,
 )
 
+
 log = logging.getLogger(__name__)
 
 

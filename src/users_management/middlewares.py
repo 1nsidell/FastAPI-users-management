@@ -4,6 +4,7 @@ Main module for middleware application.
 
 from fastapi import FastAPI
 
+
 middlewares = []
 
 

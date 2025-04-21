@@ -7,6 +7,7 @@ from users_management.app.schemas.responses import (
 )
 from users_management.core.settings import settings
 
+
 router = APIRouter()
 
 

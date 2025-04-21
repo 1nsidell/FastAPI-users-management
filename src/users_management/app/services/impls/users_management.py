@@ -21,6 +21,7 @@ from users_management.gateways.repositories import (
 )
 from users_management.gateways.transactions import UnitOfWorkProtocol
 
+
 log = logging.getLogger(__name__)
 
 

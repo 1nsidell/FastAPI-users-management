@@ -8,6 +8,7 @@ import logging.config
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+
 if TYPE_CHECKING:
     from users_management.core.settings import Settings
 

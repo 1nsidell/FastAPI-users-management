@@ -10,6 +10,7 @@ from users_management.api.http.v1 import (
 )
 from users_management.core.settings import settings
 
+
 v1_router = APIRouter(
     prefix=settings.api.v1_prefix,
     tags=["USERS-MANAGEMENT-V1"],

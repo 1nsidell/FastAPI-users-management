@@ -13,6 +13,7 @@ from users_management.app.schemas.responses import (
 from users_management.core.settings import settings
 from users_management.gateways.depends import RedisManager, SQLDBHelper
 
+
 router = APIRouter()
 
 
