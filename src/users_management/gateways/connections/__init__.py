@@ -1,8 +1,4 @@
-from .protocols.redis_protocol import RedisConnectionManagerProtocol
-from .protocols.sql_protocol import SQLDatabaseHelperProtocol
+from .protocols.base_protocol import GatewayConnectionProtocol
 
 
-__all__ = (
-    "RedisConnectionManagerProtocol",
-    "SQLDatabaseHelperProtocol",
-)
+__all__ = ("GatewayConnectionProtocol",)

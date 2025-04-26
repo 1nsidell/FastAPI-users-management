@@ -1,33 +1,27 @@
-"""
-ioc container for creating services.
-"""
-
 from typing import Annotated
 
 from fastapi import Depends
 
-from users_management.app.services import UsersManagementServiceProtocol
-from users_management.gateways.depends import UoW
-from users_management.gateways.depends.repositories import (
-    RedisUsersCacheRepository,
-    UsersSQLRepository,
-)
+from users_management.app.depends import RepositoryManager
+from users_management.app.depends.repositories import RedisUsersCacheRepository
+from users_management.app.depends.utils_factory import KeyByUserIdBuilder
+from users_management.app.services import UsersServiceProtocol
 
-from ..services.impls.users_management import UsersManagementServiceImpl
+from ..services.impls.users import UsersServiceImpl
 
 
 def get_users_management_service(
-    users_repository: UsersSQLRepository,
+    repository_manager: RepositoryManager,
     users_cache: RedisUsersCacheRepository,
-    uow: UoW,
-) -> UsersManagementServiceProtocol:
-    return UsersManagementServiceImpl(
-        users_repository,
-        users_cache,
-        uow,
+    key_builder: KeyByUserIdBuilder,
+) -> UsersServiceProtocol:
+    return UsersServiceImpl(
+        repository_manager=repository_manager,
+        users_cache=users_cache,
+        key_builder=key_builder,
     )
 
 
 UsersService = Annotated[
-    UsersManagementServiceProtocol, Depends(get_users_management_service)
+    UsersServiceProtocol, Depends(get_users_management_service)
 ]

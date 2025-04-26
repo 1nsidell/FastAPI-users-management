@@ -80,8 +80,6 @@ async def create_user(
     {
         "user_id": 123,
         "nickname": "john_doe",
-        "is_active": true,
-        "is_verified": false,
         "avatar": false
     }
     ```

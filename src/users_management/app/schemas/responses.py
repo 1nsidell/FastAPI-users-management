@@ -14,7 +14,6 @@ class ErrorResponse(BaseSchema):
     message: str
 
 
-# Common response patterns
 SQL_ERROR = {
     "summary": "Database error",
     "value": {
@@ -47,7 +46,6 @@ REDIS_PING_ERROR = {
     },
 }
 
-# Complete response definitions
 API_KEY_ERROR = {
     "model": ErrorResponse,
     "description": "API key validation failed",

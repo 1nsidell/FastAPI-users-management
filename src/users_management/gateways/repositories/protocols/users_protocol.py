@@ -6,23 +6,19 @@ that must be defined for the application to work.
 from abc import abstractmethod
 from typing import Any, Dict, Protocol, Self
 
-from sqlalchemy.ext.asyncio import AsyncSession
-
 from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
 
 
-class UsersSQLRepositoryProtocol(Protocol):
+class UsersRepositoryProtocol(Protocol):
     @abstractmethod
     async def get_user(
         self: Self,
-        session: AsyncSession,
         **filter_by: Any,
     ) -> SInfoUser:
         """Get information about the user.
 
         Args:
-            session (AsyncSession): transaction session.
             **filter_by (Any): argument to search for user data.
 
         Returns:
@@ -32,13 +28,11 @@ class UsersSQLRepositoryProtocol(Protocol):
 
     async def get_users_list(
         self: Self,
-        session: AsyncSession,
         users_id: list[int],
     ) -> list[SInfoUser]:
         """Getting information about the list of user.
 
         Args:
-            session (AsyncSession): transaction session.
             users_id (list[int]): list of user.
 
         Returns:
@@ -49,13 +43,11 @@ class UsersSQLRepositoryProtocol(Protocol):
     @abstractmethod
     async def create_user(
         self: Self,
-        session: AsyncSession,
         data: CreateUserRequest,
     ) -> SInfoUser:
         """Add a new user.
 
         Args:
-            session (AsyncSession): transaction session.
             data (CreateUserRequest): data to be added.
 
         Returns:
@@ -66,14 +58,12 @@ class UsersSQLRepositoryProtocol(Protocol):
     @abstractmethod
     async def update_user(
         self: Self,
-        session: AsyncSession,
         user_id: int,
         data: Dict[str, Any],
     ) -> SInfoUser:
         """Update user information by user ID.
 
         Args:
-            session (AsyncSession): transaction session.
             user_id (int): user id.
             data (Dict[str, Any]): Data set to be updated.
 
@@ -85,13 +75,11 @@ class UsersSQLRepositoryProtocol(Protocol):
     @abstractmethod
     async def delete_user(
         self: Self,
-        session: AsyncSession,
         user_id: int,
     ) -> None:
         """Deleting a user account by ID.
 
         Args:
-            session (AsyncSession): transaction session.
             user_id (int): user id.
         """
         ...

@@ -1,8 +1,9 @@
 """Module related to connection to repositories."""
 
 import logging
-from typing import Callable, Optional, Self
+from typing import Optional, Self
 
+from sqlalchemy import URL
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import (
     AsyncEngine,
@@ -14,32 +15,34 @@ from sqlalchemy.ext.asyncio import (
 from users_management.app.exceptions import (
     SQLRepositoryException,
 )
-from users_management.core.settings import Settings
+from users_management.core.settings import SQLDatabaseConfig
 from users_management.gateways.connections import (
-    SQLDatabaseHelperProtocol,
+    GatewayConnectionProtocol,
 )
 
 
 log = logging.getLogger(__name__)
 
 
-class SQLDatabaseHelperImpl(SQLDatabaseHelperProtocol):
+class SQLDatabaseManagerImpl(
+    GatewayConnectionProtocol[async_sessionmaker[AsyncSession]]
+):
     """Class helping to async connect to SQL database.
 
     Args:
-        __settings (Settings): Application config.
+        config (SQLDatabaseConfig): SQL config.
     """
 
-    def __init__(self: Self, settings: Settings):
-        self._settings = settings
-        self._url: str = self._settings.sql_db.url
-        self._echo: bool = self._settings.sql_db.ECHO
-        self._echo_pool: bool = self._settings.sql_db.ECHO_POOL
-        self._pool_size: int = self._settings.sql_db.POOL_SIZE
-        self._max_overflow: int = self._settings.sql_db.MAX_OVERFLOW
+    def __init__(self: Self, config: SQLDatabaseConfig):
+        self._config = config
+        self._url: URL = self._config.url
+        self._echo: bool = self._config.ECHO
+        self._echo_pool: bool = self._config.ECHO_POOL
+        self._pool_size: int = self._config.POOL_SIZE
+        self._max_overflow: int = self._config.MAX_OVERFLOW
 
-        self._engine: Optional[AsyncEngine]
-        self._async_session_factory: Optional[async_sessionmaker[AsyncSession]]
+        self._engine: Optional[AsyncEngine] = None
+        self._session_maker: Optional[async_sessionmaker[AsyncSession]] = None
 
     def startup(self: Self) -> None:
         """Initialize the database engine and session factory."""
@@ -64,10 +67,9 @@ class SQLDatabaseHelperImpl(SQLDatabaseHelperProtocol):
             )
         except SQLAlchemyError as e:
             log.error("Failed to initialize SQL database.", exc_info=True)
-            raise SQLRepositoryException(e)
+            raise SQLRepositoryException(str(e))
 
-    @property
-    def async_session_factory(self) -> Callable[[], AsyncSession]:
+    def get_connection(self) -> async_sessionmaker[AsyncSession]:
         return self._async_session_factory
 
     async def shutdown(self: Self) -> None:

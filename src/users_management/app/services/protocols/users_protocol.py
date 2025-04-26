@@ -1,5 +1,5 @@
 """
-Module for users use case description.
+Service protocol responsible for user management.
 """
 
 from abc import abstractmethod
@@ -7,24 +7,22 @@ from typing import Any, Dict, Protocol, Self
 
 from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
-from users_management.app.services import UsersManagementServiceProtocol
 
 
-class UsersManagementUseCaseProtocol(Protocol):
-    UsersService: UsersManagementServiceProtocol
+class UsersServiceProtocol(Protocol):
 
     @abstractmethod
     async def get_user_by_id(
         self: Self,
         user_id: int,
     ) -> SInfoUser:
-        """Get information about the user.
+        """Get data about the user.
 
         Args:
-            user_id (int): argument to search for user data
+            user_id (int): ID to search for user data
 
         Returns:
-            SInfoUser: user model.
+            SInfoUser: user data.
         """
         ...
 
@@ -39,18 +37,17 @@ class UsersManagementUseCaseProtocol(Protocol):
         """
         ...
 
-    @abstractmethod
-    async def get_list_users_by_id(
+    async def get_users_list(
         self: Self,
         users_id: list[int],
     ) -> list[SInfoUser]:
-        """Get information about the users.
+        """Get list user data.
 
         Args:
-            user_id (list[int]): arguments to search for users data
+            users_id (list[int]): list of user ID.
 
         Returns:
-            SInfoUser: list of users data.
+            list[SInfoUser]: list of user data.
         """
         ...
 
@@ -62,7 +59,7 @@ class UsersManagementUseCaseProtocol(Protocol):
         """Add a new user.
 
         Args:
-            **data (CreateUserRequest): data to be user create.
+            data (CreateUserRequest): data to be user create.
 
         Returns:
             SInfoUser: created user data.
@@ -79,7 +76,7 @@ class UsersManagementUseCaseProtocol(Protocol):
 
         Args:
             user_id (int): user id.
-            **data (Dict[str, Any]): Data set to be updated.
+            data (Dict[str, Any]): Data set to be updated.
 
         Returns:
             SInfoUser: updated user data.

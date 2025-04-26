@@ -72,15 +72,11 @@ async def get_list_user(
             {
                 "user_id": 1,
                 "nickname": "user1",
-                "is_active": true,
-                "is_verified": false,
                 "avatar": false
             },
             {
                 "user_id": 2,
                 "nickname": "user2",
-                "is_active": true,
-                "is_verified": true,
                 "avatar": true
             }
         ]

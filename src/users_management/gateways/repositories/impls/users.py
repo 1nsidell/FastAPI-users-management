@@ -8,7 +8,7 @@ from users_management.app.models import InfoUser
 from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
 from users_management.gateways.repositories import (
-    UsersSQLRepositoryProtocol,
+    UsersRepositoryProtocol,
     handle_sql_exceptions,
 )
 
@@ -16,18 +16,20 @@ from users_management.gateways.repositories import (
 log = logging.getLogger(__name__)
 
 
-class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
+class UsersRepositoryImpl(UsersRepositoryProtocol):
     USER_INFO_MODEL = InfoUser
+
+    def __init__(self, session: AsyncSession):
+        self._session = session
 
     @handle_sql_exceptions
     async def get_user(
         self: Self,
-        session: AsyncSession,
         **filter_by: Any,
     ) -> Optional[SInfoUser]:
         log.info("Request user data with filter: %s.", filter_by)
         stmt = select(self.USER_INFO_MODEL).filter_by(**filter_by)
-        result = await session.execute(stmt)
+        result = await self._session.execute(stmt)
         user_orm = result.scalars().one_or_none()
         if not user_orm:
             log.info("User not found with filter: %s.", filter_by)
@@ -39,14 +41,13 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     @handle_sql_exceptions
     async def get_users_list(
         self: Self,
-        session: AsyncSession,
         users_id: list[int],
     ) -> Optional[list[SInfoUser]]:
         log.info("Request list of users data with IDs: %s.", users_id)
         stmt = select(self.USER_INFO_MODEL).filter(
             self.USER_INFO_MODEL.user_id.in_(users_id)
         )
-        result = await session.execute(stmt)
+        result = await self._session.execute(stmt)
         users_list_orm = result.scalars().all()
         if len(users_list_orm) < len(users_id):
             log.warning(
@@ -63,7 +64,6 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     @handle_sql_exceptions
     async def create_user(
         self: Self,
-        session: AsyncSession,
         data: CreateUserRequest,
     ) -> SInfoUser:
         log.info(
@@ -76,7 +76,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
             .values(data.model_dump())
             .returning(self.USER_INFO_MODEL)
         )
-        result = await session.execute(stmt)
+        result = await self._session.execute(stmt)
         user_orm = result.scalars().one_or_none()
         log.info(
             "User successfully created with ID: %s and nickname: %s.",
@@ -89,7 +89,6 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     @handle_sql_exceptions
     async def update_user(
         self: Self,
-        session: AsyncSession,
         user_id: int,
         data: Dict[str, Any],
     ) -> SInfoUser:
@@ -104,7 +103,7 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
             .values(**data)
             .returning(self.USER_INFO_MODEL)
         )
-        result = await session.execute(stmt)
+        result = await self._session.execute(stmt)
         user_orm = result.scalars().one_or_none()
         log.info("User with ID: %s successful updated data: %s.", user_id, data)
         user = SInfoUser.model_validate(user_orm, from_attributes=True)
@@ -113,12 +112,11 @@ class UsersSQLRepositoryImpl(UsersSQLRepositoryProtocol):
     @handle_sql_exceptions
     async def delete_user(
         self: Self,
-        session: AsyncSession,
         user_id: int,
     ) -> None:
         log.info("User deletion with ID: %s.", user_id)
         stmt = delete(self.USER_INFO_MODEL).where(
             self.USER_INFO_MODEL.user_id == user_id
         )
-        await session.execute(stmt)
+        await self._session.execute(stmt)
         log.info("Successful deletion user with ID: %s.", user_id)

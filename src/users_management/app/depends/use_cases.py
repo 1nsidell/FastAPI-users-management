@@ -7,19 +7,15 @@ from typing import Annotated
 from fastapi import Depends
 
 from users_management.app.depends.services import UsersService
-from users_management.app.use_cases import UsersManagementUseCaseProtocol
+from users_management.app.use_cases import UsersUseCaseProtocol
 
-from ..use_cases.impls.users_management import (
-    UsersManagementUseCaseImpl,
-)
+from ..use_cases.impls.users import UsersUseCaseImpl
 
 
 def get_users_use_case(
     users_service: UsersService,
-) -> UsersManagementUseCaseProtocol:
-    return UsersManagementUseCaseImpl(users_service)
+) -> UsersUseCaseProtocol:
+    return UsersUseCaseImpl(users_service=users_service)
 
 
-UsersUseCase = Annotated[
-    UsersManagementUseCaseProtocol, Depends(get_users_use_case)
-]
+UsersUseCase = Annotated[UsersUseCaseProtocol, Depends(get_users_use_case)]

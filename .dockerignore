@@ -95,6 +95,7 @@ venv/
 # other
 .ruff_cache/
 .vscode/
+.mypy_cache
 
 # tests
 tests/

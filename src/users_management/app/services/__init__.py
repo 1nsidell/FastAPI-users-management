@@ -1,4 +1,4 @@
-from .protocols.users_management_protocol import UsersManagementServiceProtocol
+from .protocols.users_protocol import UsersServiceProtocol
 
 
-__all__ = ["UsersManagementServiceProtocol"]
+__all__ = ["UsersServiceProtocol"]

@@ -76,8 +76,7 @@ async def update_user(
             X-API-Key: your-api-key
         Body:
             {
-                "nickname": "new_nickname",
-                "is_verified": true
+                "nickname": "new_nickname2",
             }
     ```
 
@@ -85,9 +84,7 @@ async def update_user(
     ```json
     {
         "user_id": 123,
-        "nickname": "new_nickname",
-        "is_active": true,
-        "is_verified": true,
+        "nickname": "new_nickname2",
         "avatar": false
     }
     ```

@@ -12,6 +12,4 @@ class InfoUser(Base, CreatedTimestampMixin, UpdatedTimestampMixin):
     nickname: Mapped[str] = mapped_column(
         nullable=False, index=True, unique=True
     )
-    is_active: Mapped[bool] = mapped_column(default=True, nullable=False)
-    is_verified: Mapped[bool] = mapped_column(default=False, nullable=False)
     avatar: Mapped[bool] = mapped_column(default=False, nullable=False)

@@ -1,11 +1,8 @@
-from pydantic import BaseModel, ConfigDict
+from users_management.core.schemas import BaseSchema
 
 
-class SInfoUser(BaseModel):
-    model_config = ConfigDict(strict=True)
+class SInfoUser(BaseSchema):
 
     user_id: int
     nickname: str
-    is_active: bool
-    is_verified: bool
     avatar: bool

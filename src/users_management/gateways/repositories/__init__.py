@@ -1,11 +1,11 @@
 from .exceptions_handler import handle_redis_exceptions, handle_sql_exceptions
-from .protocols.users_cache_protocol import UsersCacheRepositoryProtocol
-from .protocols.users_sql_protocol import UsersSQLRepositoryProtocol
+from .protocols.cache_protocol import CacheRepositoryProtocol
+from .protocols.users_protocol import UsersRepositoryProtocol
 
 
-__all__ = [
-    "UsersCacheRepositoryProtocol",
-    "UsersSQLRepositoryProtocol",
+__all__ = (
+    "CacheRepositoryProtocol",
+    "UsersRepositoryProtocol",
     "handle_redis_exceptions",
     "handle_sql_exceptions",
-]
+)

@@ -1,9 +1,6 @@
-"""
-Custom Exception Handlers for FastAPI Application
-"""
-
 import json
 import logging
+from typing import Any, Awaitable, Callable, Dict, List
 
 from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
@@ -12,69 +9,86 @@ from users_management.core.exceptions import BaseCustomException
 from users_management.core.settings import settings
 
 
-log = logging.getLogger("ExceptionsLogger")
+log: logging.Logger = logging.getLogger("ExceptionsLogger")
+
+# Type alias for handler returning a string
+BodyHandler = Callable[[Request, List[str]], Awaitable[str]]
+
+
+async def _handle_json(request: Request, parts: List[str]) -> str:
+    body = await request.json()
+    parts.append(f"JSON={json.dumps(body)}")
+    return _join(parts)
+
+
+async def _handle_multipart(request: Request, parts: List[str]) -> str:
+    data = await request.form()
+    files: Dict[str, Dict[str, Any]] = {}
+    fields: Dict[str, str] = {}
+    for k, v in data.items():
+        filename = getattr(v, "filename", None)
+        if filename:
+            files[k] = {"name": filename, "size": getattr(v, "size", 0)}
+        else:
+            fields[k] = str(v)
+    if files:
+        parts.append(f"FILES={json.dumps(files)}")
+    if fields:
+        parts.append(f"FIELDS={json.dumps(fields)}")
+    return _join(parts)
+
+
+async def _handle_urlencoded(request: Request, parts: List[str]) -> str:
+    data = await request.form()
+    parts.append(f"FORM={json.dumps(dict(data))}")
+    return _join(parts)
+
+
+async def _handle_text(request: Request, parts: List[str]) -> str:
+    raw = await request.body()
+    text = raw.decode(errors="replace")[:5000]
+    parts.append(f"TEXT={json.dumps(text)}")
+    return _join(parts)
+
+
+async def _handle_default(request: Request, parts: List[str]) -> str:
+    raw = await request.body()
+    if raw:
+        parts.append(f"BINARY_SIZE={len(raw)}")
+    return _join(parts)
 
 
 async def read_request_body(request: Request) -> str:
     """Read and parse request data into log-friendly format"""
+    if request.method in {"GET", "HEAD", "OPTIONS", "DELETE"}:
+        return "EMPTY_REQUEST"
+
+    parts: List[str] = []
+    # Query params
+    qp: Dict[str, Any] = dict(request.query_params)
+    if qp:
+        parts.append(f"QUERY={json.dumps(qp)}")
+
+    # Content-type based dispatch
+    ctype = request.headers.get("Content-Type", "").split(";")[0].strip()
+    handlers: Dict[str, BodyHandler] = {
+        "application/json": _handle_json,
+        "multipart/form-data": _handle_multipart,
+        "application/x-www-form-urlencoded": _handle_urlencoded,
+    }
     try:
-        log_parts = []
-        query_params = dict(request.query_params)
-
-        # Add query params
-        if query_params:
-            log_parts.append(f"QUERY={json.dumps(query_params)}")
-
-        # Process body only for methods that support it
-        if request.method not in {"GET", "HEAD", "OPTIONS", "DELETE"}:
-            content_type = (
-                request.headers.get("Content-Type", "").split(";")[0].strip()
-            )
-
-            try:
-                if content_type == "application/json":
-                    body = await request.json()
-                    log_parts.append(f"JSON={json.dumps(body)}")
-
-                elif content_type == "multipart/form-data":
-                    form_data = await request.form()
-                    files = {
-                        k: {"name": v.filename, "size": v.size}
-                        for k, v in form_data.items()
-                        if v.filename
-                    }
-                    fields = {
-                        k: str(v)
-                        for k, v in form_data.items()
-                        if not v.filename
-                    }
-                    if files:
-                        log_parts.append(f"FILES={json.dumps(files)}")
-                    if fields:
-                        log_parts.append(f"FIELDS={json.dumps(fields)}")
-
-                elif content_type == "application/x-www-form-urlencoded":
-                    form_data = await request.form()
-                    log_parts.append(f"FORM={json.dumps(dict(form_data))}")
-
-                elif content_type.startswith("text/"):
-                    text = (await request.body()).decode(errors="replace")[
-                        :5000
-                    ]
-                    log_parts.append(f"TEXT={json.dumps(text)}")
-
-                else:
-                    body = await request.body()
-                    if body:
-                        log_parts.append(f"BINARY_SIZE={len(body)}")
-            except Exception as e:
-                log_parts.append(f"BODY_PARSE_ERROR={e!s}")
-
-        return " | ".join(log_parts) if log_parts else "EMPTY_REQUEST"
-
+        if handler := handlers.get(ctype):
+            return await handler(request, parts)
+        if ctype.startswith("text/"):
+            return await _handle_text(request, parts)
+        return await _handle_default(request, parts)
     except Exception as e:
-        log.error("Request data read failed: %s", str(e))
-        return f"ERROR={e!s}"
+        parts.append(f"BODY_PARSE_ERROR={e!s}")
+        return _join(parts)
+
+
+def _join(parts: List[str]) -> str:
+    return " | ".join(parts) if parts else "EMPTY_REQUEST"
 
 
 async def handle_exception(
@@ -84,17 +98,12 @@ async def handle_exception(
     status_code: int,
     message: str,
 ) -> JSONResponse:
-    """Base exception handling logic."""
-    # Read request body
     body_data = await read_request_body(request)
-
-    # Prepare error response
     error_data = {"error_type": error_type, "message": message}
 
-    # Log error details
     log.error(
-        "Request ID: %s | Method: %s | Endpoint: %s | Status: %s | Client IP: %s | "
-        "Request Body: %s | Response Body: %s.",
+        "Request ID: %s | Method: %s | Path: %s | Status: %s | Client: %s | "
+        "ReqBody: %s | RespBody: %s",  # log format simplified
         request.headers.get("X-Request-ID", "N/A"),
         request.method,
         request.url.path,
@@ -104,36 +113,41 @@ async def handle_exception(
         error_data,
         exc_info=True,
     )
-
     return JSONResponse(content=error_data, status_code=status_code)
 
 
-async def custom_exception_handler(request: Request, exc: BaseCustomException):
+async def custom_exception_handler(
+    request: Request,
+    exc: Exception,
+) -> JSONResponse:
     """Handle custom business exceptions."""
+    if not isinstance(exc, BaseCustomException):
+        return await generic_exception_handler(request, exc)
     return await handle_exception(
-        request=request,
-        exc=exc,
-        error_type=getattr(exc, "error_type", "UNKNOWN_ERROR"),
-        status_code=getattr(exc, "status_code", 500),
-        message=str(exc) if settings.mode != "PROD" else exc.__doc__,
+        request,
+        exc,
+        getattr(exc, "error_type", "UNKNOWN_ERROR"),
+        getattr(exc, "status_code", 500),
+        str(exc) if settings.mode != "PROD" else exc.__doc__ or "",
     )
 
 
-async def generic_exception_handler(request: Request, exc: Exception):
-    """Handle all unexpected exceptions."""
+async def generic_exception_handler(
+    request: Request,
+    exc: Exception,
+) -> JSONResponse:
+    """Handle unexpected exceptions."""
     return await handle_exception(
-        request=request,
-        exc=exc,
-        error_type="INTERNAL_SERVER_ERROR",
-        status_code=500,
-        message=(
-            str(exc) if settings.mode != "PROD" else "Internal server error"
-        ),
+        request,
+        exc,
+        "INTERNAL_SERVER_ERROR",
+        500,
+        str(exc) if settings.mode != "PROD" else "Internal server error",
     )
 
 
 def apply_exceptions_handlers(app: FastAPI) -> FastAPI:
-    """Register exception handlers with the FastAPI application."""
+    """Register exception handlers."""
     app.add_exception_handler(BaseCustomException, custom_exception_handler)
     app.add_exception_handler(Exception, generic_exception_handler)
     return app

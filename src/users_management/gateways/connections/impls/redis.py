@@ -9,25 +9,25 @@ from redis.exceptions import RedisError
 from users_management.app.exceptions import (
     RedisCacheDBException,
 )
-from users_management.core.settings import Settings
+from users_management.core.settings import RedisConfig
 from users_management.gateways.connections import (
-    RedisConnectionManagerProtocol,
+    GatewayConnectionProtocol,
 )
 
 
 log = logging.getLogger(__name__)
 
 
-class RedisConnectionManagerImpl(RedisConnectionManagerProtocol):
+class RedisConnectionManagerImpl(GatewayConnectionProtocol[redis.Redis]):
     """A class for getting an instance of the redis pool.
 
     Args:
-        __settings (Settings): Application config.
+        config (RedisConfig): Rdis config.
     """
 
-    def __init__(self: Self, settings: Settings):
-        self._settings = settings
-        self._url: str = self._settings.redis.users_cache_url
+    def __init__(self: Self, config: RedisConfig):
+        self._config = config
+        self._url: str = self._config.users_cache_url
         self._pool: redis.ConnectionPool
         self._redis: redis.Redis
 
@@ -43,10 +43,9 @@ class RedisConnectionManagerImpl(RedisConnectionManagerProtocol):
             log.info("Redis instance [%s] is created.", id(self._redis))
         except RedisError as e:
             log.error("Failed to initialize redis.", exc_info=True)
-            raise RedisCacheDBException(e)
+            raise RedisCacheDBException(str(e))
 
-    @property
-    def redis(self) -> redis.Redis:
+    def get_connection(self) -> redis.Redis:
         return self._redis
 
     async def shutdown(self: Self) -> None:

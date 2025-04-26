@@ -4,9 +4,8 @@ Application config.
 
 import os
 from pathlib import Path
-from typing import Annotated, Dict
+from typing import Dict
 
-from fastapi import Depends
 from pydantic import BaseModel
 from sqlalchemy import URL
 
@@ -79,7 +78,7 @@ class RedisConfig(BaseModel):
 
 
 class Settings:
-    mode: bool = str(os.getenv("MODE", "PROD"))
+    mode: str = str(os.getenv("MODE", "PROD"))
     api_key: str = os.getenv("API_KEY", "secret")
     api: ApiPrefix = ApiPrefix()
     sql_db: SQLDatabaseConfig = SQLDatabaseConfig()
@@ -92,6 +91,3 @@ def get_settings() -> Settings:
 
 
 settings: Settings = get_settings()  # Global settings instance.
-
-
-SettingsService = Annotated[Settings, Depends(get_settings)]

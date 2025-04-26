@@ -1,5 +1,5 @@
 """
-Service protocol responsible for user management.
+Module for users use case description.
 """
 
 from abc import abstractmethod
@@ -7,30 +7,22 @@ from typing import Any, Dict, Protocol, Self
 
 from users_management.app.schemas.requests import CreateUserRequest
 from users_management.app.schemas.users import SInfoUser
-from users_management.gateways.repositories import (
-    UsersCacheRepositoryProtocol,
-    UsersSQLRepositoryProtocol,
-)
-from users_management.gateways.transactions import UnitOfWorkProtocol
 
 
-class UsersManagementServiceProtocol(Protocol):
-    users_repository: UsersSQLRepositoryProtocol
-    users_cache: UsersCacheRepositoryProtocol
-    uow: UnitOfWorkProtocol
+class UsersUseCaseProtocol(Protocol):
 
     @abstractmethod
     async def get_user_by_id(
         self: Self,
         user_id: int,
     ) -> SInfoUser:
-        """Get data about the user.
+        """Get information about the user.
 
         Args:
-            user_id (int): ID to search for user data
+            user_id (int): argument to search for user data
 
         Returns:
-            SInfoUser: user data.
+            SInfoUser: user model.
         """
         ...
 
@@ -45,17 +37,18 @@ class UsersManagementServiceProtocol(Protocol):
         """
         ...
 
-    async def get_users_list(
+    @abstractmethod
+    async def get_list_users_by_id(
         self: Self,
         users_id: list[int],
     ) -> list[SInfoUser]:
-        """Get list user data.
+        """Get information about the users.
 
         Args:
-            users_id (list[int]): list of user ID.
+            user_id (list[int]): arguments to search for users data
 
         Returns:
-            list[SInfoUser]: list of user data.
+            SInfoUser: list of users data.
         """
         ...
 
@@ -67,7 +60,7 @@ class UsersManagementServiceProtocol(Protocol):
         """Add a new user.
 
         Args:
-            data (CreateUserRequest): data to be user create.
+            **data (CreateUserRequest): data to be user create.
 
         Returns:
             SInfoUser: created user data.
@@ -84,7 +77,7 @@ class UsersManagementServiceProtocol(Protocol):
 
         Args:
             user_id (int): user id.
-            data (Dict[str, Any]): Data set to be updated.
+            **data (Dict[str, Any]): Data set to be updated.
 
         Returns:
             SInfoUser: updated user data.

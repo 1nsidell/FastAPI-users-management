@@ -6,11 +6,11 @@ from typing import Annotated
 
 from fastapi import Depends
 
+from users_management.app.depends.config_factory import SettingsService
 from users_management.app.providers import APIAccessProviderProtocol
 from users_management.app.providers.impls.api_access import (
     APIAccessProviderImpl,
 )
-from users_management.core.settings import SettingsService
 
 
 def get_api_access_provider(

@@ -1,6 +1,10 @@
 from fastapi import APIRouter, status
 from sqlalchemy.future import select
 
+from users_management.app.depends.connections import (
+    AsyncSessionFactory,
+    RedisPool,
+)
 from users_management.app.exceptions import (
     RedisHealthException,
     SQLRepositoryException,
@@ -11,7 +15,6 @@ from users_management.app.schemas.responses import (
     SuccessResponse,
 )
 from users_management.core.settings import settings
-from users_management.gateways.depends import RedisManager, SQLDBHelper
 
 
 router = APIRouter()
@@ -26,7 +29,10 @@ router = APIRouter()
         status.HTTP_500_INTERNAL_SERVER_ERROR: INTERNAL_SERVER_ERROR,
     },
 )
-async def get_readiness() -> SuccessResponse:
+async def get_readiness(
+    Redis: RedisPool,
+    SQLDatabase: AsyncSessionFactory,
+) -> SuccessResponse:
     """Check if service and dependencies are ready.
 
     Performs deep health check of all critical dependencies.
@@ -64,14 +70,14 @@ async def get_readiness() -> SuccessResponse:
     * SQL database connection
     """
     try:
-        pong = await RedisManager.redis.ping()
+        pong = await Redis.ping()
         if pong is not True:
             raise RedisHealthException("Redis ping failed.")
     except Exception:
         raise RedisHealthException("Redis connection error.")
 
     try:
-        async with SQLDBHelper.async_session_factory() as session:
+        async with SQLDatabase() as session:
             await session.execute(select(1))
     except Exception:
         raise SQLRepositoryException("SQL connectivity error.")
